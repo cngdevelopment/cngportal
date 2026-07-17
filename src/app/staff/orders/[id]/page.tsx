@@ -105,7 +105,31 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
           </div>
         )
       )}
-
+    {(order.requestedDate || order.customerNotes) && (
+  <div className="side-box">
+    {order.requestedDate && (
+      <>
+        <span className="meta">Requested date</span>
+        <br />
+        <b style={{ fontSize: ".9rem" }}>
+          {new Date(order.requestedDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </b>
+      </>
+    )}
+    {order.requestedDate && order.customerNotes && <br />}
+    {order.customerNotes && (
+      <>
+        <span className="meta">Order notes</span>
+        <br />
+        <b style={{ fontSize: ".9rem" }}>{order.customerNotes}</b>
+      </>
+    )}
+  </div>
+)}
       <h2>Line items</h2>
       <table className="list">
         <thead>
