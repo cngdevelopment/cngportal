@@ -1,5 +1,6 @@
 // C&G Wholesale Ordering Portal — schema per spec §6
-// NOTE: No price/cost/currency fields anywhere, by design (spec §2 rule 6).
+// NOTE: Spec §2 rule 6 (no pricing) was lifted — products now carry a
+// retail price, shown in the catalog and summed as a cart subtotal.
 // NOTE: No inventory/stock fields anywhere, by design (spec §2 rule 4).
 
 generator client {
@@ -124,6 +125,7 @@ model Product {
   subcategory      String? // Base/Wall/Tall/Vanity | Plank
   unit             Unit
   unitsPerBox      Decimal? @map("units_per_box") // flooring: sq ft per carton
+  price            Decimal? // retail unit price; null where not yet priced
   supportsAssembly Boolean  @default(false) @map("supports_assembly")
   imageUrl         String?  @map("image_url")
   isActive         Boolean  @default(true) @map("is_active")

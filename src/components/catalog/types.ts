@@ -13,6 +13,7 @@ export interface CatalogProduct {
   subcategory: string | null;
   unit: "EACH" | "BOX";
   unitsPerBox: number | null;
+  price: number | null;
   options: { name: string; values: unknown }[];
   colors: { color: CatalogColor }[];
 }

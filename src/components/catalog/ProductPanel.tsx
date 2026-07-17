@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { colorHex } from "@/lib/colorSwatches";
+import { formatPrice } from "@/lib/price";
 import type { CatalogProduct } from "./types";
 
 export function ProductPanel({
@@ -46,6 +47,7 @@ export function ProductPanel({
       assembly,
       thickness,
       unitsPerBox: product.unitsPerBox,
+      unitPrice: product.price,
       notes,
     });
     onClose();
@@ -62,6 +64,7 @@ export function ProductPanel({
         <div className="sk">
           {product.sku} · {product.unit === "EACH" ? "sold each" : "sold by the box"}
         </div>
+        <div className="price">{formatPrice(product.price)}</div>
 
         {isCabinet ? (
           <>

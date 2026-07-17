@@ -78,6 +78,7 @@ a .onum:hover,.onum a:hover{text-decoration:underline}
 .pcard .thumb{height:110px;display:flex;align-items:center;justify-content:center;background:#f7f7f4;border:1px solid var(--line-soft);border-radius:4px;margin-bottom:10px}
 .pcard .nm{font-weight:600;font-size:.88rem}
 .pcard .sk{font-size:.75rem;color:var(--ink-2);margin-top:1px}
+.pcard .price{font-size:.85rem;font-weight:700;color:var(--navy);margin-top:6px}
 .door{width:64px;height:84px;border-radius:2px;position:relative;border:1px solid rgba(0,0,0,.18);background:#f3f0e8}
 .door::after{content:"";position:absolute;inset:9px;border:1px solid rgba(0,0,0,.14);box-shadow:inset 0 0 0 3px rgba(0,0,0,.03),inset 2px 2px 3px rgba(0,0,0,.07)}
 .door.tall{height:96px;width:52px}
@@ -151,7 +152,8 @@ aside.rail{width:200px;flex-shrink:0}
 .panel .close{position:absolute;top:14px;right:16px;font-size:1.3rem;color:var(--ink-3);line-height:1}
 .panel .close:hover{color:var(--ink)}
 .panel h2{margin:0 0 2px;font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700}
-.panel .sk{font-size:.8rem;color:var(--ink-2);margin-bottom:14px}
+.panel .sk{font-size:.8rem;color:var(--ink-2);margin-bottom:2px}
+.panel .price{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px}
 .req{color:var(--red)}
 .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .sw{cursor:pointer;text-align:center;background:none;border:none;padding:0;font:inherit}
@@ -191,6 +193,8 @@ aside.rail{width:200px;flex-shrink:0}
 .warehouse{font-size:.83rem;background:#fafaf7;border:1px solid var(--line-soft);border-radius:4px;padding:9px 11px;color:var(--ink-2);line-height:1.5}
 .warehouse b{color:var(--ink);display:block}
 .summary-line{background:var(--navy-wash);border:1px solid #c6cfdf;border-radius:4px;padding:10px 13px;font-size:.87rem;color:var(--navy);margin-bottom:12px}
+.subtotal-line{display:flex;align-items:baseline;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:14px 18px;margin-bottom:14px;font-size:.9rem}
+.subtotal-line b{font-size:1.3rem;color:var(--ink)}
 
 /* cart pill */
 .pill{position:fixed;right:24px;bottom:22px;z-index:30;background:var(--navy);color:#fff;border-radius:100px;padding:11px 20px;font-size:.88rem;font-weight:600;box-shadow:0 3px 12px rgba(20,30,60,.25)}

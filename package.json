@@ -11,8 +11,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "user:create": "tsx scripts/create-user.ts",
-    "check:no-pricing": "sh scripts/no-pricing-check.sh"
+    "user:create": "tsx scripts/create-user.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

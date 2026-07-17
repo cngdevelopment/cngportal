@@ -15,6 +15,7 @@ function toCatalogProduct(p: Awaited<ReturnType<typeof listProducts>>[number]) {
     subcategory: p.subcategory,
     unit: p.unit,
     unitsPerBox: p.unitsPerBox === null || p.unitsPerBox === undefined ? null : Number(p.unitsPerBox),
+    price: p.price === null || p.price === undefined ? null : Number(p.price),
     options: p.options.map((o) => ({ name: o.name, values: o.values })),
     colors: p.colors.map((c) => ({ color: c.color })),
   };
@@ -33,7 +34,6 @@ export default async function NewOrderPage() {
       <h1>New Order</h1>
       <p className="sub">
         Pick products, choose finish and assembly, then review your order.
-        Invoicing stays on your monthly terms — no pricing in the portal.
       </p>
       <CatalogBrowser
         cabinets={cabinets.map(toCatalogProduct)}

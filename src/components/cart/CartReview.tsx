@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { submitOrderAction } from "@/app/actions/orders";
+import { formatPrice } from "@/lib/price";
 
 interface ShipTo {
   id: string;
@@ -60,6 +61,11 @@ export function CartReview({
     if (deliveryMethod === "PICKUP") tail = " — picking up at the warehouse";
     return parts.join(", ") + tail + ".";
   }, [lines, deliveryMethod]);
+
+  const subtotal = useMemo(
+    () => lines.reduce((sum, l) => sum + (l.unitPrice ?? 0) * l.quantity, 0),
+    [lines]
+  );
 
   function cartValid() {
     if (lines.length === 0) return false;
@@ -143,6 +149,8 @@ export function CartReview({
               <th>Finish / thickness</th>
               <th>Assembly</th>
               <th>Qty</th>
+              <th>Price</th>
+              <th>Line Total</th>
               <th />
             </tr>
           </thead>
@@ -211,6 +219,8 @@ export function CartReview({
                     </div>
                   )}
                 </td>
+                <td>{formatPrice(l.unitPrice)}</td>
+                <td>{l.unitPrice === null ? "—" : formatPrice(l.unitPrice * l.quantity)}</td>
                 <td>
                   <button type="button" className="rm" onClick={() => removeLine(l.key)}>
                     Remove
@@ -223,6 +233,10 @@ export function CartReview({
       </div>
 
       <div className="cart-side">
+        <div className="subtotal-line">
+          <span>Subtotal</span>
+          <b>{formatPrice(subtotal)}</b>
+        </div>
         <div className="side-box">
           <div className="fgroup">
             <label>

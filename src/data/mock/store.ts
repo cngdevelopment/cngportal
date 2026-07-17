@@ -185,7 +185,7 @@ function seedOrders(): MockOrder[] {
       makeItem("B24", 4, "WS", "ASSEMBLED", null),
       makeItem("B36", 2, "WS", "ASSEMBLED", null),
       makeItem("W3030", 6, "WS", "ASSEMBLED", null),
-      makeItem("T2484", 1, "WS", "ASSEMBLED", null),
+      makeItem("PC248427", 1, "WS", "ASSEMBLED", null),
     ],
     events: makeEvents(
       [
@@ -224,7 +224,7 @@ function seedOrders(): MockOrder[] {
       makeItem("B12", 2, "NB", "ASSEMBLED", null),
       makeItem("B30", 3, "NB", "ASSEMBLED", null),
       makeItem("W1830", 4, "NB", "ASSEMBLED", null),
-      makeItem("V36", 1, "NB", "ASSEMBLED", null),
+      makeItem("VSB36", 1, "NB", "ASSEMBLED", null),
     ],
     events: makeEvents(
       [
@@ -293,7 +293,7 @@ function seedOrders(): MockOrder[] {
     updatedAt: hoursAgo(192),
     items: [
       makeItem("JP1008", 22, null, null, "8.5mm"),
-      makeItem("V24", 1, "GS", "UNASSEMBLED", null),
+      makeItem("VBD24", 1, "GS", "UNASSEMBLED", null),
     ],
     events: makeEvents(
       [

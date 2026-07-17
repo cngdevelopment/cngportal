@@ -52,7 +52,6 @@ Then:
 ```bash
 npm run dev        # http://localhost:3000
 npm test           # buildPipeline suite (§12.9)
-npm run check:no-pricing
 ```
 
 Log in with the magic link (in local dev, Supabase logs the email in
@@ -70,7 +69,8 @@ Supabase default sender works out of the box for low volume). Add
 - Tenant isolation: `src/data/` layer resolves `account_id` from the
   session only; scoped queries return not-found (never forbidden) for
   foreign UUIDs; RLS backstop in `prisma/rls.sql`.
-- Schema + seed: full §6 model, snapshots on line items, no price columns.
+- Schema + seed: full §6 model, snapshots on line items, catalog products
+  carry a retail price (Jan-26 cabinet price sheet).
 - Pipeline: `buildPipeline()` + tests; ProgressBar/StatusChip render only
   what it returns.
 - Customer pages: dashboard, catalog browse with product slide-over
@@ -94,10 +94,12 @@ Supabase default sender works out of the box for low volume). Add
 
 ## House rules (from the spec)
 
-No prices anywhere · everything always in stock · assembly per line,
-delivery per order · `account_id` never from the client · no status change
-without an event row · `buildPipeline()` is the only source of pipeline
-truth · required choices have no defaults.
+Everything always in stock · assembly per line, delivery per order ·
+`account_id` never from the client · no status change without an event
+row · `buildPipeline()` is the only source of pipeline truth · required
+choices have no defaults. (Spec §2 rule 6, "no prices anywhere," was
+lifted — the catalog now shows retail prices and the cart shows a
+subtotal; there's still no payment flow, invoicing stays off-portal.)
 
 ## Note on OneDrive
 

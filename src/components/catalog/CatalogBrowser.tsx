@@ -3,9 +3,10 @@
 import { useMemo, useState } from "react";
 import { ProductPanel } from "./ProductPanel";
 import { FLOOR_TONES, colorHex } from "@/lib/colorSwatches";
+import { formatPrice } from "@/lib/price";
 import type { CatalogProduct, CatalogColor } from "./types";
 
-const CABINET_TYPES = ["Base", "Wall", "Tall", "Vanity"];
+const CABINET_TYPE_ORDER = ["Base", "Wall", "Tall", "Vanity", "Molding", "Panel", "Filler", "Accessory"];
 
 export function CatalogBrowser({
   cabinets,
@@ -23,6 +24,19 @@ export function CatalogBrowser({
   const [openSku, setOpenSku] = useState<string | null>(null);
 
   const products = tab === "CABINETS" ? cabinets : flooring;
+
+  const cabinetTypes = useMemo(() => {
+    const seen = new Set<string>();
+    cabinets.forEach((p) => p.subcategory && seen.add(p.subcategory));
+    return Array.from(seen).sort((a, b) => {
+      const ia = CABINET_TYPE_ORDER.indexOf(a);
+      const ib = CABINET_TYPE_ORDER.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b);
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+  }, [cabinets]);
 
   const allThicknesses = useMemo(() => {
     const seen = new Set<string>();
@@ -80,7 +94,7 @@ export function CatalogBrowser({
           {tab === "CABINETS" ? (
             <div className="box">
               <h3>Type</h3>
-              {CABINET_TYPES.map((s) => (
+              {cabinetTypes.map((s) => (
                 <label key={s}>
                   <input
                     type="checkbox"
@@ -149,6 +163,7 @@ export function CatalogBrowser({
                     {p.sku} · {p.unit === "EACH" ? "each" : "per box"}
                     {thicknessValues.length > 0 ? <> · {thicknessValues.join(" / ")}</> : null}
                   </div>
+                  <div className="price">{formatPrice(p.price)}</div>
                 </button>
               );
             })

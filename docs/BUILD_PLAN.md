@@ -22,7 +22,7 @@ Cost note for Andrew's reimbursement question: at this scale (dozens of accounts
 |---|---|
 | Warehouse pickup address | **Resolved:** 9150 Latty Ave, Berkeley, MO 63134 · 314-838-8588 (from flyer). Hours still needed → config constant. |
 | Color list + swatches | **Resolved from flyer**, with two name corrections vs Appendix A: **"Natural Wood"** (not "Natural Shaker") and **"Pearl Glazed"** (not "Pearl Shaker"). Seed uses flyer names — confirm with Andrew Friday. Swatches croppable from the flyer PDF. |
-| Cabinet SKU list | Andrew's "SKU sheet" email attachment has it (names + sizes, no prices — which matches the no-pricing rule). Import when you have the file; seed ships 20 placeholders meanwhile. |
+| Cabinet SKU list | **Resolved:** Jan-26 Cabinet Price Sheet imported — ~290 SKUs across base/wall/tall/vanity cabinets, moldings, fillers, panels, and hardware, each with a retail price (`src/data/mock/catalog-data.ts`). |
 | Flooring `units_per_box` | Fallback 23.4 sq ft for all 10, per spec. |
 | Domain, staff recipients, logo, hours | Batch to Andrew/John Friday. All are config/env swaps. |
 
@@ -61,14 +61,12 @@ The spec's three rewrite-risk sections come first, as code you can test before a
 
 ### Week 6 — Hardening & launch
 20. Isolation test suite (automated: Account A hitting Account B's order/attachment/message/export → 404, not 403).
-21. No-pricing grep gate in CI: `price|cost|total|subtotal|currency|usd|\$` → zero hits outside comments.
-22. Pipeline unit tests in CI (already written here). Backup restore drill. Seed real accounts. Launch on real domain.
+21. Pipeline unit tests in CI (already written here). Backup restore drill. Seed real accounts. Launch on real domain.
 
 ## 3. Definition-of-done gates to wire into CI early
 
 - ESLint rule: no `@prisma/client` import outside `src/data/`.
 - Vitest: `buildPipeline` 4-variant test (included in scaffold).
-- Grep gate for pricing terms.
 - Isolation tests (week 6, but write the harness in week 1 while auth is fresh).
 
 ## 4. Questions to batch for Andrew/John (one message, per §16)

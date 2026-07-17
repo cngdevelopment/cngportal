@@ -9,6 +9,7 @@ export interface CartLine {
   category: "CABINETS" | "FLOORING";
   unit: "EACH" | "BOX";
   quantity: number;
+  unitPrice: number | null;
   colorCode: string | null;
   colorName: string | null;
   colorHex: string | null;

@@ -105,6 +105,10 @@ export async function getReorderLinesAction(orderId: string): Promise<CartLine[]
       assembly: l.assembly ?? null,
       thickness: l.thickness ?? null,
       unitsPerBox: product.unitsPerBox === null || product.unitsPerBox === undefined ? null : Number(product.unitsPerBox),
+      unitPrice: (() => {
+        const p = (product as { price?: unknown }).price;
+        return p === null || p === undefined ? null : Number(p);
+      })(),
       notes: l.notes ?? "",
     });
   }
