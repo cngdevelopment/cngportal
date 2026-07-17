@@ -220,7 +220,7 @@ export function CartReview({
                   )}
                 </td>
                 <td>{formatPrice(l.unitPrice)}</td>
-                <td>{l.unitPrice === null ? "—" : formatPrice(l.unitPrice * l.quantity)}</td>
+                <td>{l.unitPrice == null ? "—" : formatPrice(l.unitPrice * l.quantity)}</td>
                 <td>
                   <button type="button" className="rm" onClick={() => removeLine(l.key)}>
                     Remove

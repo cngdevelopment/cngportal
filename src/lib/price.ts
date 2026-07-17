@@ -1,4 +1,4 @@
-export function formatPrice(price: number | null): string {
-  if (price === null) return "—";
+export function formatPrice(price: number | null | undefined): string {
+  if (price === null || price === undefined) return "—";
   return price.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }

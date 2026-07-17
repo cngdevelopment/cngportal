@@ -57,7 +57,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw));
+      // Carts saved before unitPrice existed won't have the field.
+      if (raw) setLines(JSON.parse(raw).map((l: CartLine) => ({ ...l, unitPrice: l.unitPrice ?? null })));
     } catch {
       // ignore corrupt local storage
     }
