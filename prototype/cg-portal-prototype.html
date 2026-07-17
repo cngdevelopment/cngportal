@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C&G Wholesale — Ordering Portal</title>
+<style>
+  :root{
+    --ink:#1b1d1f; --ink-2:#5c6167; --ink-3:#8a8f94;
+    --line:#d8d8d2; --line-soft:#e7e7e2;
+    --paper:#f2f2ee; --card:#ffffff;
+    --navy:#1e3a75; --navy-deep:#16294f; --navy-wash:#eef1f7;
+    --amber:#9a6a1a; --amber-wash:#faf3e3;
+    --green:#2f6b3c; --green-wash:#eaf2ec;
+    --red:#9b3b30;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:15px}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.45;
+  }
+  button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+  input,select,textarea{font:inherit;color:inherit}
+  ::placeholder{color:var(--ink-3)}
+
+  /* ── header ─────────────────────────────── */
+  header{
+    background:var(--card); border-bottom:1px solid var(--line);
+    padding:0 28px; height:58px; display:flex; align-items:center; gap:14px;
+  }
+  .mark{
+    width:34px;height:34px;border:2px solid var(--navy);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:.8rem;color:var(--navy);letter-spacing:.02em;
+  }
+  .wordmark{font-weight:700;letter-spacing:.04em;font-size:1.02rem}
+  .wordmark small{display:block;font-weight:400;color:var(--ink-2);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .who{margin-left:auto;text-align:right;font-size:.82rem;color:var(--ink-2)}
+  .who b{display:block;color:var(--ink);font-weight:600}
+
+  nav{
+    background:var(--card); border-bottom:1px solid var(--line);
+    padding:0 28px; display:flex; gap:4px;
+  }
+  nav button{
+    padding:11px 14px; font-size:.9rem; color:var(--ink-2);
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  nav button.on{color:var(--ink); font-weight:600; border-bottom-color:var(--navy)}
+  nav button:hover{color:var(--ink)}
+
+  main{max-width:1180px;margin:0 auto;padding:26px 28px 90px}
+  h1{font-size:1.25rem;font-weight:700;margin-bottom:4px}
+  .sub{color:var(--ink-2);font-size:.86rem;margin-bottom:20px}
+  h2{font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:26px 0 10px}
+
+  /* ── badges / chips ─────────────────────── */
+  .chip{
+    display:inline-block;padding:2px 8px;border-radius:3px;
+    font-size:.72rem;font-weight:600;letter-spacing:.03em;
+    border:1px solid var(--line); color:var(--ink-2); background:#fff;
+  }
+  .chip.navy{background:var(--navy-wash);border-color:#c6cfdf;color:var(--navy)}
+  .chip.green{background:var(--green-wash);border-color:#c4d8ca;color:var(--green)}
+  .chip.amber{background:var(--amber-wash);border-color:#e3d2ab;color:var(--amber)}
+
+  /* ── dashboard cards ────────────────────── */
+  .order-card{
+    background:var(--card);border:1px solid var(--line);border-radius:5px;
+    padding:16px 18px;margin-bottom:14px;
+  }
+  .order-card .row1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+  .onum{font-weight:700;font-size:.98rem;letter-spacing:.01em}
+  .onum:hover{text-decoration:underline;cursor:pointer}
+  .meta{font-size:.8rem;color:var(--ink-2)}
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* ── progress bar ───────────────────────── */
+  .pipe{display:flex;margin-top:14px}
+  .step{flex:1;position:relative;text-align:center;padding-top:16px}
+  .step::before{
+    content:"";position:absolute;top:5px;left:-50%;width:100%;height:2px;background:var(--line);
+  }
+  .step:first-child::before{display:none}
+  .step.done::before,.step.now::before{background:var(--navy)}
+  .dot{
+    position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:12px;height:12px;border-radius:50%;
+    background:#fff;border:2px solid var(--line);
+  }
+  .step.done .dot{background:var(--navy);border-color:var(--navy)}
+  .step.now .dot{border-color:var(--navy);border-width:3px;width:14px;height:14px;top:-1px}
+  .slabel{font-size:.72rem;color:var(--ink-3);margin-top:2px}
+  .step.done .slabel,.step.now .slabel{color:var(--ink)}
+  .step.now .slabel{font-weight:700}
+  .stime{font-size:.66rem;color:var(--ink-3)}
+
+  /* ── catalog ────────────────────────────── */
+  .cat-tabs{display:flex;border:1px solid var(--line);border-radius:5px;overflow:hidden;width:max-content;margin-bottom:18px;background:#fff}
+  .cat-tabs button{padding:9px 22px;font-size:.9rem;color:var(--ink-2);border-right:1px solid var(--line)}
+  .cat-tabs button:last-child{border-right:none}
+  .cat-tabs button.on{background:var(--navy);color:#fff;font-weight:600}
+  .browse{display:flex;gap:22px;align-items:flex-start}
+  aside.rail{width:200px;flex-shrink:0}
+  .rail .box{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:13px 14px;margin-bottom:12px}
+  .rail h3{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:8px}
+  .rail label{display:flex;gap:7px;align-items:center;font-size:.85rem;padding:3px 0;cursor:pointer}
+  .rail input[type=search]{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:#fff}
+  .grid{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+  .pcard{
+    background:var(--card);border:1px solid var(--line);border-radius:5px;
+    padding:12px;cursor:pointer;transition:border-color .12s;
+  }
+  .pcard:hover{border-color:var(--navy)}
+  .pcard .thumb{height:110px;display:flex;align-items:center;justify-content:center;background:#f7f7f4;border:1px solid var(--line-soft);border-radius:4px;margin-bottom:10px}
+  .pcard .nm{font-weight:600;font-size:.88rem}
+  .pcard .sk{font-size:.75rem;color:var(--ink-2);margin-top:1px}
+  .door{width:64px;height:84px;border-radius:2px;position:relative;border:1px solid rgba(0,0,0,.18)}
+  .door::after{
+    content:"";position:absolute;inset:9px;
+    border:1px solid rgba(0,0,0,.14);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.03), inset 2px 2px 3px rgba(0,0,0,.07);
+  }
+  .planks{width:84px;height:64px;border:1px solid rgba(0,0,0,.15);border-radius:2px;overflow:hidden;display:flex;flex-direction:column}
+  .planks i{flex:1;display:block}
+
+  /* ── slide-over panel ───────────────────── */
+  .overlay{position:fixed;inset:0;background:rgba(20,22,26,.35);z-index:40}
+  .panel{
+    position:fixed;top:0;right:0;bottom:0;width:420px;max-width:94vw;z-index:41;
+    background:var(--card);border-left:1px solid var(--line);
+    padding:22px 24px;overflow-y:auto;
+  }
+  .panel .close{position:absolute;top:14px;right:16px;font-size:1.3rem;color:var(--ink-3);line-height:1}
+  .panel .close:hover{color:var(--ink)}
+  .panel h2{margin:0 0 2px;font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700}
+  .panel .sk{font-size:.8rem;color:var(--ink-2);margin-bottom:14px}
+  .fgroup{margin:16px 0}
+  .fgroup>label{display:block;font-size:.76rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);margin-bottom:7px}
+  .req{color:var(--red)}
+  .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .sw{cursor:pointer;text-align:center}
+  .sw .c{height:40px;border-radius:3px;border:1px solid rgba(0,0,0,.2)}
+  .sw span{font-size:.66rem;color:var(--ink-2);display:block;margin-top:3px;line-height:1.15}
+  .sw.on .c{outline:2px solid var(--navy);outline-offset:2px}
+  .sw.on span{color:var(--ink);font-weight:600}
+  .seg{display:flex;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .seg button{flex:1;padding:9px 6px;font-size:.87rem;color:var(--ink-2);border-right:1px solid var(--line);background:#fff}
+  .seg button:last-child{border-right:none}
+  .seg button.on{background:var(--navy);color:#fff;font-weight:600}
+  .seg-help{display:flex;gap:8px;margin-top:5px}
+  .seg-help span{flex:1;font-size:.7rem;color:var(--ink-3);text-align:center}
+  .stepper{display:flex;align-items:stretch;width:max-content;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .stepper button{width:44px;height:44px;font-size:1.15rem;background:#f7f7f4;color:var(--ink)}
+  .stepper button:disabled{color:var(--line);cursor:default}
+  .stepper input{width:64px;text-align:center;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);font-weight:600}
+  .stepper input:focus{outline:2px solid var(--navy);outline-offset:-2px}
+  .boxmath{font-size:.78rem;color:var(--ink-2);margin-top:6px}
+  .panel textarea, .panel input[type=text]{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:#fff}
+  .btn{
+    display:inline-block;background:var(--navy);color:#fff;font-weight:600;
+    padding:11px 18px;border-radius:5px;font-size:.92rem;
+  }
+  .btn:hover{background:var(--navy-deep)}
+  .btn:disabled{background:#b9bec6;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);font-weight:500}
+  .btn.ghost:hover{border-color:var(--ink-2);background:#fff}
+  .btn.wide{width:100%;text-align:center}
+  .btn.danger{background:#fff;border:1px solid #d8b7b2;color:var(--red);font-weight:500}
+
+  /* ── cart ───────────────────────────────── */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  th{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);background:#fafaf7;font-weight:600}
+  td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:.87rem;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .mini-sw{display:inline-block;width:13px;height:13px;border-radius:2px;border:1px solid rgba(0,0,0,.25);vertical-align:-2px;margin-right:6px}
+  .qty-inline{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;width:max-content}
+  .qty-inline button{width:28px;height:30px;background:#f7f7f4}
+  .qty-inline input{width:44px;text-align:center;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .rm{color:var(--ink-3);font-size:.8rem}
+  .rm:hover{color:var(--red)}
+  .asm-toggle{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;font-size:.74rem}
+  .asm-toggle button{padding:4px 8px;color:var(--ink-2);background:#fff}
+  .asm-toggle button.on{background:var(--navy);color:#fff}
+  .cart-cols{display:flex;gap:22px;align-items:flex-start;margin-top:18px}
+  .cart-main{flex:1}
+  .cart-side{width:330px;flex-shrink:0}
+  .side-box{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:16px 18px;margin-bottom:14px}
+  .side-box .fgroup:first-child{margin-top:0}
+  .side-box select, .side-box input, .side-box textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:#fff}
+  .bulk{display:flex;align-items:center;gap:10px;font-size:.83rem;color:var(--ink-2);margin:10px 0 8px}
+  .warehouse{font-size:.83rem;background:#fafaf7;border:1px solid var(--line-soft);border-radius:4px;padding:9px 11px;color:var(--ink-2);line-height:1.5}
+  .warehouse b{color:var(--ink);display:block}
+  .summary-line{
+    background:var(--navy-wash);border:1px solid #c6cfdf;border-radius:4px;
+    padding:10px 13px;font-size:.87rem;color:var(--navy);margin-bottom:12px;
+  }
+  .err{color:var(--red);font-size:.78rem;margin-top:5px}
+  .empty{
+    background:var(--card);border:1px dashed var(--line);border-radius:5px;
+    padding:38px;text-align:center;color:var(--ink-2);font-size:.9rem;
+  }
+
+  /* ── order detail ───────────────────────── */
+  .detail-head{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:18px 20px;margin-bottom:16px}
+  .pickup-panel{
+    background:var(--green-wash);border:1px solid #c4d8ca;border-radius:5px;
+    padding:14px 18px;margin-bottom:16px;font-size:.9rem;
+  }
+  .pickup-panel b{display:block;margin-bottom:3px}
+  .back{font-size:.83rem;color:var(--ink-2);margin-bottom:14px;display:inline-block;cursor:pointer}
+  .back:hover{color:var(--ink)}
+
+  /* ── cart pill ──────────────────────────── */
+  .pill{
+    position:fixed;right:24px;bottom:22px;z-index:30;
+    background:var(--navy);color:#fff;border-radius:100px;
+    padding:11px 20px;font-size:.88rem;font-weight:600;
+    box-shadow:0 3px 12px rgba(20,30,60,.25);
+  }
+  .pill:hover{background:var(--navy-deep)}
+
+  /* ── modal ──────────────────────────────── */
+  .modal-wrap{position:fixed;inset:0;background:rgba(20,22,26,.4);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+  .modal{background:#fff;border-radius:6px;max-width:440px;width:100%;padding:22px 24px}
+  .modal h2{margin:0 0 8px;font-size:1.02rem;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .modal p{font-size:.88rem;color:var(--ink-2);margin-bottom:8px}
+  .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+
+  .note-demo{
+    margin-top:34px;font-size:.75rem;color:var(--ink-3);
+    border-top:1px solid var(--line-soft);padding-top:12px;
+  }
+  @media (max-width:820px){
+    .browse{flex-direction:column} aside.rail{width:100%}
+    .cart-cols{flex-direction:column} .cart-side{width:100%}
+    main{padding:18px 14px 90px} header,nav{padding:0 14px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="mark">CG</div>
+  <div class="wordmark">C&amp;G Wholesale<small>Ordering Portal</small></div>
+  <div class="who"><b>Demo Builders LLC</b>hayden@demobuilders.com</div>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+<div id="pill"></div>
+<div id="layer"></div>
+
+<script>
+"use strict";
+
+/* ── catalog data (mirrors prisma/seed.ts) ────────────────────────── */
+
+const COLORS = [
+  { name:"Grey Shaker",  code:"GS", hex:"#a9adaf" },
+  { name:"Natural Wood", code:"NW", hex:"#c49a62" },
+  { name:"Navy Blue",    code:"NB", hex:"#25395c" },
+  { name:"Pearl Glazed", code:"PG", hex:"#ebe3d1" },
+  { name:"Smokey Black", code:"SB", hex:"#2e2c2a" },
+  { name:"Super White",  code:"SW", hex:"#fdfdfb" },
+  { name:"White Shaker", code:"WS", hex:"#f3f0e8" },
+];
+
+const CABINETS = [
+  ["B09",'Base Cabinet 9″',"Base"],["B12",'Base Cabinet 12″',"Base"],
+  ["B15",'Base Cabinet 15″',"Base"],["B18",'Base Cabinet 18″',"Base"],
+  ["B24",'Base Cabinet 24″',"Base"],["B30",'Base Cabinet 30″',"Base"],
+  ["B36",'Base Cabinet 36″',"Base"],
+  ["W1230",'Wall Cabinet 12×30″',"Wall"],["W1530",'Wall Cabinet 15×30″',"Wall"],
+  ["W1830",'Wall Cabinet 18×30″',"Wall"],["W2430",'Wall Cabinet 24×30″',"Wall"],
+  ["W3030",'Wall Cabinet 30×30″',"Wall"],["W3630",'Wall Cabinet 36×30″',"Wall"],
+  ["T1884",'Tall Pantry 18×84″',"Tall"],["T2484",'Tall Pantry 24×84″',"Tall"],
+  ["T3084",'Tall Pantry 30×84″',"Tall"],
+  ["V24",'Vanity 24″',"Vanity"],["V30",'Vanity 30″',"Vanity"],
+  ["V36",'Vanity 36″',"Vanity"],["V48",'Vanity 48″',"Vanity"],
+].map(function(r){ return {sku:r[0],name:r[1],sub:r[2],cat:"CABINETS",unit:"EACH"}; });
+
+const FLOOR_TONES = ["#b3906a","#9c7a55","#c4a179","#8a6f52","#ab8a62","#77604a","#bfa07d","#93765a","#a5876b","#87684d"];
+const FLOORING = [
+  ["JP1001",["6.5mm"]],["JP1003",["4.5mm","6.5mm"]],["JP1006",["4.5mm"]],
+  ["JP1007",["4.5mm"]],["JP1008",["4.5mm","8.5mm"]],["JP1010",["6.5mm"]],
+  ["JP1011",["5.5mm"]],["JP1012",["6.0mm"]],["JP1013",["6.0mm"]],["JP1014",["6.0mm"]],
+].map(function(r,i){ return {
+  sku:r[0], name:r[0], sub:"Plank", cat:"FLOORING", unit:"BOX",
+  thick:r[1], unitsPerBox:23.4, tone:FLOOR_TONES[i]
+};});
+
+const PRODUCTS = CABINETS.concat(FLOORING);
+const WAREHOUSE = { addr:"9150 Latty Ave, Berkeley, MO 63134", phone:"314-838-8588", hours:"Mon–Fri 7:00 AM – 4:00 PM" };
+
+/* ── pipeline (same rules as src/lib/pipeline/buildPipeline.ts) ───── */
+
+function buildPipeline(requiresAssembly, deliveryMethod){
+  const ship = deliveryMethod === "SHIP";
+  const steps = [
+    { status:"SUBMITTED",  label:"Received" },
+    { status:"PROCESSING", label:"Being Processed" },
+  ];
+  if (requiresAssembly) steps.push({ status:"ASSEMBLING", label:"Being Built" });
+  steps.push({ status:"READY", label: ship ? "Ready to Ship" : "Ready for Pickup" });
+  if (ship) steps.push({ status:"OUT_FOR_DELIVERY", label:"Out for Delivery" });
+  steps.push({ status:"COMPLETED", label: ship ? "Delivered" : "Picked Up" });
+  return steps;
+}
+
+/* ── seed orders ──────────────────────────────────────────────────── */
+
+let orderSeq = 148;
+
+function L(sku, qty, colorCode, assembly, thickness){
+  const p = PRODUCTS.find(function(x){return x.sku===sku;});
+  const color = colorCode ? COLORS.find(function(c){return c.code===colorCode;}) : null;
+  return { key:[sku,colorCode||"",thickness||"",assembly||""].join("|"),
+           sku:sku, name:p.name, cat:p.cat, unit:p.unit, qty:qty,
+           color: color?color.name:null, colorHex: color?color.hex:null, colorCode:colorCode||null,
+           assembly: assembly||null, thickness: thickness||null,
+           unitsPerBox: p.unitsPerBox||null, notes:"" };
+}
+
+function seedOrder(num, po, dm, lines, status, daysAgo, times){
+  const asm = lines.some(function(l){return l.assembly==="ASSEMBLED";});
+  return {
+    id:"o"+num, num:"CG-2026-0"+num, po:po, dm:dm, lines:lines,
+    requiresAssembly:asm, status:status,
+    submitted:new Date(Date.now()-daysAgo*864e5),
+    stepTimes:times||{}, shipTo:"Main jobsite — 123 Main St, St. Louis, MO 63101",
+    pickupName:"Hayden Charles", pickupPhone:"618-401-4778",
+  };
+}
+
+let orders = [
+  seedOrder(142,"ELM-ST-KITCHEN","SHIP",
+    [L("B24",4,"WS","ASSEMBLED"),L("B36",2,"WS","ASSEMBLED"),L("W3030",6,"WS","ASSEMBLED"),L("T2484",1,"WS","ASSEMBLED")],
+    "OUT_FOR_DELIVERY",6,
+    {SUBMITTED:"Jul 11, 8:04 AM",PROCESSING:"Jul 11, 1:36 PM",ASSEMBLING:"Jul 13, 7:15 AM",READY:"Jul 16, 3:48 PM",OUT_FOR_DELIVERY:"Jul 17, 6:30 AM"}),
+  seedOrder(145,"OAKVIEW-UNIT-7","PICKUP",
+    [L("B12",2,"NB","ASSEMBLED"),L("B30",3,"NB","ASSEMBLED"),L("W1830",4,"NB","ASSEMBLED"),L("V36",1,"NB","ASSEMBLED")],
+    "ASSEMBLING",3,
+    {SUBMITTED:"Jul 14, 9:22 AM",PROCESSING:"Jul 14, 2:05 PM",ASSEMBLING:"Jul 16, 7:40 AM"}),
+  seedOrder(147,"FLR-BID-0093","SHIP",
+    [L("JP1003",18,null,null,"6.5mm"),L("JP1012",12,null,null,"6.0mm")],
+    "PROCESSING",1,
+    {SUBMITTED:"Jul 16, 11:02 AM",PROCESSING:"Jul 17, 8:15 AM"}),
+  seedOrder(139,"GRV-BSMT","PICKUP",
+    [L("JP1008",22,null,null,"8.5mm"),L("V24",1,"GS","UNASSEMBLED")],
+    "COMPLETED",11,
+    {SUBMITTED:"Jul 6, 10:11 AM",PROCESSING:"Jul 6, 3:20 PM",READY:"Jul 8, 9:00 AM",COMPLETED:"Jul 9, 12:42 PM"}),
+  seedOrder(133,"ELM-ST-FLOOR","SHIP",
+    [L("JP1001",30,null,null,"6.5mm")],
+    "COMPLETED",19,
+    {SUBMITTED:"Jun 28, 8:30 AM",PROCESSING:"Jun 28, 1:00 PM",READY:"Jun 30, 10:15 AM",OUT_FOR_DELIVERY:"Jul 1, 6:45 AM",COMPLETED:"Jul 1, 11:20 AM"}),
+];
+
+/* ── app state ────────────────────────────────────────────────────── */
+
+const state = {
+  view:"dashboard",
+  detailId:null,
+  tab:"CABINETS",
+  q:"", subFilter:{}, thickFilter:{},
+  panel:null,
+  cart:{ lines:[], dm:null, shipTo:"default", pickupName:"Hayden Charles", pickupPhone:"618-401-4778", po:"", date:"", notes:"" },
+  confirmOpen:false, submitTried:false,
+};
+
+/* ── helpers ──────────────────────────────────────────────────────── */
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+function go(view, id){
+  state.view = view;
+  if (id) state.detailId = id;
+  state.panel = null;
+  render();
+  window.scrollTo(0,0);
+}
+
+function orderBadges(o){
+  const kinds = {};
+  o.lines.forEach(function(l){ if(l.cat==="CABINETS" && l.assembly) kinds[l.assembly]=1; });
+  const n = Object.keys(kinds).length;
+  let asm = "";
+  if (n===2) asm = '<span class="chip">Mixed assembly</span>';
+  else if (kinds.ASSEMBLED) asm = '<span class="chip">Assembled</span>';
+  else if (kinds.UNASSEMBLED) asm = '<span class="chip">RTA</span>';
+  const dm = o.dm==="SHIP" ? '<span class="chip navy">Ship</span>' : '<span class="chip navy">Pickup</span>';
+  return dm + " " + asm;
+}
+
+function lastLabel(o){ const p=buildPipeline(o.requiresAssembly,o.dm); return p[p.length-1].label; }
+
+function statusChip(o){
+  if (o.status==="COMPLETED") return '<span class="chip green">'+lastLabel(o)+'</span>';
+  if (o.status==="ON_HOLD")  return '<span class="chip amber">On Hold</span>';
+  if (o.status==="CANCELLED")return '<span class="chip">Cancelled</span>';
+  const step = buildPipeline(o.requiresAssembly,o.dm).find(function(s){return s.status===o.status;});
+  return '<span class="chip navy">'+(step?step.label:o.status)+'</span>';
+}
+
+function pipeHTML(o){
+  if (o.status==="CANCELLED")
+    return '<div class="meta" style="margin-top:12px">This order was cancelled.</div>';
+  const steps = buildPipeline(o.requiresAssembly, o.dm);
+  const idx = steps.findIndex(function(s){return s.status===o.status;});
+  return '<div class="pipe">' + steps.map(function(s,i){
+    const cls = i<idx ? "done" : (i===idx ? (o.status==="COMPLETED"?"done":"now") : "");
+    const t = o.stepTimes[s.status];
+    return '<div class="step '+cls+'"><div class="dot"></div>'+
+      '<div class="slabel">'+s.label+'</div>'+
+      (t && i<=idx ? '<div class="stime">'+t+'</div>' : "")+
+      '</div>';
+  }).join("") + '</div>';
+}
+
+function thumbHTML(p){
+  if (p.cat==="CABINETS"){
+    const tall = p.sub==="Tall";
+    return '<div class="door" style="background:#f3f0e8;'+(tall?'height:96px;width:52px':'')+'"></div>';
+  }
+  return '<div class="planks">'+
+    '<i style="background:'+p.tone+'"></i><i style="background:'+p.tone+'d9"></i><i style="background:'+p.tone+'ef"></i>'+
+    '</div>';
+}
+
+function demoNote(){
+  return '<div class="note-demo">Prototype — catalog uses placeholder cabinet SKUs until the real sheet is imported. '+
+    'No pricing appears anywhere in this system by design. Progress bars derive from the same buildPipeline() rules as the production code.</div>';
+}
+
+/* ── nav / pill ───────────────────────────────────────────────────── */
+
+function renderNav(){
+  const tabs = [["dashboard","Dashboard"],["order","New Order"],["history","Order History"]];
+  $("nav").innerHTML = tabs.map(function(t){
+    const on = state.view===t[0] || (t[0]==="order" && state.view==="cart");
+    return '<button class="'+(on?"on":"")+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>';
+  }).join("");
+}
+
+function renderPill(){
+  const n = state.cart.lines.reduce(function(a,l){return a+l.qty;},0);
+  $("pill").innerHTML = (state.cart.lines.length && state.view!=="cart")
+    ? '<button class="pill" onclick="go(\'cart\')">Order in progress · '+n+' item'+(n===1?"":"s")+'</button>' : "";
+}
+
+/* ── dashboard ────────────────────────────────────────────────────── */
+
+function cardHTML(o){
+  return '<div class="order-card"><div class="row1">'+
+    '<span class="onum" onclick="go(\'detail\',\''+o.id+'\')">'+o.num+'</span>'+
+    statusChip(o)+orderBadges(o)+
+    '<span class="meta" style="margin-left:auto">PO <b>'+esc(o.po)+'</b> · '+o.lines.length+' lines · submitted '+o.submitted.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</span>'+
+    '</div>'+pipeHTML(o)+'</div>';
+}
+
+function renderDashboard(){
+  const active = orders.filter(function(o){return o.status!=="COMPLETED" && o.status!=="CANCELLED";});
+  const done = orders.filter(function(o){return o.status==="COMPLETED";}).slice(0,5);
+  let h = '<h1>Orders</h1><p class="sub">Everything your account has in the pipeline right now.</p>';
+  h += '<button class="btn" onclick="go(\'order\')">New Order</button>';
+  h += '<h2>Active</h2>';
+  h += active.length ? active.map(cardHTML).join("") : '<div class="empty">No active orders.</div>';
+  if (done.length){
+    h += '<h2>Recent — delivered / picked up</h2>';
+    h += done.map(function(o){
+      return '<div class="order-card"><div class="row1">'+
+      '<span class="onum" onclick="go(\'detail\',\''+o.id+'\')">'+o.num+'</span>'+
+      statusChip(o)+orderBadges(o)+
+      '<span class="meta" style="margin-left:auto">PO <b>'+esc(o.po)+'</b> · '+o.lines.length+' lines</span>'+
+      '</div></div>';
+    }).join("");
+  }
+  h += demoNote();
+  $("main").innerHTML = h;
+}
+
+/* ── catalog ──────────────────────────────────────────────────────── */
+
+function setOf(obj){ return Object.keys(obj).filter(function(k){return obj[k];}); }
+
+function catalogItems(){
+  let items = PRODUCTS.filter(function(p){return p.cat===state.tab;});
+  if (state.q){
+    const q=state.q.toLowerCase();
+    items = items.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0||p.sku.toLowerCase().indexOf(q)>=0;});
+  }
+  const subs = setOf(state.subFilter), thicks = setOf(state.thickFilter);
+  if (state.tab==="CABINETS" && subs.length)
+    items = items.filter(function(p){return subs.indexOf(p.sub)>=0;});
+  if (state.tab==="FLOORING" && thicks.length)
+    items = items.filter(function(p){return p.thick.some(function(t){return thicks.indexOf(t)>=0;});});
+  return items;
+}
+
+function renderOrderView(){
+  const isCab = state.tab==="CABINETS";
+  let h = '<h1>New Order</h1><p class="sub">Pick products, choose finish and assembly, then review your order. Invoicing stays on your monthly terms — no pricing in the portal.</p>';
+  h += '<div class="cat-tabs">'+
+    '<button class="'+(isCab?"on":"")+'" onclick="setTab(\'CABINETS\')">Cabinets</button>'+
+    '<button class="'+(!isCab?"on":"")+'" onclick="setTab(\'FLOORING\')">Flooring</button></div>';
+  h += '<div class="browse"><aside class="rail">';
+  h += '<div class="box"><input type="search" placeholder="Search name or SKU" value="'+esc(state.q)+'" oninput="setQ(this.value)"></div>';
+  if (isCab){
+    h += '<div class="box"><h3>Type</h3>'+["Base","Wall","Tall","Vanity"].map(function(s){
+      return '<label><input type="checkbox" '+(state.subFilter[s]?"checked":"")+' onchange="togFilter(\'sub\',\''+s+'\')"> '+s+'</label>';
+    }).join("")+'</div>';
+    h += '<div class="box"><h3>Finishes</h3>'+COLORS.map(function(c){
+      return '<label><span class="mini-sw" style="background:'+c.hex+'"></span>'+c.name+'</label>';
+    }).join("")+'<div style="font-size:.72rem;color:var(--ink-3);margin-top:6px">Every cabinet comes in all seven finishes.</div></div>';
+  } else {
+    const seen={}; FLOORING.forEach(function(p){p.thick.forEach(function(t){seen[t]=1;});});
+    h += '<div class="box"><h3>Thickness</h3>'+Object.keys(seen).sort().map(function(t){
+      return '<label><input type="checkbox" '+(state.thickFilter[t]?"checked":"")+' onchange="togFilter(\'thick\',\''+t+'\')"> '+t+'</label>';
+    }).join("")+'</div>';
+  }
+  h += '</aside><div class="grid">';
+  const items = catalogItems();
+  h += items.length ? items.map(function(p){
+    return '<div class="pcard" onclick="openPanel(\''+p.sku+'\')">'+
+    '<div class="thumb">'+thumbHTML(p)+'</div>'+
+    '<div class="nm">'+esc(p.name)+'</div>'+
+    '<div class="sk">'+p.sku+' · '+(p.unit==="EACH"?"each":"per box")+
+    (p.cat==="FLOORING"?' · '+p.thick.join(" / "):'')+'</div></div>';
+  }).join("") : '<div class="empty" style="grid-column:1/-1">Nothing matches those filters.</div>';
+  h += '</div></div>' + demoNote();
+  $("main").innerHTML = h;
+}
+
+function setTab(t){ state.tab=t; state.q=""; render(); }
+function setQ(v){
+  state.q=v;
+  // re-render only the grid area to keep focus in the search box
+  renderOrderView();
+  const box = document.querySelector('.rail input[type=search]');
+  if (box){ box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
+}
+function togFilter(kind,v){
+  const set = kind==="sub"?state.subFilter:state.thickFilter;
+  set[v] = !set[v];
+  renderOrderView();
+}
+
+/* ── product panel ────────────────────────────────────────────────── */
+
+function openPanel(sku){
+  const p = PRODUCTS.find(function(x){return x.sku===sku;});
+  state.panel = {
+    sku:sku, color:null, assembly:null,
+    thickness: (p.cat==="FLOORING" && p.thick.length===1) ? p.thick[0] : null,
+    qty:1, notes:"",
+  };
+  renderLayer();
+}
+function closePanel(){ state.panel=null; renderLayer(); }
+
+function panelValid(){
+  const s=state.panel; if(!s) return false;
+  const p=PRODUCTS.find(function(x){return x.sku===s.sku;});
+  if (p.cat==="CABINETS") return !!(s.color && s.assembly);
+  return !!s.thickness;
+}
+
+function renderPanelInner(){
+  const s = state.panel;
+  const p = PRODUCTS.find(function(x){return x.sku===s.sku;});
+  let h = '<button class="close" onclick="closePanel()" aria-label="Close">&times;</button>';
+  h += '<h2>'+esc(p.name)+'</h2><div class="sk">'+p.sku+' · '+(p.unit==="EACH"?"sold each":"sold by the box")+'</div>';
+
+  if (p.cat==="CABINETS"){
+    h += '<div class="fgroup"><label>Finish <span class="req">*</span></label><div class="swatches">'+
+      COLORS.map(function(c){
+        return '<div class="sw '+(s.color===c.code?"on":"")+'" onclick="pSet(\'color\',\''+c.code+'\')">'+
+        '<div class="c" style="background:'+c.hex+'"></div><span>'+c.name+'</span></div>';
+      }).join("")+'</div></div>';
+    h += '<div class="fgroup"><label>Assembly <span class="req">*</span></label>'+
+      '<div class="seg">'+
+      '<button class="'+(s.assembly==="ASSEMBLED"?"on":"")+'" onclick="pSet(\'assembly\',\'ASSEMBLED\')">Assembled</button>'+
+      '<button class="'+(s.assembly==="UNASSEMBLED"?"on":"")+'" onclick="pSet(\'assembly\',\'UNASSEMBLED\')">Unassembled (RTA)</button></div>'+
+      '<div class="seg-help"><span>We build it before it leaves</span><span>Ships flat, you assemble</span></div></div>';
+  } else {
+    if (p.thick.length>1){
+      h += '<div class="fgroup"><label>Thickness <span class="req">*</span></label><div class="seg">'+
+        p.thick.map(function(t){
+          return '<button class="'+(s.thickness===t?"on":"")+'" onclick="pSet(\'thickness\',\''+t+'\')">'+t+'</button>';
+        }).join("")+'</div></div>';
+    } else {
+      h += '<div class="fgroup"><label>Thickness</label><div style="font-size:.9rem">'+p.thick[0]+'</div></div>';
+    }
+  }
+
+  h += '<div class="fgroup"><label>Quantity</label><div class="stepper">'+
+    '<button onclick="pQty(-1)" '+(s.qty<=1?"disabled":"")+'>&minus;</button>'+
+    '<input value="'+s.qty+'" inputmode="numeric" onblur="pQtyInput(this)" onkeydown="if(event.key===\'Enter\')this.blur()">'+
+    '<button onclick="pQty(1)">+</button></div>';
+  if (p.cat==="FLOORING"){
+    const sqft = (s.qty*p.unitsPerBox).toFixed(1);
+    h += '<div class="boxmath">1 box = '+p.unitsPerBox+' sq ft &nbsp;·&nbsp; '+s.qty+' box'+(s.qty===1?"":"es")+' = '+sqft+' sq ft</div>';
+  }
+  h += '</div>';
+
+  h += '<div class="fgroup"><label>Line notes</label>'+
+    '<input type="text" value="'+esc(s.notes)+'" oninput="state.panel.notes=this.value" placeholder="e.g. second-floor unit (optional)"></div>';
+
+  h += '<div style="margin-top:22px"><button class="btn wide" '+(panelValid()?"":"disabled")+' onclick="addToOrder()">Add to Order</button>';
+  if (!panelValid()){
+    h += '<div class="err">'+(p.cat==="CABINETS"?"Choose a finish and assembly first.":"Choose a thickness first.")+'</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function pSet(k,v){ state.panel[k]=v; renderLayer(); }
+function pQty(d){ state.panel.qty=Math.min(999,Math.max(1,state.panel.qty+d)); renderLayer(); }
+function pQtyInput(el){
+  const n = parseInt(el.value,10);
+  state.panel.qty = isNaN(n)?state.panel.qty:Math.min(999,Math.max(1,n));
+  renderLayer();
+}
+
+function addToOrder(){
+  const s=state.panel, p=PRODUCTS.find(function(x){return x.sku===s.sku;});
+  const color = s.color?COLORS.find(function(c){return c.code===s.color;}):null;
+  const key = [s.sku,s.color||"",s.thickness||"",s.assembly||""].join("|");
+  const existing = state.cart.lines.find(function(l){return l.key===key;});
+  if (existing){ existing.qty += s.qty; }
+  else state.cart.lines.push({
+    key:key, sku:s.sku, name:p.name, cat:p.cat, unit:p.unit, qty:s.qty,
+    color:color?color.name:null, colorHex:color?color.hex:null, colorCode:s.color,
+    assembly:s.assembly, thickness:s.thickness,
+    unitsPerBox:p.unitsPerBox||null, notes:s.notes,
+  });
+  state.panel=null;
+  render();
+}
+
+/* ── cart ─────────────────────────────────────────────────────────── */
+
+function summarySentence(){
+  const c=state.cart;
+  const sum=function(f){return c.lines.filter(f).reduce(function(a,l){return a+l.qty;},0);};
+  const asm = sum(function(l){return l.assembly==="ASSEMBLED";});
+  const rta = sum(function(l){return l.assembly==="UNASSEMBLED";});
+  const flr = sum(function(l){return l.cat==="FLOORING";});
+  const parts=[];
+  if (asm) parts.push(asm+" cabinet"+(asm===1?"":"s")+" assembled");
+  if (rta) parts.push(rta+" cabinet"+(rta===1?"":"s")+" unassembled");
+  if (flr) parts.push(flr+" box"+(flr===1?"":"es")+" flooring");
+  let tail = "";
+  if (c.dm==="SHIP") tail = " — shipping to your jobsite";
+  if (c.dm==="PICKUP") tail = " — picking up at the warehouse";
+  return parts.join(", ") + tail + ".";
+}
+
+function cartValid(){
+  const c=state.cart;
+  if (!c.lines.length) return false;
+  if (!c.dm) return false;
+  if (c.dm==="PICKUP" && (!c.pickupName.trim()||!c.pickupPhone.trim())) return false;
+  if (!c.po.trim()) return false;
+  return true;
+}
+
+function renderCart(){
+  const c = state.cart;
+  let h = '<span class="back" onclick="go(\'order\')">&larr; Back to catalog</span>';
+  h += '<h1>Review Order</h1><p class="sub">Check the lines, choose how it gets to you, and submit.</p>';
+
+  if (!c.lines.length){
+    h += '<div class="empty">Your order is empty.<br><br><button class="btn" onclick="go(\'order\')">Browse the catalog</button></div>';
+    $("main").innerHTML = h; return;
+  }
+
+  const hasCabs = c.lines.some(function(l){return l.cat==="CABINETS";});
+
+  h += '<div class="cart-cols"><div class="cart-main">';
+
+  if (hasCabs){
+    h += '<div class="bulk">Set all cabinets to'+
+      '<span class="asm-toggle">'+
+      '<button onclick="bulkAsm(\'ASSEMBLED\')">Assembled</button>'+
+      '<button onclick="bulkAsm(\'UNASSEMBLED\')">Unassembled</button></span></div>';
+  }
+
+  h += '<table><tr><th>Product</th><th>Finish / thickness</th><th>Assembly</th><th>Qty</th><th></th></tr>';
+  h += c.lines.map(function(l,i){
+    const finish = l.cat==="CABINETS"
+      ? '<span class="mini-sw" style="background:'+l.colorHex+'"></span>'+esc(l.color)
+      : esc(l.thickness);
+    const asm = l.cat==="CABINETS"
+      ? '<span class="asm-toggle">'+
+        '<button class="'+(l.assembly==="ASSEMBLED"?"on":"")+'" onclick="lineAsm('+i+',\'ASSEMBLED\')">Asm</button>'+
+        '<button class="'+(l.assembly==="UNASSEMBLED"?"on":"")+'" onclick="lineAsm('+i+',\'UNASSEMBLED\')">RTA</button></span>'
+      : '<span style="color:var(--ink-3)">—</span>';
+    return '<tr><td><b>'+esc(l.name)+'</b><br><span class="meta">'+l.sku+
+      (l.notes?' · '+esc(l.notes):'')+'</span></td>'+
+      '<td>'+finish+'</td><td>'+asm+'</td>'+
+      '<td><span class="qty-inline">'+
+        '<button onclick="lineQty('+i+',-1)">&minus;</button>'+
+        '<input value="'+l.qty+'" onblur="lineQtyInput('+i+',this)" onkeydown="if(event.key===\'Enter\')this.blur()">'+
+        '<button onclick="lineQty('+i+',1)">+</button></span>'+
+      (l.cat==="FLOORING"?'<div class="meta" style="margin-top:3px">'+(l.qty*l.unitsPerBox).toFixed(1)+' sq ft</div>':'')+
+      '</td>'+
+      '<td><button class="rm" onclick="rmLine('+i+')">Remove</button></td></tr>';
+  }).join("");
+  h += '</table></div>';
+
+  h += '<div class="cart-side"><div class="side-box">';
+  h += '<div class="fgroup"><label>Delivery <span class="req">*</span></label><div class="seg">'+
+    '<button class="'+(c.dm==="SHIP"?"on":"")+'" onclick="setDM(\'SHIP\')">Ship to me</button>'+
+    '<button class="'+(c.dm==="PICKUP"?"on":"")+'" onclick="setDM(\'PICKUP\')">I&rsquo;ll pick up</button></div>'+
+    (state.submitTried&&!c.dm?'<div class="err">Choose ship or pickup.</div>':'')+'</div>';
+
+  if (c.dm==="SHIP"){
+    h += '<div class="fgroup"><label>Ship to</label><select onchange="state.cart.shipTo=this.value">'+
+      '<option value="default"'+(c.shipTo==="default"?" selected":"")+'>Main jobsite — 123 Main St, St. Louis, MO</option>'+
+      '<option value="alt"'+(c.shipTo==="alt"?" selected":"")+'>Shop — 4410 Delor St, St. Louis, MO</option></select></div>';
+  }
+  if (c.dm==="PICKUP"){
+    h += '<div class="fgroup"><label>Pickup contact <span class="req">*</span></label>'+
+      '<input type="text" value="'+esc(c.pickupName)+'" oninput="state.cart.pickupName=this.value" placeholder="Name" style="margin-bottom:7px">'+
+      '<input type="text" value="'+esc(c.pickupPhone)+'" oninput="state.cart.pickupPhone=this.value" placeholder="Phone">'+
+      (state.submitTried&&(!c.pickupName.trim()||!c.pickupPhone.trim())?'<div class="err">Name and phone are required for pickup.</div>':'')+'</div>';
+    h += '<div class="warehouse"><b>C&amp;G Wholesale warehouse</b>'+WAREHOUSE.addr+'<br>'+WAREHOUSE.hours+' · '+WAREHOUSE.phone+'</div>';
+  }
+
+  h += '<div class="fgroup"><label>PO number <span class="req">*</span></label>'+
+    '<input type="text" value="'+esc(c.po)+'" oninput="state.cart.po=this.value" placeholder="Your job / PO reference">'+
+    (state.submitTried&&!c.po.trim()?'<div class="err">PO number is required.</div>':'')+'</div>';
+  h += '<div class="fgroup"><label>Requested date</label><input type="date" min="2026-07-17" value="'+c.date+'" onchange="state.cart.date=this.value"></div>';
+  h += '<div class="fgroup"><label>Order notes</label><textarea rows="2" oninput="state.cart.notes=this.value" placeholder="Anything we should know">'+esc(c.notes)+'</textarea></div>';
+  h += '</div>';
+
+  h += '<div class="summary-line">'+summarySentence()+'</div>';
+  h += '<button class="btn wide" onclick="trySubmit()">Submit Order</button>';
+  h += '</div></div>' + demoNote();
+  $("main").innerHTML = h;
+}
+
+function setDM(v){ state.cart.dm=v; renderCart(); }
+function bulkAsm(v){
+  state.cart.lines.forEach(function(l){ if(l.cat==="CABINETS") l.assembly=v; });
+  mergeLines(); renderCart(); renderPill();
+}
+function lineAsm(i,v){ state.cart.lines[i].assembly=v; mergeLines(); renderCart(); }
+function mergeLines(){
+  const out=[];
+  state.cart.lines.forEach(function(l){
+    l.key=[l.sku,l.colorCode||"",l.thickness||"",l.assembly||""].join("|");
+    const dup=out.find(function(x){return x.key===l.key;});
+    if (dup) dup.qty+=l.qty; else out.push(l);
+  });
+  state.cart.lines=out;
+}
+function lineQty(i,d){
+  const l=state.cart.lines[i];
+  const next=l.qty+d;
+  if (next<1){ rmLine(i); return; }
+  l.qty=Math.min(999,next); renderCart(); renderPill();
+}
+function lineQtyInput(i,el){
+  const n=parseInt(el.value,10);
+  if (isNaN(n)){ renderCart(); return; }
+  if (n<1){ rmLine(i); return; }
+  state.cart.lines[i].qty=Math.min(999,n); renderCart(); renderPill();
+}
+function rmLine(i){
+  if (confirm("Remove this line?")){ state.cart.lines.splice(i,1); render(); }
+  else renderCart();
+}
+
+function trySubmit(){
+  state.submitTried=true;
+  if (!cartValid()){ renderCart(); return; }
+  state.confirmOpen=true; renderLayer();
+}
+
+function confirmSubmit(){
+  const c=state.cart;
+  orderSeq++;
+  const asm = c.lines.some(function(l){return l.assembly==="ASSEMBLED";});
+  const now = new Date();
+  const t = now.toLocaleDateString("en-US",{month:"short",day:"numeric"})+", "+
+            now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  const o = {
+    id:"o"+orderSeq, num:"CG-2026-0"+orderSeq, po:c.po.trim(), dm:c.dm,
+    lines:c.lines.map(function(l){ return Object.assign({},l); }),
+    requiresAssembly:asm, status:"SUBMITTED", submitted:now,
+    stepTimes:{SUBMITTED:t},
+    shipTo:c.shipTo==="alt"?"Shop — 4410 Delor St, St. Louis, MO 63116":"Main jobsite — 123 Main St, St. Louis, MO 63101",
+    pickupName:c.pickupName, pickupPhone:c.pickupPhone, justSubmitted:true,
+  };
+  orders.unshift(o);
+  state.cart={ lines:[], dm:null, shipTo:"default", pickupName:"Hayden Charles", pickupPhone:"618-401-4778", po:"", date:"", notes:"" };
+  state.confirmOpen=false; state.submitTried=false;
+  go("detail",o.id);
+}
+
+/* ── order detail ─────────────────────────────────────────────────── */
+
+function renderDetail(){
+  const o = orders.find(function(x){return x.id===state.detailId;});
+  if (!o){ go("dashboard"); return; }
+  let h = '<span class="back" onclick="go(\'dashboard\')">&larr; All orders</span>';
+
+  if (o.justSubmitted){
+    h += '<div class="pickup-panel" style="background:var(--navy-wash);border-color:#c6cfdf">'+
+      '<b>Order received.</b> We&rsquo;ve emailed a confirmation and our team has been notified. '+
+      'You can watch progress on this page.</div>';
+    o.justSubmitted=false;
+  }
+
+  h += '<div class="detail-head"><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">'+
+    '<span class="onum" style="font-size:1.1rem">'+o.num+'</span>'+statusChip(o)+orderBadges(o)+
+    '<span class="meta" style="margin-left:auto">PO <b>'+esc(o.po)+'</b> · submitted '+
+    o.submitted.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</span></div>'+
+    pipeHTML(o)+'</div>';
+
+  const pastReady = ["READY","OUT_FOR_DELIVERY"].indexOf(o.status)>=0;
+  if (o.dm==="PICKUP" && pastReady){
+    h += '<div class="pickup-panel"><b>Ready for pickup</b>'+
+      WAREHOUSE.addr+' · '+WAREHOUSE.hours+'<br>'+
+      'Give the counter your order number: <b>'+o.num+'</b> &nbsp;·&nbsp; Contact on file: '+esc(o.pickupName)+', '+esc(o.pickupPhone)+'</div>';
+  }
+  if (o.dm==="SHIP"){
+    h += '<div class="side-box" style="margin-bottom:16px"><span class="meta">Shipping to</span><br><b style="font-size:.9rem">'+esc(o.shipTo)+'</b></div>';
+  }
+
+  h += '<h2>Line items</h2><table><tr><th>Product</th><th>Finish / thickness</th><th>Assembly</th><th>Qty</th></tr>';
+  h += o.lines.map(function(l){
+    const finish = l.cat==="CABINETS"
+      ? '<span class="mini-sw" style="background:'+l.colorHex+'"></span>'+esc(l.color)
+      : esc(l.thickness);
+    const asm = l.cat==="CABINETS" ? (l.assembly==="ASSEMBLED"?"Assembled":"RTA") : "—";
+    return '<tr><td><b>'+esc(l.name)+'</b><br><span class="meta">'+l.sku+(l.notes?' · '+esc(l.notes):'')+'</span></td>'+
+      '<td>'+finish+'</td><td>'+asm+'</td><td>'+l.qty+
+      (l.cat==="FLOORING"?' <span class="meta">('+(l.qty*l.unitsPerBox).toFixed(1)+' sq ft)</span>':'')+'</td></tr>';
+  }).join("");
+  h += '</table>';
+
+  h += '<div style="margin-top:18px;display:flex;gap:10px">';
+  h += '<button class="btn ghost" onclick="reorder(\''+o.id+'\')">Reorder</button>';
+  if (o.status==="SUBMITTED")
+    h += '<button class="btn danger" onclick="cancelOrder(\''+o.id+'\')">Cancel Order</button>';
+  h += '</div>' + demoNote();
+  $("main").innerHTML = h;
+}
+
+function reorder(id){
+  const o=orders.find(function(x){return x.id===id;});
+  state.cart.lines = state.cart.lines.concat(o.lines.map(function(l){ return Object.assign({},l); }));
+  mergeLines();
+  go("cart");
+}
+function cancelOrder(id){
+  if (!confirm("Cancel this order? Our team will be notified.")) return;
+  const o=orders.find(function(x){return x.id===id;});
+  o.status="CANCELLED";
+  render();
+}
+
+/* ── history ──────────────────────────────────────────────────────── */
+
+function renderHistory(){
+  let h='<h1>Order History</h1><p class="sub">Every order on your account.</p>';
+  h+='<table><tr><th>Order</th><th>PO</th><th>Submitted</th><th>Lines</th><th>Method</th><th>Status</th></tr>';
+  h+=orders.map(function(o){
+    return '<tr>'+
+    '<td><span class="onum" onclick="go(\'detail\',\''+o.id+'\')">'+o.num+'</span></td>'+
+    '<td>'+esc(o.po)+'</td>'+
+    '<td>'+o.submitted.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</td>'+
+    '<td>'+o.lines.length+'</td>'+
+    '<td>'+(o.dm==="SHIP"?"Ship":"Pickup")+'</td>'+
+    '<td>'+statusChip(o)+'</td></tr>';
+  }).join("");
+  h+='</table>'+demoNote();
+  $("main").innerHTML=h;
+}
+
+/* ── layer (panel / modal) ────────────────────────────────────────── */
+
+function renderLayer(){
+  let h="";
+  if (state.panel){
+    h += '<div class="overlay" onclick="closePanel()"></div><div class="panel">'+renderPanelInner()+'</div>';
+  }
+  if (state.confirmOpen){
+    const c=state.cart;
+    h += '<div class="modal-wrap"><div class="modal">'+
+      '<h2>Submit this order?</h2>'+
+      '<p>'+summarySentence()+'</p>'+
+      '<p>PO <b>'+esc(c.po)+'</b> · '+c.lines.length+' line'+(c.lines.length===1?"":"s")+'</p>'+
+      '<div class="actions"><button class="btn ghost" onclick="state.confirmOpen=false;renderLayer()">Go back</button>'+
+      '<button class="btn" onclick="confirmSubmit()">Submit</button></div></div></div>';
+  }
+  $("layer").innerHTML = h;
+}
+
+/* ── boot ─────────────────────────────────────────────────────────── */
+
+function render(){
+  renderNav();
+  if (state.view==="dashboard") renderDashboard();
+  else if (state.view==="order") renderOrderView();
+  else if (state.view==="cart") renderCart();
+  else if (state.view==="detail") renderDetail();
+  else if (state.view==="history") renderHistory();
+  renderPill();
+  renderLayer();
+}
+render();
+</script>
+</body>
+</html>

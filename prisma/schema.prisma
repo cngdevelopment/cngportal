@@ -1,0 +1,290 @@
+// C&G Wholesale Ordering Portal — schema per spec §6
+// NOTE: No price/cost/currency fields anywhere, by design (spec §2 rule 6).
+// NOTE: No inventory/stock fields anywhere, by design (spec §2 rule 4).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────
+
+enum Role {
+  CUSTOMER_USER
+  CUSTOMER_ADMIN
+  STAFF
+  STAFF_ADMIN
+}
+
+enum Category {
+  CABINETS
+  FLOORING
+}
+
+enum Unit {
+  EACH
+  BOX
+}
+
+enum DeliveryMethod {
+  SHIP
+  PICKUP
+}
+
+enum Assembly {
+  ASSEMBLED
+  UNASSEMBLED
+}
+
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  PROCESSING
+  ASSEMBLING
+  READY
+  OUT_FOR_DELIVERY
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+// ── Tenancy ──────────────────────────────────────────────────────────
+
+model Account {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  legalName     String?  @map("legal_name")
+  accountNumber String   @unique @map("account_number")
+  terms         String   @default("NET30")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  users     User[]
+  addresses ShipToAddress[]
+  orders    Order[]
+
+  @@map("accounts")
+}
+
+model ShipToAddress {
+  id           String  @id @default(uuid()) @db.Uuid
+  accountId    String  @map("account_id") @db.Uuid
+  label        String
+  line1        String
+  line2        String?
+  city         String
+  state        String
+  zip          String
+  contactName  String? @map("contact_name")
+  contactPhone String? @map("contact_phone")
+  isDefault    Boolean @default(false) @map("is_default")
+  isActive     Boolean @default(true) @map("is_active")
+
+  account Account @relation(fields: [accountId], references: [id])
+  orders  Order[]
+
+  @@index([accountId])
+  @@map("ship_to_addresses")
+}
+
+model User {
+  id          String    @id @db.Uuid // = Supabase auth user id
+  accountId   String?   @map("account_id") @db.Uuid // null = staff
+  email       String    @unique
+  fullName    String    @map("full_name")
+  phone       String?
+  role        Role
+  isActive    Boolean   @default(true) @map("is_active")
+  invitedAt   DateTime? @map("invited_at")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  account       Account?       @relation(fields: [accountId], references: [id])
+  ordersCreated Order[]        @relation("created_by")
+  events        OrderEvent[]
+  messages      OrderMessage[]
+  attachments   Attachment[]
+
+  @@index([accountId])
+  @@map("users")
+}
+
+// ── Catalog ──────────────────────────────────────────────────────────
+
+model Product {
+  id               String   @id @default(uuid()) @db.Uuid
+  sku              String   @unique
+  name             String
+  description      String?
+  category         Category
+  subcategory      String? // Base/Wall/Tall/Vanity | Plank
+  unit             Unit
+  unitsPerBox      Decimal? @map("units_per_box") // flooring: sq ft per carton
+  supportsAssembly Boolean  @default(false) @map("supports_assembly")
+  imageUrl         String?  @map("image_url")
+  isActive         Boolean  @default(true) @map("is_active")
+  sortOrder        Int      @default(0) @map("sort_order")
+  maxQuantity      Int      @default(999) @map("max_quantity") // §9 stepper max
+
+  colors     ProductColor[]
+  options    ProductOption[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model Color {
+  id        String  @id @default(uuid()) @db.Uuid
+  name      String
+  code      String  @unique
+  swatchUrl String? @map("swatch_url")
+  isActive  Boolean @default(true) @map("is_active")
+  sortOrder Int     @default(0) @map("sort_order")
+
+  products   ProductColor[]
+  orderItems OrderItem[]
+
+  @@map("colors")
+}
+
+// Presence of a row = orderable. No availability flag (spec §2 rule 4).
+model ProductColor {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  colorId   String  @map("color_id") @db.Uuid
+  skuSuffix String? @map("sku_suffix")
+
+  product Product @relation(fields: [productId], references: [id])
+  color   Color   @relation(fields: [colorId], references: [id])
+
+  @@unique([productId, colorId])
+  @@map("product_colors")
+}
+
+// Assembly is NOT modeled here — see spec §2.1. Thickness lives here.
+model ProductOption {
+  id         String  @id @default(uuid()) @db.Uuid
+  productId  String  @map("product_id") @db.Uuid
+  name       String // e.g. "Thickness"
+  values     Json // e.g. ["4.5mm","6.5mm"]
+  isRequired Boolean @default(true) @map("is_required")
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("product_options")
+}
+
+// ── Orders ───────────────────────────────────────────────────────────
+
+model Order {
+  id                 String          @id @default(uuid()) @db.Uuid
+  orderNumber        String          @unique @map("order_number") // CG-2026-0142, display only
+  accountId          String          @map("account_id") @db.Uuid
+  createdByUserId    String          @map("created_by_user_id") @db.Uuid
+  poNumber           String?         @map("po_number") // required at submit, nullable in DRAFT
+  deliveryMethod     DeliveryMethod? @map("delivery_method") // required at submit (CHECK in rls.sql)
+  shipToAddressId    String?         @map("ship_to_address_id") @db.Uuid // required iff SHIP
+  pickupContactName  String?         @map("pickup_contact_name") // required iff PICKUP
+  pickupContactPhone String?         @map("pickup_contact_phone")
+  requiresAssembly   Boolean         @default(false) @map("requires_assembly") // derived, staff-overridable
+  requestedDate      DateTime?       @map("requested_date") @db.Date
+  customerNotes      String?         @map("customer_notes")
+  internalNotes      String?         @map("internal_notes")
+  status             OrderStatus     @default(DRAFT)
+  submittedAt        DateTime?       @map("submitted_at")
+  completedAt        DateTime?       @map("completed_at")
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+
+  account     Account        @relation(fields: [accountId], references: [id])
+  createdBy   User           @relation("created_by", fields: [createdByUserId], references: [id])
+  shipTo      ShipToAddress? @relation(fields: [shipToAddressId], references: [id])
+  items       OrderItem[]
+  events      OrderEvent[]
+  messages    OrderMessage[]
+  attachments Attachment[]
+
+  @@index([accountId, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String    @id @default(uuid()) @db.Uuid
+  orderId         String    @map("order_id") @db.Uuid
+  productId       String    @map("product_id") @db.Uuid
+  colorId         String?   @map("color_id") @db.Uuid // null for flooring
+  assembly        Assembly? // NULL for flooring (CHECK in rls.sql)
+  selectedOptions Json?     @map("selected_options") // e.g. {"Thickness":"6.5mm"}
+  quantity        Decimal
+  unit            Unit
+  lineNotes       String?   @map("line_notes")
+
+  // Snapshots are mandatory (spec §6) — never resolve history via live join
+  productNameSnapshot String  @map("product_name_snapshot")
+  colorNameSnapshot   String? @map("color_name_snapshot")
+  skuSnapshot         String  @map("sku_snapshot")
+  assemblySnapshot    String? @map("assembly_snapshot")
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  color   Color?  @relation(fields: [colorId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// Immutable audit trail. Status is never mutated without one of these
+// in the same transaction (spec §7).
+model OrderEvent {
+  id                String       @id @default(uuid()) @db.Uuid
+  orderId           String       @map("order_id") @db.Uuid
+  fromStatus        OrderStatus? @map("from_status")
+  toStatus          OrderStatus? @map("to_status")
+  actorUserId       String?      @map("actor_user_id") @db.Uuid
+  note              String?
+  isCustomerVisible Boolean      @default(true) @map("is_customer_visible")
+  createdAt         DateTime     @default(now()) @map("created_at")
+
+  order Order @relation(fields: [orderId], references: [id])
+  actor User? @relation(fields: [actorUserId], references: [id])
+
+  @@index([orderId])
+  @@map("order_events")
+}
+
+model OrderMessage {
+  id           String   @id @default(uuid()) @db.Uuid
+  orderId      String   @map("order_id") @db.Uuid
+  authorUserId String   @map("author_user_id") @db.Uuid
+  body         String
+  isInternal   Boolean  @default(false) @map("is_internal")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  order  Order @relation(fields: [orderId], references: [id])
+  author User  @relation(fields: [authorUserId], references: [id])
+
+  @@index([orderId])
+  @@map("order_messages")
+}
+
+model Attachment {
+  id                String   @id @default(uuid()) @db.Uuid
+  orderId           String   @map("order_id") @db.Uuid
+  filePath          String   @map("file_path") // private bucket path; serve via signed URL only
+  fileName          String   @map("file_name")
+  mimeType          String   @map("mime_type")
+  sizeBytes         Int      @map("size_bytes")
+  uploadedByUserId  String   @map("uploaded_by_user_id") @db.Uuid
+  isCustomerVisible Boolean  @default(true) @map("is_customer_visible")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  order      Order @relation(fields: [orderId], references: [id])
+  uploadedBy User  @relation(fields: [uploadedByUserId], references: [id])
+
+  @@index([orderId])
+  @@map("attachments")
+}
