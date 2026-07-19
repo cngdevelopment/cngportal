@@ -2,6 +2,8 @@ import "server-only";
 import { COMPANY } from "@/config/company";
 import { WAREHOUSE } from "@/config/warehouse";
 import { FEATURES } from "@/config/features";
+import { readOverrides, writeOverrides, type SettingsOverrides } from "./settings-store";
+import type { UpdateSettingsInput } from "@/schemas/settings";
 
 /**
  * Application settings — the values a business owner should be able to edit
@@ -50,9 +52,43 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 /**
- * Resolve the effective settings. Insertion point for Supabase: fetch the
- * persisted overrides and deep-merge them onto DEFAULT_SETTINGS here.
+ * Resolve the effective settings: persisted overrides merged onto the
+ * config-derived defaults. `features` is always taken from code (not
+ * user-editable). Callers read settings only through this function.
  */
 export async function getSettings(): Promise<AppSettings> {
-  return DEFAULT_SETTINGS;
+  const overrides = readOverrides();
+  return {
+    ...DEFAULT_SETTINGS,
+    ...overrides,
+    warehouse: { ...DEFAULT_SETTINGS.warehouse, ...overrides.warehouse },
+    announcement: { ...DEFAULT_SETTINGS.announcement, ...overrides.announcement },
+    features: FEATURES,
+  };
+}
+
+/**
+ * Persist a settings change from the Admin Portal. Input is already
+ * validated (schemas/settings.ts) at the action boundary; here we map the
+ * flat form shape onto the structured overrides and store them.
+ */
+export async function updateSettings(input: UpdateSettingsInput): Promise<AppSettings> {
+  const overrides: SettingsOverrides = {
+    companyName: input.companyName,
+    portalName: input.portalName,
+    supportEmail: input.supportEmail,
+    supportPhone: input.supportPhone,
+    warehouse: {
+      address: input.warehouseAddress,
+      hours: input.warehouseHours,
+      phone: input.warehousePhone,
+    },
+    announcement: {
+      enabled: input.announcementEnabled,
+      message: input.announcementMessage,
+    },
+    maintenanceMode: input.maintenanceMode,
+  };
+  writeOverrides(overrides);
+  return getSettings();
 }

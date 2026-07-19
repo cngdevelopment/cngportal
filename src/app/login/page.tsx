@@ -1,15 +1,18 @@
+import { Fragment } from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/mode";
-import { MOCK_USERS } from "@/data/mock/catalog-data";
+import { MOCK_USERS, MOCK_ACCOUNT } from "@/data/mock/catalog-data";
+import { getSettings } from "@/server/settings/settings";
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: { sent?: string };
 }) {
   const demo = isDemoMode();
+  const settings = await getSettings();
 
   async function demoLogin(formData: FormData) {
     "use server";
@@ -47,27 +50,27 @@ export default function LoginPage({
   return (
     <div className="login-wrap">
       <div className="login-card">
-        <Image src="/cg-logo.png" alt="C&amp;G Wholesale" width={64} height={64} className="login-logo" priority />
-        <h1>C&amp;G Wholesale</h1>
+        <Image src="/cg-logo.png" alt={settings.companyName} width={76} height={76} className="login-logo" priority />
+        <h1>{settings.companyName}</h1>
         <p className="sub">Ordering portal for wholesale accounts</p>
 
         {demo && (
-          <div className="demo-box">
-            <div className="demo-tag">Demo Mode</div>
-            <p>
-              No Supabase/database keys are configured yet, so this preview
-              runs on sample data. Sign in as one of the demo logins below —
-              add real keys to <code>.env</code> later to switch to live
-              accounts and magic-link email.
-            </p>
-            {MOCK_USERS.map((u) => (
-              <form action={demoLogin} key={u.id}>
-                <input type="hidden" name="userId" value={u.id} />
-                <button className="btn wide demo-btn" type="submit">
-                  Continue as {u.fullName}
-                  <small>{u.accountId ? "Customer — Demo Builders LLC" : "C&G Staff"}</small>
-                </button>
-              </form>
+          <div className="signin-box">
+            {MOCK_USERS.map((u, i) => (
+              <Fragment key={u.id}>
+                {i > 0 && (
+                  <div className="signin-divider">
+                    <span>or</span>
+                  </div>
+                )}
+                <form action={demoLogin}>
+                  <input type="hidden" name="userId" value={u.id} />
+                  <button className="btn wide signin-btn" type="submit">
+                    Continue as {u.fullName}
+                    <small>{u.accountId ? `Customer · ${MOCK_ACCOUNT.name}` : "Staff"}</small>
+                  </button>
+                </form>
+              </Fragment>
             ))}
           </div>
         )}
@@ -99,7 +102,7 @@ export default function LoginPage({
           ))}
 
         <p className="meta" style={{ marginTop: 16, textAlign: "center" }}>
-          No passwords. Accounts are created by C&amp;G — call 314-838-8588 to
+          No passwords. Accounts are created by C&amp;G — call {settings.supportPhone} to
           get set up.
         </p>
       </div>

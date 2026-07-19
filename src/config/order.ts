@@ -9,7 +9,7 @@ import type { Assembly, DeliveryMethod, PipelineStatus } from "@/types/domain";
  * chip colors and the labels for off-pipeline states and order types.
  */
 
-export type ChipVariant = "navy" | "green" | "amber" | "default";
+export type ChipVariant = "red" | "green" | "amber" | "default";
 
 /** Chip styling + label for statuses that never appear on the pipeline. */
 export const OFF_PIPELINE_STATUS_META = {
@@ -18,9 +18,9 @@ export const OFF_PIPELINE_STATUS_META = {
   CANCELLED: { label: "Cancelled", chip: "default" },
 } as const satisfies Record<string, { label: string; chip: ChipVariant }>;
 
-/** Chip color for an on-pipeline status (terminal = green, otherwise navy). */
+/** Chip color for an on-pipeline status (terminal = green, otherwise red). */
 export function pipelineChipVariant(status: PipelineStatus): ChipVariant {
-  return status === "COMPLETED" ? "green" : "navy";
+  return status === "COMPLETED" ? "green" : "red";
 }
 
 export const DELIVERY_LABELS: Record<DeliveryMethod, string> = {

@@ -3,8 +3,8 @@
  * safe fallbacks); import from Server Components/Actions.
  */
 export const COMPANY = {
-  name: "C&G Wholesale",
-  legalName: "C&G Wholesale LLC",
+  name: "C&G Global",
+  legalName: "C&G Global LLC",
   portalName: "Ordering Portal",
   staffConsoleName: "Staff Console",
   phone: "314-838-8588",

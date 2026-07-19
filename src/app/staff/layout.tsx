@@ -1,43 +1,13 @@
 import { requireStaff } from "@/data/context";
-import { Logo } from "@/components/Logo";
-import { NavLinks } from "@/components/NavLinks";
-import { signOutAction } from "@/app/actions/auth";
-import { hasPermission } from "@/server/auth/permissions";
-import { ROUTES } from "@/config/routes";
-import { COMPANY } from "@/config/company";
+import { getSettings } from "@/server/settings/settings";
+import { ConsoleShell } from "@/components/console/ConsoleShell";
 
 export default async function StaffLayout({ children }: { children: React.ReactNode }) {
   const ctx = await requireStaff();
-
-  const links: { href: string; label: string }[] = [
-    { href: ROUTES.staff.queue, label: "Order Queue" },
-  ];
-  if (hasPermission(ctx.role, "admin.access")) {
-    links.push({ href: ROUTES.admin.overview, label: "Admin" });
-  }
-
+  const settings = await getSettings();
   return (
-    <>
-      <header className="site-header">
-        <Logo />
-        <div className="wordmark">
-          {COMPANY.name}
-          <small>{COMPANY.staffConsoleName}</small>
-        </div>
-        <div className="who">
-          <b>{ctx.fullName}</b>
-          {ctx.email}
-        </div>
-        <form action={signOutAction}>
-          <button className="btn ghost signout" type="submit">
-            Sign out
-          </button>
-        </form>
-      </header>
-      <nav className="site-nav">
-        <NavLinks links={links} />
-      </nav>
-      <main className="portal">{children}</main>
-    </>
+    <ConsoleShell companyName={settings.companyName} fullName={ctx.fullName} email={ctx.email} role={ctx.role}>
+      {children}
+    </ConsoleShell>
   );
 }

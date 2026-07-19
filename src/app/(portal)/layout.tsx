@@ -1,4 +1,5 @@
 import { requireCustomer } from "@/data/context";
+import { getSettings } from "@/server/settings/settings";
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
 import { CartProvider } from "@/components/cart/CartProvider";
@@ -12,14 +13,15 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireCustomer();
+  const settings = await getSettings();
 
   return (
     <CartProvider>
       <header className="site-header">
         <Logo />
         <div className="wordmark">
-          C&amp;G Wholesale
-          <small>Ordering Portal</small>
+          {settings.companyName}
+          <small>{settings.portalName}</small>
         </div>
         <div className="who">
           <b>{ctx.accountName}</b>

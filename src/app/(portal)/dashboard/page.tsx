@@ -42,7 +42,7 @@ export default async function DashboardPage() {
                 requiresAssembly={o.requiresAssembly}
                 deliveryMethod={o.deliveryMethod ?? "SHIP"}
               />
-              <span className="chip navy">
+              <span className="chip red">
                 {o.deliveryMethod === "PICKUP" ? "Pickup" : "Ship"}
               </span>
               <span className="meta push">

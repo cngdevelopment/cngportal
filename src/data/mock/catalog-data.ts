@@ -465,8 +465,8 @@ export interface MockUser {
 
 export const MOCK_ACCOUNT = {
   id: "acct-demo-001",
-  name: "Demo Builders LLC",
-  accountNumber: "DEMO-001",
+  name: "Meridian Builders LLC",
+  accountNumber: "CG-001",
 };
 
 export const MOCK_SHIP_TO = [
@@ -497,14 +497,14 @@ export const MOCK_SHIP_TO = [
 export const MOCK_USERS: MockUser[] = [
   {
     id: "user-buyer",
-    email: "buyer@demobuilders.com",
-    fullName: "Demo Buyer",
+    email: "jordan@meridianbuilders.com",
+    fullName: "Jordan Ellis",
     role: "CUSTOMER_ADMIN",
     accountId: MOCK_ACCOUNT.id,
   },
   {
     id: "user-staff",
-    email: "staff@cgwholesale.com",
+    email: "staff@cgglobal.com",
     fullName: "C&G Staff",
     role: "STAFF_ADMIN",
     accountId: null,

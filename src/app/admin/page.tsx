@@ -18,7 +18,7 @@ interface AdminSection {
 }
 
 const SECTIONS: AdminSection[] = [
-  { key: "settings", title: "Settings", permission: "settings.manage", description: "Company info, warehouse, branding, and announcements." },
+  { key: "settings", title: "Settings", permission: "settings.manage", description: "Company info, warehouse, branding, and announcements.", href: ROUTES.admin.settings },
   { key: "catalog", title: "Catalog", permission: "catalog.manage", description: "Products, pricing, colors, and images." },
   { key: "discounts", title: "Discounts", permission: "discounts.manage", description: "Promo codes and automatic discount rules." },
   { key: "cms", title: "Content", permission: "cms.manage", description: "Homepage, FAQs, footer, and contact info." },

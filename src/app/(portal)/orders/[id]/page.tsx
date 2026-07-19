@@ -57,7 +57,7 @@ export default async function OrderDetailPage({
       </Link>
 
       {searchParams.justSubmitted && (
-        <div className="pickup-panel" style={{ background: "var(--navy-wash)", borderColor: "#c6cfdf" }}>
+        <div className="pickup-panel" style={{ background: "var(--red-wash)", borderColor: "#f3c4c5" }}>
           <b>Order received.</b> We&rsquo;ve emailed a confirmation and our team has been
           notified. You can watch progress on this page.
         </div>
@@ -73,7 +73,7 @@ export default async function OrderDetailPage({
             requiresAssembly={order.requiresAssembly}
             deliveryMethod={dm}
           />
-          <span className="chip navy">{dm === "PICKUP" ? "Pickup" : "Ship"}</span>
+          <span className="chip red">{dm === "PICKUP" ? "Pickup" : "Ship"}</span>
           <span className="meta push">
             PO <b>{order.poNumber}</b>
             {order.submittedAt ? (

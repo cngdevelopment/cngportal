@@ -290,3 +290,16 @@ model Attachment {
   @@index([orderId])
   @@map("attachments")
 }
+
+// ── Admin-managed settings ───────────────────────────────────────────
+// Key/value store backing the Admin → Settings page. One row per setting
+// key; `value` holds the JSON override merged onto config defaults in
+// src/server/settings/. Lets a business owner edit company/warehouse/
+// announcement details without a code change.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}

@@ -15,8 +15,8 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-The login screen shows two one-click demo logins instead of the magic-link
-form — "Demo Buyer" (a customer buyer on Demo Builders LLC) and "C&G
+The login screen shows two one-click logins instead of the magic-link
+form — "Jordan Ellis" (a customer buyer on Meridian Builders LLC) and "C&G
 Staff" (staff console). Sign in as either to click through the full flow:
 browse the catalog, add cabinets/flooring to an order, submit it, watch it
 move through the pipeline, and — as staff — advance/hold/send back orders
@@ -34,7 +34,7 @@ present — no code changes needed (see `src/lib/mode.ts`).
 ```bash
 cp .env.example .env      # fill in the Supabase values
 npx prisma migrate dev --name init
-npm run db:seed           # 7 colors, 20 placeholder cabinets, 10 flooring SKUs, DEMO-001 account
+npm run db:seed           # 7 colors, 20 placeholder cabinets, 10 flooring SKUs, CG-001 account
 ```
 
 Apply `prisma/rls.sql` in the Supabase SQL editor (Dashboard → SQL) after the
@@ -44,7 +44,7 @@ Create your first logins (no self-registration by design):
 
 ```bash
 npm run user:create -- you@email.com "Your Name" staff STAFF_ADMIN
-npm run user:create -- buyer@test.com "Test Buyer" DEMO-001 CUSTOMER_ADMIN
+npm run user:create -- buyer@test.com "Test Buyer" CG-001 CUSTOMER_ADMIN
 ```
 
 Then:

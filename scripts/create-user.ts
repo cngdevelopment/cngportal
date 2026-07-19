@@ -5,7 +5,7 @@
  *
  * Examples:
  *   npm run user:create -- ben@example.com "Ben Hampton" staff STAFF_ADMIN
- *   npm run user:create -- buyer@client.com "Pat Buyer" DEMO-001 CUSTOMER_ADMIN
+ *   npm run user:create -- buyer@client.com "Pat Buyer" CG-001 CUSTOMER_ADMIN
  *
  * Creates the Supabase auth user (email pre-confirmed — they log in via
  * magic link) and the matching row in our users table.

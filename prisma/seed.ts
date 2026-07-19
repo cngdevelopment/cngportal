@@ -132,13 +132,13 @@ async function main() {
     }
   }
 
-  // Demo account + orders in all four pipeline variants (spec §12.7)
-  const demo = await prisma.account.upsert({
-    where: { accountNumber: "DEMO-001" },
+  // Starter account for first-run setup (rename/replace once real accounts exist).
+  const starter = await prisma.account.upsert({
+    where: { accountNumber: "CG-001" },
     update: {},
     create: {
-      name: "Demo Builders LLC",
-      accountNumber: "DEMO-001",
+      name: "Meridian Builders LLC",
+      accountNumber: "CG-001",
       addresses: {
         create: {
           label: "Main jobsite",
@@ -152,8 +152,7 @@ async function main() {
     },
   });
 
-  console.log(`Seeded ${COLORS.length} colors, ${CABINETS.length} cabinets, ${FLOORING.length} flooring SKUs, demo account ${demo.accountNumber}.`);
-  console.log("TODO: seed 4 demo orders (one per pipeline variant) once auth users exist — needs a created_by user id.");
+  console.log(`Seeded ${COLORS.length} colors, ${CABINETS.length} cabinets, ${FLOORING.length} flooring SKUs, starter account ${starter.accountNumber}.`);
 }
 
 main()
