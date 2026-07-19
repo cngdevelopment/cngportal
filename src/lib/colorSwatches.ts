@@ -1,23 +1,12 @@
 /**
- * Swatch hex fallback, keyed by color code — used until real swatch
- * images are on `Color.swatchUrl`. Demo-mode colors already carry a hex
- * value; this covers the real-database path too.
+ * Swatch hex helpers. Color definitions are owned by src/config/colors.ts;
+ * this module only adds the `colorHex()` resolution helper and re-exports
+ * the shared constants so existing importers keep working.
  */
-export const COLOR_HEX: Record<string, string> = {
-  GS: "#a9adaf",
-  NW: "#c49a62",
-  NB: "#25395c",
-  PG: "#ebe3d1",
-  SB: "#2e2c2a",
-  SW: "#fdfdfb",
-  WS: "#f3f0e8",
-};
+import { COLOR_HEX, FLOOR_TONES, DEFAULT_SWATCH_HEX } from "@/config/colors";
+
+export { COLOR_HEX, FLOOR_TONES };
 
 export function colorHex(code: string, fallback?: string): string {
-  return fallback ?? COLOR_HEX[code] ?? "#cccccc";
+  return fallback ?? COLOR_HEX[code] ?? DEFAULT_SWATCH_HEX;
 }
-
-export const FLOOR_TONES = [
-  "#b3906a", "#9c7a55", "#c4a179", "#8a6f52", "#ab8a62",
-  "#77604a", "#bfa07d", "#93765a", "#a5876b", "#87684d",
-];

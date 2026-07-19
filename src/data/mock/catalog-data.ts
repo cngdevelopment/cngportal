@@ -7,6 +7,9 @@
  * Sheet (ws04.24).
  */
 
+import { CABINET_COLORS } from "@/config/colors";
+import type { Role } from "@/types/domain";
+
 export interface MockColor {
   id: string;
   name: string;
@@ -37,15 +40,15 @@ export interface MockProduct {
   colors: { color: MockColor }[];
 }
 
-export const MOCK_COLORS: MockColor[] = [
-  { id: "col-gs", name: "Grey Shaker", code: "GS", hex: "#a9adaf", sortOrder: 0 },
-  { id: "col-nw", name: "Natural Wood", code: "NW", hex: "#c49a62", sortOrder: 1 },
-  { id: "col-nb", name: "Navy Blue", code: "NB", hex: "#25395c", sortOrder: 2 },
-  { id: "col-pg", name: "Pearl Glazed", code: "PG", hex: "#ebe3d1", sortOrder: 3 },
-  { id: "col-sb", name: "Smokey Black", code: "SB", hex: "#2e2c2a", sortOrder: 4 },
-  { id: "col-sw", name: "Super White", code: "SW", hex: "#fdfdfb", sortOrder: 5 },
-  { id: "col-ws", name: "White Shaker", code: "WS", hex: "#f3f0e8", sortOrder: 6 },
-];
+// Derived from the canonical finish list (src/config/colors.ts) so a
+// color is defined in exactly one place; the demo store just adds an id.
+export const MOCK_COLORS: MockColor[] = CABINET_COLORS.map((c) => ({
+  id: `col-${c.code.toLowerCase()}`,
+  name: c.name,
+  code: c.code,
+  hex: c.hex,
+  sortOrder: c.sortOrder,
+}));
 
 // [sku, price, name, subcategory] — full Jan-26 price sheet.
 const CABINET_DEFS: Array<[string, number, string, string]> = [
@@ -450,13 +453,13 @@ export function findColor(code: string): MockColor | undefined {
 
 // ── Tenancy / identity ──────────────────────────────────────────────
 
-export type MockRole = "CUSTOMER_USER" | "CUSTOMER_ADMIN" | "STAFF" | "STAFF_ADMIN";
+export type MockRole = Role;
 
 export interface MockUser {
   id: string;
   email: string;
   fullName: string;
-  role: MockRole;
+  role: Role;
   accountId: string | null;
 }
 

@@ -1,5 +1,6 @@
 import "server-only";
 import { isDemoMode } from "@/lib/mode";
+import { formatOrderNumber } from "@/config/business";
 import {
   listOrdersMock,
   getOrderMock,
@@ -61,7 +62,8 @@ export async function createOrder(input: CreateOrderInput) {
   const { findProduct, findColor } = await import("./mock/catalog-data");
 
   return prisma.$transaction(async (tx) => {
-    const orderNumber = `CG-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Placeholder numbering until a real sequence/counter lands with Supabase.
+    const orderNumber = formatOrderNumber(Math.floor(1000 + Math.random() * 9000));
     const requiresAssembly = input.lines.some((l) => l.assembly === "ASSEMBLED");
     const order = await tx.order.create({
       data: {

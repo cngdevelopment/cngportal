@@ -9,21 +9,11 @@
  * Do NOT branch on these rules anywhere else.
  */
 
-export type DeliveryMethod = "SHIP" | "PICKUP";
+import type { DeliveryMethod, PipelineStatus, OrderStatus } from "@/types/domain";
 
-export type PipelineStatus =
-  | "SUBMITTED"
-  | "PROCESSING"
-  | "ASSEMBLING"
-  | "READY"
-  | "OUT_FOR_DELIVERY"
-  | "COMPLETED";
-
-export type OrderStatus =
-  | "DRAFT"
-  | PipelineStatus
-  | "ON_HOLD"
-  | "CANCELLED";
+// Re-exported so existing importers of these types from buildPipeline keep
+// working; the canonical definitions live in src/types/domain.ts.
+export type { DeliveryMethod, PipelineStatus, OrderStatus };
 
 export interface Step {
   status: PipelineStatus;

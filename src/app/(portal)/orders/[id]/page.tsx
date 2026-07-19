@@ -6,6 +6,8 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { StatusChip } from "@/components/StatusChip";
 import { OrderDetailActions } from "@/components/cart/OrderDetailActions";
 import { CustomerMessages } from "@/components/cart/CustomerMessages";
+import { WAREHOUSE } from "@/config/warehouse";
+import { ROUTES } from "@/config/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +52,7 @@ export default async function OrderDetailPage({
 
   return (
     <>
-      <Link href="/dashboard" className="back">
+      <Link href={ROUTES.dashboard} className="back">
         &larr; All orders
       </Link>
 
@@ -98,7 +100,7 @@ export default async function OrderDetailPage({
       {dm === "PICKUP" && pastReady && (
         <div className="pickup-panel">
           <b>Ready for pickup</b>
-          {process.env.WAREHOUSE_ADDRESS} · {process.env.WAREHOUSE_HOURS}
+          {WAREHOUSE.address} · {WAREHOUSE.hours}
           <br />
           Give the counter your order number: <b>{order.orderNumber}</b>
           {order.pickupContactName ? (

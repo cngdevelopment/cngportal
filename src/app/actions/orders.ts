@@ -11,6 +11,9 @@ import {
 import { getProductBySku } from "@/data/catalog";
 import { colorHex } from "@/lib/colorSwatches";
 import type { CartLine } from "@/components/cart/CartProvider";
+import { submitOrderSchema } from "@/schemas/order";
+import { postMessageSchema } from "@/schemas/message";
+import { ValidationError } from "@/server/errors";
 
 export interface SubmitOrderLine {
   sku: string;
@@ -35,11 +38,9 @@ export interface SubmitOrderPayload {
 export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ orderId: string }> {
   const ctx = await requireCustomer();
 
-  if (payload.lines.length === 0) throw new Error("Order is empty.");
-  if (!payload.poNumber.trim()) throw new Error("PO number is required.");
-  if (payload.deliveryMethod === "PICKUP" && (!payload.pickupContactName?.trim() || !payload.pickupContactPhone?.trim())) {
-    throw new Error("Pickup contact name and phone are required.");
-  }
+  // Never trust the client — re-validate at the trust boundary (spec §5.2).
+  const parsed = submitOrderSchema.safeParse(payload);
+  if (!parsed.success) throw ValidationError.fromZod(parsed.error);
 
   const order = await createOrder({
     accountId: ctx.accountId,
@@ -76,7 +77,9 @@ export async function cancelOrderAction(orderId: string): Promise<{ ok: boolean 
 
 export async function addCustomerMessageAction(orderId: string, body: string): Promise<{ ok: boolean }> {
   const ctx = await requireCustomer();
-  const ok = await addCustomerMessage(ctx.accountId, orderId, ctx.userId, body);
+  const parsed = postMessageSchema.safeParse({ orderId, body });
+  if (!parsed.success) return { ok: false };
+  const ok = await addCustomerMessage(ctx.accountId, parsed.data.orderId, ctx.userId, parsed.data.body);
   revalidatePath(`/orders/${orderId}`);
   return { ok };
 }

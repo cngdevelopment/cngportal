@@ -10,6 +10,8 @@ import {
   type MockProduct,
 } from "./catalog-data";
 import { nextStatus, previousStep, type PipelineStatus } from "@/lib/pipeline/buildPipeline";
+import type { OrderStatus } from "@/types/domain";
+import { formatOrderNumber } from "@/config/business";
 
 /**
  * In-memory demo backend. Stands in for Prisma/Postgres while no
@@ -20,16 +22,7 @@ import { nextStatus, previousStep, type PipelineStatus } from "@/lib/pipeline/bu
  * added, so callers don't need to branch on mode themselves.
  */
 
-export type OrderStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "PROCESSING"
-  | "ASSEMBLING"
-  | "READY"
-  | "OUT_FOR_DELIVERY"
-  | "COMPLETED"
-  | "ON_HOLD"
-  | "CANCELLED";
+export type { OrderStatus };
 
 export interface MockOrderItem {
   id: string;
@@ -91,16 +84,23 @@ export interface MockOrder {
   messages: MockOrderMessage[];
 }
 
-const globalForMock = globalThis as unknown as { __cgMockOrders?: MockOrder[]; __cgMockSeq?: number };
+const globalForMock = globalThis as unknown as {
+  __cgMockOrders?: MockOrder[];
+  __cgMockSeq?: number;
+  // Persisted on globalThis (like the orders themselves) so ids stay
+  // monotonic across dev hot-reloads — otherwise a module reset would
+  // restart the counter and collide with already-persisted event/item ids.
+  __cgMockIdSeq?: number;
+};
 
 function actorName(userId: string | null): string | null {
   if (!userId) return null;
   return MOCK_USERS.find((u) => u.id === userId)?.fullName ?? null;
 }
 
-let idCounter = 1;
 function id(prefix: string): string {
-  return `${prefix}-${idCounter++}`;
+  globalForMock.__cgMockIdSeq = (globalForMock.__cgMockIdSeq ?? 0) + 1;
+  return `${prefix}-${globalForMock.__cgMockIdSeq}`;
 }
 
 function makeItem(
@@ -144,7 +144,7 @@ function getStore(): MockOrder[] {
 
 function nextOrderNumber(): string {
   globalForMock.__cgMockSeq = (globalForMock.__cgMockSeq ?? 148) + 1;
-  return `CG-2026-0${globalForMock.__cgMockSeq}`;
+  return formatOrderNumber(globalForMock.__cgMockSeq);
 }
 
 // ── Catalog ──────────────────────────────────────────────────────────

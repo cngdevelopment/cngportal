@@ -1,19 +1,20 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { Assembly, Category, Unit } from "@/types/domain";
 
 export interface CartLine {
   key: string;
   sku: string;
   name: string;
-  category: "CABINETS" | "FLOORING";
-  unit: "EACH" | "BOX";
+  category: Category;
+  unit: Unit;
   quantity: number;
   unitPrice: number | null;
   colorCode: string | null;
   colorName: string | null;
   colorHex: string | null;
-  assembly: "ASSEMBLED" | "UNASSEMBLED" | null;
+  assembly: Assembly | null;
   thickness: string | null;
   unitsPerBox: number | null;
   notes: string;
@@ -27,8 +28,8 @@ interface CartContextValue {
   lines: CartLine[];
   addLine: (line: Omit<CartLine, "key">) => void;
   updateQuantity: (key: string, quantity: number) => void;
-  setLineAssembly: (key: string, assembly: "ASSEMBLED" | "UNASSEMBLED") => void;
-  bulkSetAssembly: (assembly: "ASSEMBLED" | "UNASSEMBLED") => void;
+  setLineAssembly: (key: string, assembly: Assembly) => void;
+  bulkSetAssembly: (assembly: Assembly) => void;
   removeLine: (key: string) => void;
   clear: () => void;
   replaceAll: (lines: CartLine[]) => void;

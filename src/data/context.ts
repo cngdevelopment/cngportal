@@ -3,12 +3,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/mode";
 import { findUserById, MOCK_ACCOUNT } from "./mock/catalog-data";
+import type { Role } from "@/types/domain";
 
 export interface SessionContext {
   userId: string;
   email: string;
   fullName: string;
-  role: "CUSTOMER_USER" | "CUSTOMER_ADMIN" | "STAFF" | "STAFF_ADMIN";
+  role: Role;
   /** null for staff users */
   accountId: string | null;
   accountName: string | null;

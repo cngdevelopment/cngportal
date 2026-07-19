@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireCustomer } from "@/data/context";
 import { listShipToAddresses } from "@/data/orders";
 import { CartReview } from "@/components/cart/CartReview";
+import { WAREHOUSE } from "@/config/warehouse";
+import { ROUTES } from "@/config/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +13,7 @@ export default async function CartPage() {
 
   return (
     <>
-      <Link href="/new-order" className="back">
+      <Link href={ROUTES.newOrder} className="back">
         &larr; Back to catalog
       </Link>
       <h1>Review Order</h1>
@@ -27,9 +29,9 @@ export default async function CartPage() {
           isDefault: s.isDefault,
         }))}
         warehouse={{
-          address: process.env.WAREHOUSE_ADDRESS ?? "9150 Latty Ave, Berkeley, MO 63134",
-          hours: process.env.WAREHOUSE_HOURS ?? "Mon–Fri 7:00 AM – 4:00 PM",
-          phone: process.env.WAREHOUSE_PHONE ?? "314-838-8588",
+          address: WAREHOUSE.address,
+          hours: WAREHOUSE.hours,
+          phone: WAREHOUSE.phone,
         }}
       />
     </>

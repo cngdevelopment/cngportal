@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/mode";
+import { COMPANY } from "@/config/company";
+import { ROUTES } from "@/config/routes";
 
 export default function NoAccessPage() {
   async function signOut() {
@@ -12,7 +14,7 @@ export default function NoAccessPage() {
       const supabase = supabaseServer();
       await supabase.auth.signOut();
     }
-    redirect("/login");
+    redirect(ROUTES.login);
   }
 
   return (
@@ -22,7 +24,7 @@ export default function NoAccessPage() {
         <h1>Almost there</h1>
         <p className="sub">
           Your login isn&rsquo;t linked to an active account yet. Reach out to
-          C&amp;G at 314-838-8588 and we&rsquo;ll get you connected.
+          C&amp;G at {COMPANY.phone} and we&rsquo;ll get you connected.
         </p>
         <form action={signOut}>
           <button className="btn ghost wide" type="submit">
