@@ -105,6 +105,23 @@ table.list td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-si
 table.list tr:last-child td{border-bottom:none}
 .mini-sw{display:inline-block;width:13px;height:13px;border-radius:2px;border:1px solid rgba(0,0,0,.25);vertical-align:-2px;margin-right:6px}
 
+/* loading skeletons */
+@keyframes cg-shimmer{0%{background-position:-320px 0}100%{background-position:calc(320px + 100%) 0}}
+.skeleton{background:var(--line-soft);border-radius:4px;background-image:linear-gradient(90deg,var(--line-soft) 0,#eef0ec 44px,var(--line-soft) 88px);background-size:320px 100%;background-repeat:no-repeat;animation:cg-shimmer 1.3s ease-in-out infinite}
+.sk-title{height:20px;width:180px;margin-bottom:8px}
+.sk-sub{height:12px;width:280px;margin-bottom:22px}
+.sk-line{height:12px;margin-bottom:10px}
+.sk-card{height:92px;border-radius:5px;margin-bottom:14px;border:1px solid var(--line-soft)}
+.sk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.sk-tile{height:190px;border-radius:5px;border:1px solid var(--line-soft)}
+@media (prefers-reduced-motion:reduce){.skeleton{animation:none}}
+
+/* full-screen states (root not-found / errors outside the portal chrome) */
+.center-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.state-card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:34px 36px;width:100%;max-width:420px;text-align:center}
+.state-card h1{font-size:1.15rem;margin-bottom:6px}
+.state-card p{color:var(--ink-2);font-size:.88rem;margin-bottom:18px;line-height:1.5}
+
 /* misc */
 .empty{background:var(--card);border:1px dashed var(--line);border-radius:5px;padding:38px;text-align:center;color:var(--ink-2);font-size:.9rem}
 .detail-head{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:18px 20px;margin-bottom:16px}

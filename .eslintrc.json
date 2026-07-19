@@ -1,0 +1,38 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "no-console": ["error", { "allow": ["warn", "error"] }]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "excludedFiles": ["src/data/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@prisma/client",
+                "message": "Prisma may only be imported inside src/data/. All data access goes through the repository layer (spec §5.3)."
+              }
+            ],
+            "patterns": [
+              {
+                "group": ["**/data/db", "@/data/db"],
+                "message": "The Prisma client (src/data/db) may only be imported inside src/data/."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
