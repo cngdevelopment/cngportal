@@ -1,28 +1,22 @@
-import { requireStaff } from "@/data/context";
+import { requirePermission } from "@/server/auth/guards";
+import { getSettings } from "@/server/settings/settings";
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
 import { signOutAction } from "@/app/actions/auth";
-import { hasPermission } from "@/server/auth/permissions";
 import { ROUTES } from "@/config/routes";
-import { COMPANY } from "@/config/company";
 
-export default async function StaffLayout({ children }: { children: React.ReactNode }) {
-  const ctx = await requireStaff();
-
-  const links: { href: string; label: string }[] = [
-    { href: ROUTES.staff.queue, label: "Order Queue" },
-  ];
-  if (hasPermission(ctx.role, "admin.access")) {
-    links.push({ href: ROUTES.admin.overview, label: "Admin" });
-  }
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Gate the entire admin portal on a single permission.
+  const ctx = await requirePermission("admin.access");
+  const settings = await getSettings();
 
   return (
     <>
       <header className="site-header">
         <Logo />
         <div className="wordmark">
-          {COMPANY.name}
-          <small>{COMPANY.staffConsoleName}</small>
+          {settings.companyName}
+          <small>Admin</small>
         </div>
         <div className="who">
           <b>{ctx.fullName}</b>
@@ -35,7 +29,12 @@ export default async function StaffLayout({ children }: { children: React.ReactN
         </form>
       </header>
       <nav className="site-nav">
-        <NavLinks links={links} />
+        <NavLinks
+          links={[
+            { href: ROUTES.admin.overview, label: "Overview" },
+            { href: ROUTES.staff.queue, label: "Staff Queue" },
+          ]}
+        />
       </nav>
       <main className="portal">{children}</main>
     </>

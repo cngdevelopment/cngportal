@@ -1,11 +1,10 @@
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { requireCustomer } from "@/data/context";
-import { isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/mode";
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartPill } from "@/components/cart/CartPill";
+import { signOutAction } from "@/app/actions/auth";
+import { ROUTES } from "@/config/routes";
 
 export default async function PortalLayout({
   children,
@@ -13,18 +12,6 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireCustomer();
-
-  async function signOut() {
-    "use server";
-    if (isDemoMode()) {
-      cookies().delete(DEMO_SESSION_COOKIE);
-    } else {
-      const { supabaseServer } = await import("@/lib/supabase/server");
-      const supabase = supabaseServer();
-      await supabase.auth.signOut();
-    }
-    redirect("/login");
-  }
 
   return (
     <CartProvider>
@@ -38,7 +25,7 @@ export default async function PortalLayout({
           <b>{ctx.accountName}</b>
           {ctx.email}
         </div>
-        <form action={signOut}>
+        <form action={signOutAction}>
           <button className="btn ghost signout" type="submit">
             Sign out
           </button>
@@ -47,9 +34,9 @@ export default async function PortalLayout({
       <nav className="site-nav">
         <NavLinks
           links={[
-            { href: "/dashboard", label: "Dashboard" },
-            { href: "/new-order", label: "New Order" },
-            { href: "/history", label: "Order History" },
+            { href: ROUTES.dashboard, label: "Dashboard" },
+            { href: ROUTES.newOrder, label: "New Order" },
+            { href: ROUTES.history, label: "Order History" },
           ]}
         />
       </nav>

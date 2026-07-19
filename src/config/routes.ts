@@ -21,4 +21,13 @@ export const ROUTES = {
     queue: "/staff/queue",
     order: (id: string) => `/staff/orders/${id}`,
   },
+
+  // Admin portal
+  admin: {
+    overview: "/admin",
+    settings: "/admin/settings",
+    catalog: "/admin/catalog",
+    discounts: "/admin/discounts",
+    cms: "/admin/cms",
+  },
 } as const;
