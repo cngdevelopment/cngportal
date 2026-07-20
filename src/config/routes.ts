@@ -8,6 +8,7 @@ export const ROUTES = {
   login: "/login",
   noAccess: "/no-access",
   authConfirm: "/auth/confirm",
+  resetPassword: "/reset-password",
 
   // Customer portal
   dashboard: "/dashboard",
@@ -27,6 +28,7 @@ export const ROUTES = {
     overview: "/admin",
     settings: "/admin/settings",
     customers: "/admin/customers",
+    employees: "/admin/employees",
     catalog: "/admin/catalog",
     discounts: "/admin/discounts",
     cms: "/admin/cms",

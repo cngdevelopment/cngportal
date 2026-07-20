@@ -14,7 +14,7 @@ type CookieToSet = { name: string; value: string; options: CookieOptions };
  */
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const open = path === "/login" || path.startsWith("/auth");
+  const open = path === "/login" || path === "/reset-password" || path.startsWith("/auth");
 
   if (isDemoMode()) {
     const hasSession = !!request.cookies.get(DEMO_SESSION_COOKIE)?.value;

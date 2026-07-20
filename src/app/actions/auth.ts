@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/mode";
 import { ROUTES } from "@/config/routes";
-import { signInSchema, signUpSchema, type SignInInput, type SignUpInput } from "@/schemas/auth";
+import { signInSchema, passwordResetRequestSchema, type SignInInput, type PasswordResetRequestInput } from "@/schemas/auth";
 import { ValidationError, toErrorResult } from "@/server/errors";
-import { signUpCustomer } from "@/data/accounts";
+import { recordLastLogin } from "@/data/context";
 import { type Result, ok, err } from "@/lib/result";
 
 /**
@@ -34,8 +34,9 @@ export async function signInAction(input: SignInInput): Promise<Result<null>> {
   if (!parsed.success) return toErrorResult(ValidationError.fromZod(parsed.error));
   try {
     const { supabaseServer } = await import("@/lib/supabase/server");
-    const { error } = await supabaseServer().auth.signInWithPassword(parsed.data);
-    if (error) return err("UNAUTHENTICATED", "That email or password isn't right.");
+    const { data, error } = await supabaseServer().auth.signInWithPassword(parsed.data);
+    if (error || !data.user) return err("UNAUTHENTICATED", "That email or password isn't right.");
+    await recordLastLogin(data.user.id).catch(() => {});
     return ok(null);
   } catch {
     return err("INTERNAL", "Couldn't sign in right now. Please try again.");
@@ -43,22 +44,23 @@ export async function signInAction(input: SignInInput): Promise<Result<null>> {
 }
 
 /**
- * Customer self-signup: creates their company account + password login, then
- * signs them in.
+ * "Forgot password" — sends a Supabase recovery email that lands on
+ * /reset-password. Always reports success (even for unknown emails) so the
+ * form never reveals whether an account exists.
  */
-export async function signUpAction(input: SignUpInput): Promise<Result<null>> {
-  const parsed = signUpSchema.safeParse(input);
+export async function requestPasswordResetAction(input: PasswordResetRequestInput): Promise<Result<null>> {
+  const parsed = passwordResetRequestSchema.safeParse(input);
   if (!parsed.success) return toErrorResult(ValidationError.fromZod(parsed.error));
+  if (isDemoMode()) return ok(null);
   try {
-    await signUpCustomer(parsed.data);
     const { supabaseServer } = await import("@/lib/supabase/server");
-    const { error } = await supabaseServer().auth.signInWithPassword({
-      email: parsed.data.email,
-      password: parsed.data.password,
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    await supabaseServer().auth.resetPasswordForEmail(parsed.data.email, {
+      redirectTo: `${base}${ROUTES.resetPassword}`,
     });
-    if (error) return err("INTERNAL", "Account created — please sign in.");
     return ok(null);
-  } catch (e) {
-    return toErrorResult(e);
+  } catch {
+    // Never surface whether the address exists.
+    return ok(null);
   }
 }

@@ -67,6 +67,16 @@ export async function getSessionContext(): Promise<SessionContext | null> {
   return isDemoMode() ? getDemoSessionContext() : getSupabaseSessionContext();
 }
 
+/** Stamp a user's last-login time. No-op in demo mode. Best-effort. */
+export async function recordLastLogin(userId: string): Promise<void> {
+  if (isDemoMode()) return;
+  const { prisma } = await import("./db");
+  await prisma.user.updateMany({
+    where: { id: userId },
+    data: { lastLoginAt: new Date() },
+  });
+}
+
 /** For customer-facing pages: requires a linked, active customer account. */
 export async function requireCustomer(): Promise<
   SessionContext & { accountId: string }

@@ -17,6 +17,7 @@ export type Permission =
   | "cms.manage"
   | "orders.manage"
   | "accounts.manage"
+  | "employees.manage"
   | "users.invite";
 
 const ALL_PERMISSIONS: readonly Permission[] = [
@@ -27,6 +28,7 @@ const ALL_PERMISSIONS: readonly Permission[] = [
   "cms.manage",
   "orders.manage",
   "accounts.manage",
+  "employees.manage",
   "users.invite",
 ];
 

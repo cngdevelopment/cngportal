@@ -59,57 +59,6 @@ export async function listAccounts(): Promise<AccountRow[]> {
   }));
 }
 
-export async function signUpCustomer(input: {
-  companyName: string;
-  fullName: string;
-  email: string;
-  password: string;
-}): Promise<void> {
-  if (isDemoMode()) {
-    throw new BusinessRuleError("Sign-up requires the database (Supabase) to be connected.");
-  }
-  const { prisma } = await import("./db");
-
-  // Auto-generate a unique account number.
-  let n = (await prisma.account.count()) + 1;
-  let accountNumber = "";
-  do {
-    accountNumber = `CG-${String(n).padStart(3, "0")}`;
-    n++;
-  } while (await prisma.account.findUnique({ where: { accountNumber } }));
-
-  const admin = supabaseAdmin();
-  const { data: created, error } = await admin.auth.admin.createUser({
-    email: input.email,
-    password: input.password,
-    email_confirm: true,
-  });
-  if (error || !created?.user) {
-    const already = error?.message?.toLowerCase().includes("already");
-    throw new ConflictError(already ? "An account with that email already exists." : error?.message ?? "Could not create your account.");
-  }
-
-  let accountId: string | undefined;
-  try {
-    const account = await prisma.account.create({ data: { name: input.companyName, accountNumber } });
-    accountId = account.id;
-    await prisma.user.create({
-      data: {
-        id: created.user.id,
-        email: input.email,
-        fullName: input.fullName,
-        role: "CUSTOMER_ADMIN",
-        accountId: account.id,
-        invitedAt: new Date(),
-      },
-    });
-  } catch (e) {
-    await admin.auth.admin.deleteUser(created.user.id).catch(() => {});
-    if (accountId) await prisma.account.delete({ where: { id: accountId } }).catch(() => {});
-    throw e;
-  }
-}
-
 export async function deleteAccount(accountId: string): Promise<void> {
   if (isDemoMode()) {
     throw new BusinessRuleError("Connect the database (Supabase) to manage accounts.");
