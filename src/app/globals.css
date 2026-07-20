@@ -150,14 +150,17 @@ table.list tr:last-child td{border-bottom:none}
 .auth-head img{display:block;margin:0 auto 14px}
 .auth-brand{color:#fff;font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase}
 .auth-brand-sub{color:#9a9a9e;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;margin-top:5px}
-.auth-body{padding:26px 30px 24px}
+.auth-body{padding:22px 30px 22px}
 .auth-body .fgroup{margin:0 0 14px}
-.auth-hint{font-size:.76rem;color:var(--ink-2);text-align:center;margin-top:13px;line-height:1.5}
-.auth-foot{font-size:.75rem;color:var(--ink-3);text-align:center;margin-top:20px;border-top:1px solid var(--line-soft);padding-top:15px}
-.auth-sent{text-align:center;padding:6px 0 4px}
-.auth-sent-icon{width:44px;height:44px;border-radius:50%;background:var(--green-wash);color:var(--green);border:1px solid #c4d8ca;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;margin:0 auto 12px}
-.auth-sent b{display:block;font-size:1rem;margin-bottom:6px}
-.auth-sent p{font-size:.83rem;color:var(--ink-2);line-height:1.55}
+.auth-tabs{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:18px}
+.auth-tabs button{flex:1;padding:10px;font-size:.82rem;font-weight:600;color:var(--ink-2);background:#fff;border-right:1px solid var(--line)}
+.auth-tabs button:last-child{border-right:none}
+.auth-tabs button.on{background:var(--red);color:#fff}
+.auth-section-title{font-weight:700;font-size:1rem;margin-bottom:16px;text-align:center}
+.auth-error{background:var(--red-wash);border:1px solid #f3c4c5;color:var(--red-deep);border-radius:2px;padding:9px 12px;font-size:.82rem;margin-bottom:14px}
+.auth-switch-link{display:block;width:100%;text-align:center;margin-top:16px;font-size:.8rem;font-weight:600;color:var(--ink-2);background:none;border:none;padding:8px}
+.auth-switch-link:hover{color:var(--red)}
+.auth-foot{font-size:.75rem;color:var(--ink-3);text-align:center;margin-top:16px;border-top:1px solid var(--line-soft);padding-top:14px}
 
 /* header extras */
 .brand-logo{flex-shrink:0}
