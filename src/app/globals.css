@@ -24,7 +24,7 @@ a{color:inherit;text-decoration:none}
 .site-header :focus-visible{outline-color:#fff}
 
 /* header / nav — black bar, red accent line (Arasaka) */
-.site-header{background:var(--black);border-bottom:2px solid var(--red);padding:0 28px;height:58px;display:flex;align-items:center;gap:14px}
+.site-header{background:var(--black);border-bottom:2px solid var(--red);padding:0 28px;height:68px;display:flex;align-items:center;gap:13px}
 .mark{width:34px;height:34px;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--red)}
 .wordmark{font-weight:700;letter-spacing:.06em;font-size:1.02rem;color:#fff;text-transform:uppercase}
 .wordmark small{display:block;font-weight:400;color:#9a9a9e;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;margin-top:1px}
@@ -136,12 +136,27 @@ table.list tr:last-child td{border-bottom:none}
 .back:hover{color:var(--ink)}
 
 /* login */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--paper)}
 .login-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:34px 36px;width:100%;max-width:400px}
 .login-card .mark{margin:0 auto 12px}
 .login-card h1{text-align:center}
 .login-card .sub{text-align:center}
-.notice{background:var(--red-wash);border:1px solid #f3c4c5;border-radius:2px;padding:10px 13px;font-size:.87rem;color:var(--red);margin-top:14px}
+.notice{background:var(--red-wash);border:1px solid #f3c4c5;border-radius:2px;padding:10px 13px;font-size:.87rem;color:var(--red-deep);margin-top:14px}
+
+/* auth card (login) — black brand band + red accent, on-theme */
+.auth-card{background:var(--card);border:1px solid var(--line);border-radius:3px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.10)}
+.auth-head{background:var(--black);border-bottom:3px solid var(--red);padding:32px 24px 26px;text-align:center}
+.auth-head img{display:block;margin:0 auto 14px}
+.auth-brand{color:#fff;font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase}
+.auth-brand-sub{color:#9a9a9e;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;margin-top:5px}
+.auth-body{padding:26px 30px 24px}
+.auth-body .fgroup{margin:0 0 14px}
+.auth-hint{font-size:.76rem;color:var(--ink-2);text-align:center;margin-top:13px;line-height:1.5}
+.auth-foot{font-size:.75rem;color:var(--ink-3);text-align:center;margin-top:20px;border-top:1px solid var(--line-soft);padding-top:15px}
+.auth-sent{text-align:center;padding:6px 0 4px}
+.auth-sent-icon{width:44px;height:44px;border-radius:50%;background:var(--green-wash);color:var(--green);border:1px solid #c4d8ca;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;margin:0 auto 12px}
+.auth-sent b{display:block;font-size:1rem;margin-bottom:6px}
+.auth-sent p{font-size:.83rem;color:var(--ink-2);line-height:1.55}
 
 /* header extras */
 .brand-logo{flex-shrink:0}

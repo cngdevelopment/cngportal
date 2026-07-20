@@ -5,7 +5,7 @@ import Image from "next/image";
  * to change the logo everywhere (header, admin, staff). The favicon is a
  * separate asset at src/app/icon.png.
  */
-export function Logo({ size = 36 }: { size?: number }) {
+export function Logo({ size = 48 }: { size?: number }) {
   return (
     <Image
       src="/cg-logo.png"

@@ -49,62 +49,74 @@ export default async function LoginPage({
 
   return (
     <div className="login-wrap">
-      <div className="login-card">
-        <Image src="/cg-logo.png" alt={settings.companyName} width={76} height={76} className="login-logo" priority />
-        <h1>{settings.companyName}</h1>
-        <p className="sub">Ordering portal for wholesale accounts</p>
+      <div className="auth-card">
+        <div className="auth-head">
+          <Image src="/cg-logo.png" alt={settings.companyName} width={104} height={104} priority />
+          <div className="auth-brand">{settings.companyName}</div>
+          <div className="auth-brand-sub">{settings.portalName}</div>
+        </div>
 
-        {demo && (
-          <div className="signin-box">
-            {MOCK_USERS.map((u, i) => (
-              <Fragment key={u.id}>
-                {i > 0 && (
-                  <div className="signin-divider">
-                    <span>or</span>
-                  </div>
-                )}
-                <form action={demoLogin}>
-                  <input type="hidden" name="userId" value={u.id} />
-                  <button className="btn wide signin-btn" type="submit">
-                    Continue as {u.fullName}
-                    <small>{u.accountId ? `Customer · ${MOCK_ACCOUNT.name}` : "Staff"}</small>
-                  </button>
-                </form>
-              </Fragment>
-            ))}
-          </div>
-        )}
-
-        {!demo &&
-          (searchParams.sent ? (
-            <div className="notice">
-              If an account exists for that email, a sign-in link has been
-              sent. Check your inbox.
+        <div className="auth-body">
+          {demo && (
+            <div className="signin-box">
+              {MOCK_USERS.map((u, i) => (
+                <Fragment key={u.id}>
+                  {i > 0 && (
+                    <div className="signin-divider">
+                      <span>or</span>
+                    </div>
+                  )}
+                  <form action={demoLogin}>
+                    <input type="hidden" name="userId" value={u.id} />
+                    <button className="btn wide signin-btn" type="submit">
+                      Continue as {u.fullName}
+                      <small>{u.accountId ? `Customer · ${MOCK_ACCOUNT.name}` : "Staff"}</small>
+                    </button>
+                  </form>
+                </Fragment>
+              ))}
             </div>
-          ) : (
-            <form action={sendLink}>
-              <div className="fgroup">
-                <label htmlFor="email">Work email</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="field"
-                  placeholder="you@company.com"
-                  autoComplete="email"
-                />
-              </div>
-              <button className="btn wide" type="submit">
-                Email me a sign-in link
-              </button>
-            </form>
-          ))}
+          )}
 
-        <p className="meta" style={{ marginTop: 16, textAlign: "center" }}>
-          No passwords. Accounts are created by C&amp;G — call {settings.supportPhone} to
-          get set up.
-        </p>
+          {!demo &&
+            (searchParams.sent ? (
+              <div className="auth-sent">
+                <div className="auth-sent-icon" aria-hidden="true">✓</div>
+                <b>Check your email</b>
+                <p>
+                  If an account exists for that address, we&rsquo;ve sent a secure
+                  sign-in link. It expires shortly and can only be used once.
+                </p>
+              </div>
+            ) : (
+              <form action={sendLink}>
+                <div className="fgroup">
+                  <label htmlFor="email">Email address</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoFocus
+                    className="field"
+                    placeholder="you@company.com"
+                    autoComplete="email"
+                  />
+                </div>
+                <button className="btn wide" type="submit">
+                  Email me a sign-in link
+                </button>
+                <p className="auth-hint">
+                  Passwordless &amp; secure — we email you a single-use link. No
+                  password to remember.
+                </p>
+              </form>
+            ))}
+
+          <p className="auth-foot">
+            Accounts are set up by C&amp;G. Need access? Call {settings.supportPhone}.
+          </p>
+        </div>
       </div>
     </div>
   );
