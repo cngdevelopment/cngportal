@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
 import { FormField } from "@/components/admin/FormField";
 import { createCustomerAction } from "@/app/actions/customers";
 import type { CreateCustomerInput } from "@/schemas/customer";
 import type { FieldErrors } from "@/lib/result";
+
+const PASSWORD_HINT = "At least 8 characters, with uppercase, lowercase, a number, and a special character.";
 
 const EMPTY: CreateCustomerInput = {
   companyName: "",
@@ -13,13 +16,14 @@ const EMPTY: CreateCustomerInput = {
   buyerName: "",
   buyerEmail: "",
   role: "CUSTOMER_ADMIN",
+  password: "",
 };
 
 export function CustomerForm() {
+  const router = useRouter();
   const { toast } = useToast();
   const [form, setForm] = useState<CreateCustomerInput>(EMPTY);
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   function set<K extends keyof CreateCustomerInput>(key: K, value: CreateCustomerInput[K]) {
@@ -29,13 +33,12 @@ export function CustomerForm() {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrors({});
-    setLoginUrl(null);
     startTransition(async () => {
       const result = await createCustomerAction(form);
       if (result.ok) {
         toast(`Login created for ${result.data.buyerEmail}.`);
-        setLoginUrl(result.data.loginUrl);
         setForm(EMPTY);
+        router.refresh();
       } else {
         setErrors(result.error.fields ?? {});
         toast(result.error.message, "error");
@@ -54,6 +57,9 @@ export function CustomerForm() {
       <FormField label="Buyer email" htmlFor="buyerEmail" error={errors.buyerEmail} required>
         <input id="buyerEmail" type="email" className="field" value={form.buyerEmail} onChange={(e) => set("buyerEmail", e.target.value)} />
       </FormField>
+      <FormField label="Password" htmlFor="password" error={errors.password} hint={PASSWORD_HINT} required>
+        <input id="password" type="password" autoComplete="new-password" className="field" value={form.password} onChange={(e) => set("password", e.target.value)} />
+      </FormField>
       <FormField label="Role" htmlFor="role" error={errors.role}>
         <select id="role" className="field" value={form.role} onChange={(e) => set("role", e.target.value as CreateCustomerInput["role"])}>
           <option value="CUSTOMER_ADMIN">Account admin — can manage their account</option>
@@ -67,14 +73,6 @@ export function CustomerForm() {
       <button className="btn wide" type="submit" disabled={pending}>
         {pending ? "Creating…" : "Create customer login"}
       </button>
-
-      {loginUrl && (
-        <div className="login-link-box">
-          <b>Login created.</b>
-          <p>Send the customer this first-login link (expires in ~1 hour), or they can request their own at the sign-in page:</p>
-          <input className="field" readOnly value={loginUrl} onFocus={(e) => e.currentTarget.select()} />
-        </div>
-      )}
     </form>
   );
 }

@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { assertPermission } from "@/server/auth/guards";
 import { runAction } from "@/server/action";
 import { ValidationError } from "@/server/errors";
-import { createCustomer, deleteAccount, type CustomerCreated } from "@/data/accounts";
-import { createCustomerSchema, type CreateCustomerInput } from "@/schemas/customer";
+import { createCustomer, updateCustomer, deleteAccount, type CustomerCreated } from "@/data/accounts";
+import { createCustomerSchema, updateCustomerSchema, type CreateCustomerInput, type UpdateCustomerInput } from "@/schemas/customer";
 import { ROUTES } from "@/config/routes";
 import type { Result } from "@/lib/result";
 
@@ -23,6 +23,17 @@ export async function createCustomerAction(
     const created = await createCustomer(parsed.data);
     revalidatePath(ROUTES.admin.customers);
     return created;
+  });
+}
+
+export async function updateCustomerAction(input: UpdateCustomerInput): Promise<Result<{ id: string }>> {
+  return runAction(async () => {
+    await assertPermission("accounts.manage");
+    const parsed = updateCustomerSchema.safeParse(input);
+    if (!parsed.success) throw ValidationError.fromZod(parsed.error);
+    const updated = await updateCustomer(parsed.data);
+    revalidatePath(ROUTES.admin.customers);
+    return updated;
   });
 }
 

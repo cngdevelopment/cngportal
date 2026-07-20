@@ -1,8 +1,8 @@
 import "server-only";
 import { isDemoMode } from "@/lib/mode";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { ConflictError, BusinessRuleError } from "@/server/errors";
-import type { CreateCustomerInput } from "@/schemas/customer";
+import { ConflictError, BusinessRuleError, NotFoundError } from "@/server/errors";
+import type { CreateCustomerInput, UpdateCustomerInput } from "@/schemas/customer";
 import { MOCK_ACCOUNT, MOCK_USERS } from "./mock/catalog-data";
 
 /**
@@ -15,7 +15,7 @@ export interface AccountRow {
   id: string;
   name: string;
   accountNumber: string;
-  users: { id: string; email: string; fullName: string; role: string }[];
+  users: { id: string; email: string; fullName: string; role: string; isActive: boolean }[];
 }
 
 export interface CustomerCreated {
@@ -23,8 +23,6 @@ export interface CustomerCreated {
   accountNumber: string;
   buyerName: string;
   buyerEmail: string;
-  /** First-login link staff can hand the customer (expires ~1 hour). */
-  loginUrl: string;
 }
 
 export async function listAccounts(): Promise<AccountRow[]> {
@@ -39,6 +37,7 @@ export async function listAccounts(): Promise<AccountRow[]> {
           email: u.email,
           fullName: u.fullName,
           role: u.role,
+          isActive: true,
         })),
       },
     ];
@@ -48,14 +47,14 @@ export async function listAccounts(): Promise<AccountRow[]> {
     where: { isActive: true },
     orderBy: { createdAt: "desc" },
     include: {
-      users: { orderBy: { email: "asc" }, select: { id: true, email: true, fullName: true, role: true } },
+      users: { orderBy: { email: "asc" }, select: { id: true, email: true, fullName: true, role: true, isActive: true } },
     },
   });
   return accounts.map((a) => ({
     id: a.id,
     name: a.name,
     accountNumber: a.accountNumber,
-    users: a.users.map((u) => ({ id: u.id, email: u.email, fullName: u.fullName, role: u.role })),
+    users: a.users.map((u) => ({ id: u.id, email: u.email, fullName: u.fullName, role: u.role, isActive: u.isActive })),
   }));
 }
 
@@ -111,6 +110,7 @@ export async function createCustomer(input: CreateCustomerInput): Promise<Custom
   const admin = supabaseAdmin();
   const { data: created, error } = await admin.auth.admin.createUser({
     email: input.buyerEmail,
+    password: input.password,
     email_confirm: true,
   });
   if (error || !created?.user) {
@@ -133,16 +133,11 @@ export async function createCustomer(input: CreateCustomerInput): Promise<Custom
       },
     });
 
-    const { data: link } = await admin.auth.admin.generateLink({ type: "magiclink", email: input.buyerEmail });
-    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-    const loginUrl = `${base}/auth/confirm?token_hash=${link?.properties?.hashed_token}&type=magiclink`;
-
     return {
       accountName: input.companyName,
       accountNumber,
       buyerName: input.buyerName,
       buyerEmail: input.buyerEmail,
-      loginUrl,
     };
   } catch (e) {
     // Roll back so a failed write never orphans a login or account.
@@ -150,4 +145,62 @@ export async function createCustomer(input: CreateCustomerInput): Promise<Custom
     if (accountId) await prisma.account.delete({ where: { id: accountId } }).catch(() => {});
     throw e;
   }
+}
+
+export async function updateCustomer(input: UpdateCustomerInput): Promise<{ id: string }> {
+  if (isDemoMode()) {
+    throw new BusinessRuleError("Connect the database (Supabase) to manage customer logins.");
+  }
+  const { prisma } = await import("./db");
+
+  const user = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!user || !user.accountId) throw new NotFoundError("That customer no longer exists.");
+  const accountId = user.accountId;
+
+  // Account number: resolve + enforce uniqueness (only when changed/provided).
+  const account = await prisma.account.findUnique({ where: { id: accountId } });
+  if (!account) throw new NotFoundError("That account no longer exists.");
+  let accountNumber = input.accountNumber?.trim() || account.accountNumber;
+  if (accountNumber !== account.accountNumber) {
+    const clash = await prisma.account.findUnique({ where: { accountNumber } });
+    if (clash) throw new ConflictError(`Account number "${accountNumber}" is already in use.`);
+  }
+
+  const admin = supabaseAdmin();
+  const emailChanged = input.buyerEmail.toLowerCase() !== user.email.toLowerCase();
+
+  // Sync the auth record first (email/password) so the two never diverge.
+  if (emailChanged) {
+    const dup = await prisma.user.findFirst({
+      where: { email: input.buyerEmail, NOT: { id: input.userId } },
+      select: { id: true },
+    });
+    if (dup) throw new ConflictError("That email already belongs to another user.");
+    const { error } = await admin.auth.admin.updateUserById(input.userId, {
+      email: input.buyerEmail,
+      email_confirm: true,
+    });
+    if (error) {
+      const already = error.message?.toLowerCase().includes("already");
+      throw new ConflictError(already ? "That email already has a login." : error.message);
+    }
+  }
+  if (input.password) {
+    const { error } = await admin.auth.admin.updateUserById(input.userId, { password: input.password });
+    if (error) throw new ConflictError(error.message);
+  }
+
+  await prisma.$transaction([
+    prisma.account.update({ where: { id: accountId }, data: { name: input.companyName, accountNumber } }),
+    prisma.user.update({
+      where: { id: input.userId },
+      data: {
+        email: input.buyerEmail,
+        fullName: input.buyerName,
+        role: input.role,
+        isActive: input.isActive,
+      },
+    }),
+  ]);
+  return { id: input.userId };
 }
