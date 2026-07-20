@@ -1,4 +1,4 @@
-# C&G Wholesale Ordering Portal
+# C&G Global Ordering Portal
 
 Customer ordering portal per `docs/BUILD_PLAN.md` and the v1.3 build spec.
 The approved look/interaction reference is `prototype/cg-portal-prototype.html`
@@ -22,7 +22,7 @@ browse the catalog, add cabinets/flooring to an order, submit it, watch it
 move through the pipeline, and — as staff — advance/hold/send back orders
 and message customers.
 
-Demo data (5 sample orders across every pipeline stage, the full 20-SKU
+Demo data (the full ~290-SKU
 cabinet catalog, 10 flooring SKUs, colors) lives in `src/data/mock/` and
 resets whenever the dev server restarts.
 
@@ -34,7 +34,7 @@ present — no code changes needed (see `src/lib/mode.ts`).
 ```bash
 cp .env.example .env      # fill in the Supabase values
 npx prisma migrate dev --name init
-npm run db:seed           # 7 colors, 20 placeholder cabinets, 10 flooring SKUs, CG-001 account
+npm run db:seed           # 7 colors, ~290 cabinets, 10 flooring SKUs, CG-001 account
 ```
 
 Apply `prisma/rls.sql` in the Supabase SQL editor (Dashboard → SQL) after the

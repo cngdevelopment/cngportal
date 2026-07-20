@@ -77,7 +77,7 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
             {order.orderNumber}
           </span>
           <StatusChip status={order.status} requiresAssembly={order.requiresAssembly} deliveryMethod={dm} />
-          <span className="chip red">{dm === "PICKUP" ? "Pickup" : "Ship"}</span>
+          <span className="chip neutral">{dm === "PICKUP" ? "Pickup" : "Ship"}</span>
           <span className="meta push">
             {order.accountName} · PO <b>{order.poNumber}</b>
           </span>

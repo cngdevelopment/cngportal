@@ -26,6 +26,7 @@ export const ROUTES = {
   admin: {
     overview: "/admin",
     settings: "/admin/settings",
+    customers: "/admin/customers",
     catalog: "/admin/catalog",
     discounts: "/admin/discounts",
     cms: "/admin/cms",

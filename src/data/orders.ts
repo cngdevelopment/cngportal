@@ -59,10 +59,19 @@ export async function listShipToAddresses(accountId: string) {
 export async function createOrder(input: CreateOrderInput) {
   if (isDemoMode()) return createOrderMock(input);
   const { prisma } = await import("./db");
-  const { findProduct, findColor } = await import("./mock/catalog-data");
+
+  // Resolve REAL product/color ids from the database (never the demo ids).
+  const skus = [...new Set(input.lines.map((l) => l.sku))];
+  const codes = [...new Set(input.lines.map((l) => l.colorCode).filter((c): c is string => !!c))];
+  const [products, colors] = await Promise.all([
+    prisma.product.findMany({ where: { sku: { in: skus } } }),
+    codes.length ? prisma.color.findMany({ where: { code: { in: codes } } }) : Promise.resolve([]),
+  ]);
+  const productBySku = new Map(products.map((p) => [p.sku, p]));
+  const colorByCode = new Map(colors.map((c) => [c.code, c]));
 
   return prisma.$transaction(async (tx) => {
-    // Placeholder numbering until a real sequence/counter lands with Supabase.
+    // Placeholder numbering until a real sequence/counter lands.
     const orderNumber = formatOrderNumber(Math.floor(1000 + Math.random() * 9000));
     const requiresAssembly = input.lines.some((l) => l.assembly === "ASSEMBLED");
     const order = await tx.order.create({
@@ -82,19 +91,20 @@ export async function createOrder(input: CreateOrderInput) {
         submittedAt: new Date(),
         items: {
           create: input.lines.map((l) => {
-            const p = findProduct(l.sku);
-            const c = l.colorCode ? findColor(l.colorCode) : null;
+            const p = productBySku.get(l.sku);
+            if (!p) throw new Error(`Unknown product SKU: ${l.sku}`);
+            const c = l.colorCode ? colorByCode.get(l.colorCode) ?? null : null;
             return {
-              productId: p!.id,
+              productId: p.id,
               colorId: c?.id ?? null,
               assembly: l.assembly ?? null,
               selectedOptions: l.thickness ? { Thickness: l.thickness } : undefined,
               quantity: l.quantity,
-              unit: p!.unit as never,
+              unit: p.unit,
               lineNotes: l.notes,
-              productNameSnapshot: p!.name,
+              productNameSnapshot: p.name,
               colorNameSnapshot: c?.name ?? null,
-              skuSnapshot: p!.sku,
+              skuSnapshot: p.sku,
               assemblySnapshot: l.assembly ?? null,
             };
           }),
