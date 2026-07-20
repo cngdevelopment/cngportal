@@ -13,18 +13,19 @@ export default async function LoginPage({
     "use server";
     const email = String(formData.get("email") ?? "").trim();
     if (email) {
-      const { supabaseServer } = await import("@/lib/supabase/server");
-      const supabase = supabaseServer();
       // shouldCreateUser:false — no self-registration (spec §4).
-      // Errors are deliberately swallowed: never confirm whether an email is
-      // registered (spec §8.1 — no account enumeration).
-      await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: false,
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
-        },
-      });
+      // Both returned errors AND thrown errors are swallowed: never confirm
+      // whether an email is registered (spec §8.1) and never crash the form.
+      try {
+        const { supabaseServer } = await import("@/lib/supabase/server");
+        const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+        await supabaseServer().auth.signInWithOtp({
+          email,
+          options: { shouldCreateUser: false, emailRedirectTo: `${base}/auth/confirm` },
+        });
+      } catch {
+        // ignore — still show the neutral "check your email" screen
+      }
     }
     redirect("/login?sent=1");
   }
