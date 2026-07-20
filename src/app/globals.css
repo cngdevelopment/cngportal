@@ -285,6 +285,11 @@ aside.rail{width:200px;flex-shrink:0}
 .admin-card-title{font-weight:600;font-size:.95rem}
 .admin-card p{font-size:.83rem;color:var(--ink-2);flex:1;margin:0}
 .admin-card .btn{align-self:flex-start;margin-top:4px}
+.store-chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.store-chip{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;text-decoration:none;transition:border-color .15s,box-shadow .15s}
+.store-chip:hover{border-color:var(--red);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.store-chip-name{font-weight:600;font-size:1rem;color:var(--ink)}
+.store-chip-number{font-size:.78rem;color:var(--ink-3)}
 
 /* admin forms */
 .settings-panel{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:8px 22px 22px;max-width:760px}

@@ -30,6 +30,16 @@ export async function listAllOrders() {
   return orders.map((o) => ({ ...o, accountName: o.account.name }));
 }
 
+export async function listOrdersForAccount(accountId: string) {
+  if (isDemoMode()) return listAllOrdersMock().filter((o) => o.accountId === accountId);
+  const { prisma } = await import("./db");
+  return prisma.order.findMany({
+    where: { accountId, status: { not: "DRAFT" } },
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { items: true } } },
+  });
+}
+
 export async function getOrderForStaff(orderId: string) {
   if (isDemoMode()) return getOrderForStaffMock(orderId);
   const { prisma } = await import("./db");

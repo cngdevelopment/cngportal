@@ -20,6 +20,7 @@ interface AdminSection {
 const SECTIONS: AdminSection[] = [
   { key: "employees", title: "Employees", permission: "employees.manage", description: "Create staff logins, set roles, reset passwords, and manage access.", href: ROUTES.admin.employees },
   { key: "customers", title: "Customers", permission: "accounts.manage", description: "Create customer logins and manage accounts.", href: ROUTES.admin.customers },
+  { key: "stores", title: "Stores", permission: "accounts.manage", description: "Browse every customer account and view their order history.", href: ROUTES.admin.stores },
   { key: "settings", title: "Settings", permission: "settings.manage", description: "Company info, warehouse, branding, and announcements.", href: ROUTES.admin.settings },
   { key: "catalog", title: "Catalog", permission: "catalog.manage", description: "Products, pricing, colors, and images." },
   { key: "discounts", title: "Discounts", permission: "discounts.manage", description: "Promo codes and automatic discount rules." },

@@ -28,6 +28,8 @@ export const ROUTES = {
     overview: "/admin",
     settings: "/admin/settings",
     customers: "/admin/customers",
+    stores: "/admin/stores",
+    store: (id: string) => `/admin/stores/${id}`,
     employees: "/admin/employees",
     catalog: "/admin/catalog",
     discounts: "/admin/discounts",
