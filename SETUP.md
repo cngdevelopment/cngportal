@@ -34,11 +34,32 @@ Add `RESEND_API_KEY` + a verified `EMAIL_FROM` (block **4**) to send real
 staff/customer notifications. Without it, the app still works — it just
 doesn't send email.
 
-## 5. Run it
+## 5. Run it locally
 ```bash
 npm run dev        # http://localhost:3000  → magic-link login
 npm run build      # production build (also runs lint + typecheck)
 ```
+`localhost` is your machine only. To let customers use it on any device, deploy (below).
+
+## 6. Deploy so anyone can use it (Vercel — recommended for Next.js)
+1. Push to GitHub (already done: `cngdevelopment/cngportal`).
+2. [vercel.com](https://vercel.com) → New Project → import the repo. Framework
+   auto-detects as Next.js; no build settings to change.
+3. Add the **same env vars** from your `.env` in Vercel → Project Settings →
+   Environment Variables (Production): `DATABASE_URL`, `DIRECT_URL`,
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+   `SUPABASE_SERVICE_ROLE_KEY`, and set **`NEXT_PUBLIC_SITE_URL` to the Vercel
+   URL** (e.g. `https://cgportal.vercel.app`). Add the warehouse/email ones too.
+4. Deploy. You now have a public URL that works on any device.
+5. In **Supabase → Authentication → URL Configuration**: set **Site URL** to
+   your Vercel URL and add `https://<your-domain>/**` to **Redirect URLs**.
+   (Magic-link sign-in fails without this.)
+6. **Email delivery:** Supabase's built-in email is rate-limited and not for
+   production. In **Supabase → Authentication → Email**, configure SMTP (or a
+   provider like Resend) so customers reliably receive sign-in links. Until
+   then, use the first-login links from Admin → Customers.
+
+Redeploys are automatic on every `git push` to `main`.
 
 ## Where each concern plugs in (for future work)
 | Concern | Insertion point |
