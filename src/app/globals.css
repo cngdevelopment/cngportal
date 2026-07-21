@@ -144,12 +144,24 @@ table.list tr:last-child td{border-bottom:none}
 /* login */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--paper);position:relative;overflow:hidden}
 
-/* decorative globe behind the sign-in card */
-.world-backdrop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(880px,140vw);height:auto;pointer-events:none;user-select:none}
-.world-backdrop .wb-rim{stroke:var(--red);opacity:.13}
-.world-backdrop .wb-line{stroke:var(--ink);opacity:.07}
+/* full-bleed globe behind the sign-in card — oversized so it crops off every edge */
+/* Sized off viewport height so the rim arc stays on screen while the globe
+   crops off the top and bottom — a planet horizon, not a wall of grid. */
+.world-backdrop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(142vh,128vw);height:auto;pointer-events:none;user-select:none}
+/* hairlines stay crisp at any scale */
+.world-backdrop circle,.world-backdrop ellipse,.world-backdrop line{vector-effect:non-scaling-stroke}
+.world-backdrop .wb-orbit{stroke:var(--red);stroke-width:1;opacity:.30}
+.world-backdrop .wb-rim{stroke:var(--red);stroke-width:2;opacity:.45}
+.world-backdrop .wb-equator{stroke:var(--ink);stroke-width:1.25;opacity:.26}
+.world-backdrop .wb-line{stroke:var(--ink);stroke-width:1;opacity:.15}
 .login-wrap .auth-card{position:relative;z-index:1}
-@media (max-width:520px){.world-backdrop{opacity:.7}}
+/* Narrow screens: the card takes nearly the full width, so only the rim arcs
+   can show at the margins — size for a clear curve and lift them slightly. */
+@media (max-width:640px){
+  .world-backdrop{width:165vw}
+  .world-backdrop .wb-rim{opacity:.55}
+  .world-backdrop .wb-orbit{opacity:.38}
+}
 .login-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:34px 36px;width:100%;max-width:400px}
 .login-card .mark{margin:0 auto 12px}
 .login-card h1{text-align:center}

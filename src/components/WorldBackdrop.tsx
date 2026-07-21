@@ -1,44 +1,62 @@
 /**
- * Decorative globe behind the sign-in card — an orthographic graticule
- * (meridians + latitudes) echoing the C&G Global mark. Deliberately plain
- * line work at low opacity so it reads as texture, never as content.
+ * Full-bleed globe behind the sign-in card. An orthographic graticule scaled
+ * past the viewport so it crops off every edge — reads as a planet horizon
+ * rather than a logo. Strokes are non-scaling, so the line work stays hairline
+ * and precise no matter how large it renders.
+ *
+ * Geometry (viewBox 600, centre 300,300, radius R):
+ *   meridians  = ellipses sharing ry = R, narrowing rx toward the centre line
+ *   latitudes  = horizontal chords, half-width = sqrt(R^2 - offset^2)
  */
-export function WorldBackdrop() {
-  // Latitude chords: half-width = sqrt(r^2 - offset^2) for r = 240.
-  const latitudes = [
-    { y: 0, half: 240 },
-    { y: 80, half: 226 },
-    { y: 160, half: 179 },
-  ];
+const R = 240;
+const C = 300;
 
+const MERIDIAN_RX = [185, 120, 55];
+const LATITUDE_OFFSETS = [60, 120, 180];
+
+const chord = (offset: number) => Math.sqrt(R * R - offset * offset);
+
+export function WorldBackdrop() {
   return (
-    <svg className="world-backdrop" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
-      <g fill="none" strokeWidth="1.5" vectorEffect="non-scaling-stroke">
-        {/* rim */}
-        <circle cx="300" cy="300" r="240" className="wb-rim" />
+    <svg
+      className="world-backdrop"
+      viewBox="0 0 600 600"
+      aria-hidden="true"
+      focusable="false"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <g fill="none">
+        {/* outer orbit ring — sits beyond the globe, cropped by the viewport */}
+        <circle cx={C} cy={C} r={282} className="wb-orbit" />
+
+        {/* globe rim */}
+        <circle cx={C} cy={C} r={R} className="wb-rim" />
 
         {/* meridians */}
-        {[240, 160, 80].map((rx) => (
-          <ellipse key={rx} cx="300" cy="300" rx={rx} ry="240" className="wb-line" />
+        {MERIDIAN_RX.map((rx) => (
+          <ellipse key={rx} cx={C} cy={C} rx={rx} ry={R} className="wb-line" />
         ))}
-        <line x1="300" y1="60" x2="300" y2="540" className="wb-line" />
+        <line x1={C} y1={C - R} x2={C} y2={C + R} className="wb-line" />
 
-        {/* latitudes */}
-        {latitudes.map(({ y, half }) =>
-          y === 0 ? (
-            <line key="eq" x1={300 - half} y1="300" x2={300 + half} y2="300" className="wb-line" />
-          ) : (
-            [-1, 1].map((sign) => (
+        {/* equator — slightly stronger, gives the horizon its anchor */}
+        <line x1={C - R} y1={C} x2={C + R} y2={C} className="wb-equator" />
+
+        {/* latitudes above and below */}
+        {LATITUDE_OFFSETS.map((offset) =>
+          [-1, 1].map((sign) => {
+            const half = chord(offset);
+            const y = C + sign * offset;
+            return (
               <line
-                key={`${y}${sign}`}
-                x1={300 - half}
-                y1={300 + sign * y}
-                x2={300 + half}
-                y2={300 + sign * y}
+                key={`${offset}:${sign}`}
+                x1={C - half}
+                y1={y}
+                x2={C + half}
+                y2={y}
                 className="wb-line"
               />
-            ))
-          )
+            );
+          })
         )}
       </g>
     </svg>
