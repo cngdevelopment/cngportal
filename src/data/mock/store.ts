@@ -163,6 +163,26 @@ export function listShipToMock(accountId: string) {
   return MOCK_SHIP_TO.filter((s) => s.accountId === accountId);
 }
 
+/** Demo-mode counterpart of createShipToAddress — appends to the in-memory list. */
+export function createShipToMock(
+  accountId: string,
+  data: {
+    label: string;
+    line1: string;
+    line2: string | null;
+    city: string;
+    state: string;
+    zip: string;
+    contactName: string | null;
+    contactPhone: string | null;
+  }
+): { id: string } {
+  const isFirst = MOCK_SHIP_TO.every((s) => s.accountId !== accountId);
+  const row = { id: id("ship"), accountId, ...data, isDefault: isFirst };
+  MOCK_SHIP_TO.push(row);
+  return { id: row.id };
+}
+
 // ── Customer order reads ────────────────────────────────────────────
 
 function withCount(o: MockOrder) {

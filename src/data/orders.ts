@@ -5,6 +5,7 @@ import {
   listOrdersMock,
   getOrderMock,
   listShipToMock,
+  createShipToMock,
   createOrderMock,
   cancelOrderMock,
   reorderLinesMock,
@@ -54,6 +55,48 @@ export async function listShipToAddresses(accountId: string) {
     where: { accountId, isActive: true },
     orderBy: { isDefault: "desc" },
   });
+}
+
+export interface NewShipToData {
+  label?: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  contactName?: string;
+  contactPhone?: string;
+}
+
+/**
+ * Save a shipping address typed in at checkout. Always scoped to the caller's
+ * account (resolved server-side). Becomes the default when it's the account's
+ * first address, and shows up in the saved-address list on later orders.
+ */
+export async function createShipToAddress(
+  accountId: string,
+  data: NewShipToData
+): Promise<{ id: string }> {
+  const clean = {
+    label: data.label?.trim() || "Jobsite",
+    line1: data.line1.trim(),
+    line2: data.line2?.trim() || null,
+    city: data.city.trim(),
+    state: data.state.trim(),
+    zip: data.zip.trim(),
+    contactName: data.contactName?.trim() || null,
+    contactPhone: data.contactPhone?.trim() || null,
+  };
+
+  if (isDemoMode()) return createShipToMock(accountId, clean);
+
+  const { prisma } = await import("./db");
+  const existing = await prisma.shipToAddress.count({ where: { accountId, isActive: true } });
+  const created = await prisma.shipToAddress.create({
+    data: { accountId, ...clean, isDefault: existing === 0, isActive: true },
+    select: { id: true },
+  });
+  return created;
 }
 
 export async function createOrder(input: CreateOrderInput) {

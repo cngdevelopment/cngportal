@@ -23,6 +23,36 @@ interface Warehouse {
   phone: string;
 }
 
+/** Sentinel select value meaning "I'll type a new address". */
+const NEW_ADDRESS = "__new__";
+
+interface NewAddress {
+  label: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  zip: string;
+  contactName: string;
+  contactPhone: string;
+}
+
+const EMPTY_ADDRESS: NewAddress = {
+  label: "",
+  line1: "",
+  line2: "",
+  city: "",
+  state: "",
+  zip: "",
+  contactName: "",
+  contactPhone: "",
+};
+
+/** The fields we require before an order can ship to a typed-in address. */
+function addressComplete(a: NewAddress): boolean {
+  return !!(a.line1.trim() && a.city.trim() && a.state.trim() && a.zip.trim());
+}
+
 export function CartReview({
   shipToOptions,
   warehouse,
@@ -34,7 +64,11 @@ export function CartReview({
   const router = useRouter();
 
   const [deliveryMethod, setDeliveryMethod] = useState<"SHIP" | "PICKUP" | null>(null);
-  const [shipToId, setShipToId] = useState(shipToOptions.find((s) => s.isDefault)?.id ?? shipToOptions[0]?.id ?? "");
+  // "__new__" = type a new address. Accounts with no saved addresses always start here.
+  const [shipToId, setShipToId] = useState(
+    shipToOptions.find((s) => s.isDefault)?.id ?? shipToOptions[0]?.id ?? NEW_ADDRESS
+  );
+  const [newAddress, setNewAddress] = useState<NewAddress>(EMPTY_ADDRESS);
   const [pickupName, setPickupName] = useState("");
   const [pickupPhone, setPickupPhone] = useState("");
   const [po, setPo] = useState("");
@@ -67,10 +101,13 @@ export function CartReview({
     [lines]
   );
 
+  const enteringNewAddress = shipToId === NEW_ADDRESS;
+
   function cartValid() {
     if (lines.length === 0) return false;
     if (!deliveryMethod) return false;
     if (deliveryMethod === "PICKUP" && (!pickupName.trim() || !pickupPhone.trim())) return false;
+    if (deliveryMethod === "SHIP" && enteringNewAddress && !addressComplete(newAddress)) return false;
     if (!po.trim()) return false;
     return true;
   }
@@ -95,7 +132,10 @@ export function CartReview({
           notes: l.notes,
         })),
         deliveryMethod: deliveryMethod!,
-        shipToAddressId: deliveryMethod === "SHIP" ? shipToId || null : null,
+        shipToAddressId:
+          deliveryMethod === "SHIP" && !enteringNewAddress ? shipToId || null : null,
+        newShipTo:
+          deliveryMethod === "SHIP" && enteringNewAddress ? newAddress : null,
         pickupContactName: deliveryMethod === "PICKUP" ? pickupName : null,
         pickupContactPhone: deliveryMethod === "PICKUP" ? pickupPhone : null,
         poNumber: po,
@@ -262,16 +302,92 @@ export function CartReview({
           </div>
 
           {deliveryMethod === "SHIP" && (
-            <div className="fgroup">
-              <label>Ship to</label>
-              <select value={shipToId} onChange={(e) => setShipToId(e.target.value)}>
-                {shipToOptions.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label} — {s.line1}, {s.city}, {s.state}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <>
+              {shipToOptions.length > 0 && (
+                <div className="fgroup">
+                  <label>Ship to</label>
+                  <select value={shipToId} onChange={(e) => setShipToId(e.target.value)}>
+                    {shipToOptions.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.label} — {s.line1}, {s.city}, {s.state}
+                      </option>
+                    ))}
+                    <option value={NEW_ADDRESS}>+ Enter a new address</option>
+                  </select>
+                </div>
+              )}
+
+              {enteringNewAddress && (
+                <div className="fgroup">
+                  <label>
+                    Shipping address <span className="req">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newAddress.label}
+                    onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
+                    placeholder="Name this address (optional) — e.g. Oak St jobsite"
+                    style={{ marginBottom: 7 }}
+                  />
+                  <input
+                    type="text"
+                    value={newAddress.line1}
+                    onChange={(e) => setNewAddress({ ...newAddress, line1: e.target.value })}
+                    placeholder="Street address"
+                    style={{ marginBottom: 7 }}
+                  />
+                  <input
+                    type="text"
+                    value={newAddress.line2}
+                    onChange={(e) => setNewAddress({ ...newAddress, line2: e.target.value })}
+                    placeholder="Suite / unit (optional)"
+                    style={{ marginBottom: 7 }}
+                  />
+                  <input
+                    type="text"
+                    value={newAddress.city}
+                    onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                    placeholder="City"
+                    style={{ marginBottom: 7 }}
+                  />
+                  <div style={{ display: "flex", gap: 7, marginBottom: 7 }}>
+                    <input
+                      type="text"
+                      value={newAddress.state}
+                      onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                      placeholder="State"
+                      style={{ flex: 1, minWidth: 0 }}
+                    />
+                    <input
+                      type="text"
+                      value={newAddress.zip}
+                      onChange={(e) => setNewAddress({ ...newAddress, zip: e.target.value })}
+                      placeholder="ZIP"
+                      style={{ flex: 1, minWidth: 0 }}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={newAddress.contactName}
+                    onChange={(e) => setNewAddress({ ...newAddress, contactName: e.target.value })}
+                    placeholder="Site contact name (optional)"
+                    style={{ marginBottom: 7 }}
+                  />
+                  <input
+                    type="text"
+                    value={newAddress.contactPhone}
+                    onChange={(e) => setNewAddress({ ...newAddress, contactPhone: e.target.value })}
+                    placeholder="Site contact phone (optional)"
+                  />
+                  <div className="field-hint">
+                    We&rsquo;ll save this address so you can reuse it on your next order.
+                  </div>
+                  {submitTried && !addressComplete(newAddress) && (
+                    <div className="err">Street address, city, state, and ZIP are required.</div>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
           {deliveryMethod === "PICKUP" && (

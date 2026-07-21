@@ -469,7 +469,21 @@ export const MOCK_ACCOUNT = {
   accountNumber: "CG-001",
 };
 
-export const MOCK_SHIP_TO = [
+export interface MockShipTo {
+  id: string;
+  accountId: string;
+  label: string;
+  line1: string;
+  line2: string | null;
+  city: string;
+  state: string;
+  zip: string;
+  contactName?: string | null;
+  contactPhone?: string | null;
+  isDefault: boolean;
+}
+
+export const MOCK_SHIP_TO: MockShipTo[] = [
   {
     id: "ship-main",
     accountId: MOCK_ACCOUNT.id,

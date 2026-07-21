@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireCustomer } from "@/data/context";
 import {
   createOrder,
+  createShipToAddress,
   cancelOrder as cancelOrderData,
   reorderLines,
   addCustomerMessage,
@@ -24,10 +25,23 @@ export interface SubmitOrderLine {
   notes: string;
 }
 
+export interface SubmitOrderNewShipTo {
+  label?: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  contactName?: string;
+  contactPhone?: string;
+}
+
 export interface SubmitOrderPayload {
   lines: SubmitOrderLine[];
   deliveryMethod: "SHIP" | "PICKUP";
   shipToAddressId: string | null;
+  /** Sent instead of shipToAddressId when the customer types a new address. */
+  newShipTo?: SubmitOrderNewShipTo | null;
   pickupContactName: string | null;
   pickupContactPhone: string | null;
   poNumber: string;
@@ -42,6 +56,14 @@ export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ 
   const parsed = submitOrderSchema.safeParse(payload);
   if (!parsed.success) throw ValidationError.fromZod(parsed.error);
 
+  // A typed-in shipping address is saved to this account first, then the
+  // order references it. accountId comes from the session, never the client.
+  let shipToAddressId = parsed.data.shipToAddressId;
+  if (parsed.data.deliveryMethod === "SHIP" && !shipToAddressId && parsed.data.newShipTo) {
+    const created = await createShipToAddress(ctx.accountId, parsed.data.newShipTo);
+    shipToAddressId = created.id;
+  }
+
   const order = await createOrder({
     accountId: ctx.accountId,
     userId: ctx.userId,
@@ -54,7 +76,7 @@ export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ 
       notes: l.notes || null,
     })),
     deliveryMethod: payload.deliveryMethod,
-    shipToAddressId: payload.shipToAddressId,
+    shipToAddressId,
     pickupContactName: payload.pickupContactName,
     pickupContactPhone: payload.pickupContactPhone,
     poNumber: payload.poNumber.trim(),
