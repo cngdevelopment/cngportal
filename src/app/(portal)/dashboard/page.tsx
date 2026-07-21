@@ -3,6 +3,7 @@ import { requireCustomer } from "@/data/context";
 import { listOrders } from "@/data/orders";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusChip } from "@/components/StatusChip";
+import { getContent } from "@/server/content/content";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ function fmt(d: Date) {
 
 export default async function DashboardPage() {
   const ctx = await requireCustomer();
-  const orders = await listOrders(ctx.accountId);
+  const [orders, content] = await Promise.all([listOrders(ctx.accountId), getContent()]);
 
   const active = orders.filter(
     (o) => o.status !== "COMPLETED" && o.status !== "CANCELLED"
@@ -21,6 +22,12 @@ export default async function DashboardPage() {
 
   return (
     <>
+      {(content.welcomeHeading.trim() || content.welcomeBody.trim()) && (
+        <div className="welcome-panel">
+          {content.welcomeHeading.trim() ? <b>{content.welcomeHeading}</b> : null}
+          {content.welcomeBody.trim() ? <p>{content.welcomeBody}</p> : null}
+        </div>
+      )}
       <h1>Orders</h1>
       <p className="sub">Everything your account has in the pipeline right now.</p>
       <Link href="/new-order" className="btn">

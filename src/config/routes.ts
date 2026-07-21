@@ -15,6 +15,7 @@ export const ROUTES = {
   newOrder: "/new-order",
   cart: "/cart",
   history: "/history",
+  help: "/help",
   order: (id: string) => `/orders/${id}`,
 
   // Staff console

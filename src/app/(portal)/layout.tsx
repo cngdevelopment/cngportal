@@ -1,5 +1,6 @@
 import { requireCustomer } from "@/data/context";
 import { getSettings } from "@/server/settings/settings";
+import { getContent } from "@/server/content/content";
 import { isStaffRole } from "@/types/domain";
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
@@ -16,7 +17,7 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireCustomer();
-  const settings = await getSettings();
+  const [settings, content] = await Promise.all([getSettings(), getContent()]);
 
   // Maintenance mode closes the customer portal; staff keep working through it.
   if (settings.maintenanceMode && !isStaffRole(ctx.role)) {
@@ -47,11 +48,13 @@ export default async function PortalLayout({
             { href: ROUTES.dashboard, label: "Dashboard" },
             { href: ROUTES.newOrder, label: "New Order" },
             { href: ROUTES.history, label: "Order History" },
+            { href: ROUTES.help, label: "Help" },
           ]}
         />
       </nav>
       <AnnouncementBanner enabled={settings.announcement.enabled} message={settings.announcement.message} />
       <main className="portal">{children}</main>
+      {content.footerText.trim() ? <footer className="site-footer">{content.footerText}</footer> : null}
       <CartPill />
     </CartProvider>
   );
