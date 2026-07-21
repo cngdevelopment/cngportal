@@ -2,7 +2,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
 /**
- * Supabase admin client (service-role key). Server-only — the service-role
+ * Supabase admin client (service-role key). Server-only - the service-role
  * key bypasses Row Level Security and must never reach the browser. Used to
  * provision auth users when staff create a customer login.
  */

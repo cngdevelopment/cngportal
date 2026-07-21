@@ -1,7 +1,7 @@
 import { buildPipeline, type PipelineStatus } from "@/lib/pipeline/buildPipeline";
 
 /**
- * Renders whatever buildPipeline() returns — no pipeline rules live here
+ * Renders whatever buildPipeline() returns - no pipeline rules live here
  * (spec §7). Server component; no client JS needed.
  */
 export function ProgressBar({

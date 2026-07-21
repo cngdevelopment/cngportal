@@ -113,7 +113,7 @@ export function ContentForm({ content }: { content: SiteContent }) {
       <div className="form-section-label">FAQs</div>
       <div className="field-hint" style={{ marginBottom: 10 }}>
         {faqs.length === 0
-          ? "No FAQs yet — the Help page will just show your contact details."
+          ? "No FAQs yet. The Help page will just show your contact details."
           : `${faqs.length} question${faqs.length === 1 ? "" : "s"}, shown in this order.`}
       </div>
 

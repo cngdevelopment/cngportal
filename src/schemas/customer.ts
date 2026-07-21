@@ -3,7 +3,7 @@ import { emailSchema, passwordSchema } from "./auth";
 
 /**
  * Staff creating a customer login from the Admin Portal. Account number is
- * optional — auto-generated when blank. A password is required so the
+ * optional - auto-generated when blank. A password is required so the
  * customer can sign in with email + password (no magic-link-only logins).
  */
 export const createCustomerSchema = z.object({
@@ -18,7 +18,7 @@ export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 
 /**
  * Staff editing a customer. Company + account number apply to the account;
- * the rest apply to the buyer login. Password is optional — empty means
+ * the rest apply to the buyer login. Password is optional - empty means
  * "leave it unchanged".
  */
 export const updateCustomerSchema = z

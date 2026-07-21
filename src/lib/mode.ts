@@ -1,6 +1,6 @@
 /**
  * Demo mode: true whenever real Supabase/Postgres credentials aren't
- * configured. Lets the whole app run with zero external setup — an
+ * configured. Lets the whole app run with zero external setup - an
  * in-memory data store stands in for Prisma/Supabase (src/data/mock/*).
  *
  * Add real values to .env (see .env.example) and this flips off on its

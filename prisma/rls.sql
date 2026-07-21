@@ -5,7 +5,7 @@
 -- Assumes the Supabase JWT carries the user's account_id claim, exposed via:
 --   current_setting('request.jwt.claims', true)::json ->> 'account_id'
 -- Staff (account_id IS NULL on users) connect through the service role,
--- which bypasses RLS — the app's staffContext() gate is their control.
+-- which bypasses RLS - the app's staffContext() gate is their control.
 
 -- ── CHECK constraints from spec §6 ──────────────────────────────────
 
@@ -88,4 +88,4 @@ CREATE POLICY tenant_attachments ON attachments
   );
 
 -- Catalog tables (products, colors, product_colors, product_options) are
--- global reads — no RLS needed, but keep writes to the service role.
+-- global reads - no RLS needed, but keep writes to the service role.

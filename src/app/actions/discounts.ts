@@ -23,7 +23,7 @@ import {
 import { ROUTES } from "@/config/routes";
 import type { Result } from "@/lib/result";
 
-/** Admin CRUD — gated on discounts.manage (STAFF_ADMIN). */
+/** Admin CRUD - gated on discounts.manage (STAFF_ADMIN). */
 
 export async function createDiscountAction(input: CreateDiscountInput): Promise<Result<{ id: string }>> {
   return runAction(async () => {
@@ -59,7 +59,7 @@ export async function deleteDiscountAction(id: string): Promise<Result<{ id: str
 
 /**
  * Customer previewing a promo code in the cart. The subtotal is recomputed
- * from catalog prices here — the client's number is never trusted.
+ * from catalog prices here - the client's number is never trusted.
  */
 export async function applyDiscountAction(
   input: ApplyDiscountInput

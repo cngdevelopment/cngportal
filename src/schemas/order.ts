@@ -3,7 +3,7 @@ import { BUSINESS } from "@/config/business";
 
 /**
  * Input schemas for order mutations. The trust boundary: never trust the
- * client — every server mutation re-validates here, independent of any
+ * client - every server mutation re-validates here, independent of any
  * client-side checks.
  */
 

@@ -4,7 +4,7 @@ import type { Assembly, DeliveryMethod, PipelineStatus } from "@/types/domain";
  * Order status + order-type display metadata.
  *
  * NOTE: the pipeline itself (which statuses exist, in what order, with
- * what step labels) is owned exclusively by buildPipeline() — the single
+ * what step labels) is owned exclusively by buildPipeline() - the single
  * source of truth (spec §7). This file only holds *display* concerns:
  * chip colors and the labels for off-pipeline states and order types.
  */
@@ -22,7 +22,7 @@ export const OFF_PIPELINE_STATUS_META = {
 
 /**
  * Chip colour for an on-pipeline status. Success states (ready/delivered) are
- * green; everything still in flight is neutral — never red, so red is reserved
+ * green; everything still in flight is neutral - never red, so red is reserved
  * for genuine failure (cancelled).
  */
 export function pipelineChipVariant(status: PipelineStatus): ChipVariant {

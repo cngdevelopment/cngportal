@@ -42,7 +42,7 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
   const rawEvents = ("events" in order ? (order as { events?: RawEvent[] }).events : undefined) ?? [];
   const events = [...rawEvents].reverse().map((e) => ({
     id: e.id,
-    label: e.toStatus ? `${e.fromStatus ?? "—"} → ${e.toStatus}` : "—",
+    label: e.toStatus ? `${e.fromStatus ?? "-"} → ${e.toStatus}` : "-",
     note: e.note,
     actorName: e.actorName ?? e.actor?.fullName ?? "System",
     when: fmtDateTime(new Date(e.createdAt)),
@@ -99,7 +99,7 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
             <span className="meta">Shipping to</span>
             <br />
             <b style={{ fontSize: ".9rem" }}>
-              {order.shipTo.label} — {order.shipTo.line1}, {order.shipTo.city}, {order.shipTo.state}{" "}
+              {order.shipTo.label}: {order.shipTo.line1}, {order.shipTo.city}, {order.shipTo.state}{" "}
               {order.shipTo.zip}
             </b>
           </div>
@@ -153,9 +153,9 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
                     {l.lineNotes ? <> · {l.lineNotes}</> : null}
                   </span>
                 </td>
-                <td>{l.colorNameSnapshot ?? opts["Thickness"] ?? "—"}</td>
+                <td>{l.colorNameSnapshot ?? opts["Thickness"] ?? "-"}</td>
                 <td>
-                  {l.assembly === "ASSEMBLED" ? "Assembled" : l.assembly === "UNASSEMBLED" ? "RTA" : "—"}
+                  {l.assembly === "ASSEMBLED" ? "Assembled" : l.assembly === "UNASSEMBLED" ? "RTA" : "-"}
                 </td>
                 <td>{Number(l.quantity)}</td>
               </tr>
@@ -181,7 +181,7 @@ export default async function StaffOrderDetailPage({ params }: { params: { id: s
             <div key={e.id} className="event-row">
               <span className="when">{e.when}</span>
               <span>
-                <b>{e.label}</b> — {e.actorName}
+                <b>{e.label}</b> by {e.actorName}
                 {e.note ? <> · {e.note}</> : null}
               </span>
             </div>

@@ -117,16 +117,16 @@ export function CustomersTable({ accounts }: { accounts: AccountRow[] }) {
                 <tr key={r.key}>
                   <td><b>{r.accountName}</b></td>
                   <td>{r.accountNumber}</td>
-                  <td>{r.user?.fullName ?? <span className="meta">—</span>}</td>
-                  <td>{r.user?.email ?? <span className="meta">—</span>}</td>
-                  <td>{r.user ? <span className="chip">{ROLE_LABEL[r.user.role] ?? r.user.role}</span> : "—"}</td>
+                  <td>{r.user?.fullName ?? <span className="meta">-</span>}</td>
+                  <td>{r.user?.email ?? <span className="meta">-</span>}</td>
+                  <td>{r.user ? <span className="chip">{ROLE_LABEL[r.user.role] ?? r.user.role}</span> : "-"}</td>
                   <td>
                     {r.user ? (
                       <span className={`chip ${r.user.isActive ? "green" : "neutral"}`}>
                         {r.user.isActive ? "Active" : "Inactive"}
                       </span>
                     ) : (
-                      "—"
+                      "-"
                     )}
                   </td>
                   <td className="row-actions">

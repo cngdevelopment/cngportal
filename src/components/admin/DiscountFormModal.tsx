@@ -116,7 +116,7 @@ export function DiscountFormModal({
             </FormField>
           </div>
 
-          <FormField label="Description" htmlFor="description" error={errors.description} hint="Internal note — customers don't see this.">
+          <FormField label="Description" htmlFor="description" error={errors.description} hint="Internal note. Customers don't see this.">
             <input id="description" className="field" value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Optional" />
           </FormField>
 

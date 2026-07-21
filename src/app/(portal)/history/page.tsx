@@ -43,7 +43,7 @@ export default async function HistoryPage() {
                         day: "numeric",
                         year: "numeric",
                       })
-                    : "—"}
+                    : "-"}
                 </td>
                 <td>{o._count.items}</td>
                 <td>{o.deliveryMethod === "PICKUP" ? "Pickup" : "Ship"}</td>

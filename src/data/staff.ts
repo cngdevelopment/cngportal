@@ -13,7 +13,7 @@ import {
 } from "./mock/store";
 
 /**
- * Staff data access — deliberately NOT accountId-scoped (staff can see
+ * Staff data access - deliberately NOT accountId-scoped (staff can see
  * every account's orders). All status changes go through buildPipeline()
  * so the transition rules can never drift from the customer-facing
  * progress bar (spec §7).

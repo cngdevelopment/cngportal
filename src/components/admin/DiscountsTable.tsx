@@ -23,7 +23,7 @@ function limitsLabel(d: DiscountRow): string {
   const parts: string[] = [];
   const start = fmtDate(d.startsAt);
   const end = fmtDate(d.endsAt);
-  if (start && end) parts.push(`${start} – ${end}`);
+  if (start && end) parts.push(`${start} to ${end}`);
   else if (start) parts.push(`from ${start}`);
   else if (end) parts.push(`until ${end}`);
   if (d.minOrderSubtotal != null) parts.push(`min $${d.minOrderSubtotal.toFixed(2)}`);

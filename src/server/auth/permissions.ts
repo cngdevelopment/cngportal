@@ -5,7 +5,7 @@ import type { Role } from "@/types/domain";
  * check against (not raw roles), so adding a role or re-scoping a
  * capability is a one-line change here rather than a hunt across the app.
  *
- * Pure module (no server imports) — safe to use in Server Components for
+ * Pure module (no server imports) - safe to use in Server Components for
  * conditional nav and in server guards alike.
  */
 

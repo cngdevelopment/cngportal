@@ -4,7 +4,7 @@
  * (src/lib/colorSwatches.ts) both derive from this list, so a color is
  * defined in exactly one place.
  *
- * Pure constants only (no env, no server imports) — safe to import from
+ * Pure constants only (no env, no server imports) - safe to import from
  * Client Components.
  */
 
@@ -32,7 +32,7 @@ export const COLOR_HEX: Record<string, string> = Object.fromEntries(
 
 export const DEFAULT_SWATCH_HEX = "#cccccc";
 
-/** Flooring plank swatch tones (no named colors — visual only). */
+/** Flooring plank swatch tones (no named colors - visual only). */
 export const FLOOR_TONES = [
   "#b3906a", "#9c7a55", "#c4a179", "#8a6f52", "#ab8a62",
   "#77604a", "#bfa07d", "#93765a", "#a5876b", "#87684d",

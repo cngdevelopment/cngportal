@@ -38,7 +38,7 @@ export default async function AdminOverview() {
       <Breadcrumbs items={[{ label: "Admin" }]} />
       <PageHeader
         title="Admin"
-        description={`Manage ${settings.companyName} — products, settings, discounts, and content, without touching code.`}
+        description={`Manage ${settings.companyName}: products, settings, discounts, and content, without touching code.`}
       />
       <div className="admin-grid">
         {sections.map((section) => (

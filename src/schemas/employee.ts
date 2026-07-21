@@ -3,7 +3,7 @@ import { emailSchema, passwordSchema } from "./auth";
 
 /**
  * Employee (staff) accounts, managed only from the Admin Portal. Staff have
- * no linked customer account — role is STAFF or STAFF_ADMIN. A password is
+ * no linked customer account - role is STAFF or STAFF_ADMIN. A password is
  * always required at creation (no more magic-link-only, no-password logins).
  */
 
@@ -27,7 +27,7 @@ export const createEmployeeSchema = z.object({
 export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>;
 
 /**
- * Editing an employee. Password is optional — an empty New Password means
+ * Editing an employee. Password is optional - an empty New Password means
  * "leave it unchanged". When provided it must meet the policy and match the
  * confirmation field.
  */

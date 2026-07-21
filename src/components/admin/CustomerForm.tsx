@@ -62,7 +62,7 @@ export function CustomerForm() {
       </FormField>
       <FormField label="Role" htmlFor="role" error={errors.role}>
         <select id="role" className="field" value={form.role} onChange={(e) => set("role", e.target.value as CreateCustomerInput["role"])}>
-          <option value="CUSTOMER_ADMIN">Account admin — can manage their account</option>
+          <option value="CUSTOMER_ADMIN">Account admin (can manage their account)</option>
           <option value="CUSTOMER_USER">Standard user</option>
         </select>
       </FormField>

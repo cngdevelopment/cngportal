@@ -2,9 +2,9 @@
 
 Customer ordering portal per `docs/BUILD_PLAN.md` and the v1.3 build spec.
 The approved look/interaction reference is `prototype/cg-portal-prototype.html`
-(open it in a browser — it runs standalone).
+(open it in a browser - it runs standalone).
 
-## Preview it right now — no setup required
+## Preview it right now - no setup required
 
 There's no `.env` yet, which puts the app in **Demo Mode**: an in-memory
 data store stands in for Supabase/Postgres, so the whole app runs with
@@ -16,10 +16,10 @@ npm run dev        # http://localhost:3000
 ```
 
 The login screen shows two one-click logins instead of the magic-link
-form — "Jordan Ellis" (a customer buyer on Meridian Builders LLC) and "C&G
+form - "Jordan Ellis" (a customer buyer on Meridian Builders LLC) and "C&G
 Staff" (staff console). Sign in as either to click through the full flow:
 browse the catalog, add cabinets/flooring to an order, submit it, watch it
-move through the pipeline, and — as staff — advance/hold/send back orders
+move through the pipeline, and - as staff - advance/hold/send back orders
 and message customers.
 
 Demo data (the full ~290-SKU
@@ -29,7 +29,7 @@ resets whenever the dev server restarts.
 ## Switching to real accounts (Supabase + Resend)
 
 Demo Mode turns itself off automatically the moment real credentials are
-present — no code changes needed (see `src/lib/mode.ts`).
+present - no code changes needed (see `src/lib/mode.ts`).
 
 ```bash
 cp .env.example .env      # fill in the Supabase values
@@ -38,7 +38,7 @@ npm run db:seed           # 7 colors, ~290 cabinets, 10 flooring SKUs, CG-001 ac
 ```
 
 Apply `prisma/rls.sql` in the Supabase SQL editor (Dashboard → SQL) after the
-first migration — it adds Row Level Security and the CHECK constraints.
+first migration - it adds Row Level Security and the CHECK constraints.
 
 Create your first logins (no self-registration by design):
 
@@ -87,7 +87,7 @@ Supabase default sender works out of the box for low volume). Add
 ## Next up (in order)
 
 1. Attachments (private bucket + signed URLs + authz check).
-2. Resend email templates (Ready-for-Pickup first) — Demo Mode surfaces
+2. Resend email templates (Ready-for-Pickup first) - Demo Mode surfaces
    the same in-app events but doesn't send real email.
 3. Accounts admin + catalog admin CRUD for staff.
 4. Tablet/responsive + accessibility pass.
@@ -98,12 +98,12 @@ Everything always in stock · assembly per line, delivery per order ·
 `account_id` never from the client · no status change without an event
 row · `buildPipeline()` is the only source of pipeline truth · required
 choices have no defaults. (Spec §2 rule 6, "no prices anywhere," was
-lifted — the catalog now shows retail prices and the cart shows a
+lifted - the catalog now shows retail prices and the cart shows a
 subtotal; there's still no payment flow, invoicing stays off-portal.)
 
 ## Note on OneDrive
 
 This folder lives in OneDrive. `node_modules` is heavy and churns on every
-install — consider telling OneDrive to ignore it (Settings → Sync and backup
+install - consider telling OneDrive to ignore it (Settings → Sync and backup
 → Advanced) or moving the project to a plain folder like `C:\dev\CGPortal`
 if sync gets noisy. Git + GitHub is the real backup once we init the repo.

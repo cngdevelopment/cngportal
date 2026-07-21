@@ -4,7 +4,7 @@
  * Every backend operation resolves to a `Result<T>`: either `ok` with data,
  * or a typed `error` the UI can branch on. This is the single response
  * contract the whole app agrees on (spec: "standardize every response
- * format" — success / validation / unauthorized / forbidden / not-found /
+ * format" - success / validation / unauthorized / forbidden / not-found /
  * server error).
  *
  * Framework-free (no server-only imports) so it is safe to import from
@@ -42,7 +42,7 @@ export function err(code: ErrorCode, message: string, fields?: FieldErrors): Err
   return { ok: false, error: fields ? { code, message, fields } : { code, message } };
 }
 
-/** HTTP status for an error code — for future API route handlers. */
+/** HTTP status for an error code - for future API route handlers. */
 export const ERROR_STATUS: Record<ErrorCode, number> = {
   VALIDATION: 422,
   UNAUTHENTICATED: 401,

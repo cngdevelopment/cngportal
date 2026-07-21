@@ -4,7 +4,7 @@ import { CatalogBrowser } from "@/components/catalog/CatalogBrowser";
 
 export const dynamic = "force-dynamic";
 
-// Plain-JSON shape for the client boundary — Prisma's Decimal isn't
+// Plain-JSON shape for the client boundary - Prisma's Decimal isn't
 // serializable as-is, so unitsPerBox is coerced to a plain number here.
 function toCatalogProduct(p: Awaited<ReturnType<typeof listProducts>>[number]) {
   return {

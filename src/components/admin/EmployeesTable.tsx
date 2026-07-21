@@ -15,7 +15,7 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 function fmtDate(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
@@ -109,7 +109,7 @@ export function EmployeesTable({ employees }: { employees: EmployeeRow[] }) {
                   </td>
                   <td>{e.email}</td>
                   <td><span className="chip">{ROLE_LABEL[e.role] ?? e.role}</span></td>
-                  <td>{e.department ?? "—"}</td>
+                  <td>{e.department ?? "-"}</td>
                   <td>
                     <span className={`chip ${e.isActive ? "green" : "neutral"}`}>
                       {e.isActive ? "Active" : "Inactive"}

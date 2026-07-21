@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * Brand mark. Source file lives at public/cg-logo.png — replace that file
+ * Brand mark. Source file lives at public/cg-logo.png - replace that file
  * to change the logo everywhere (header, admin, staff). The favicon is a
  * separate asset at src/app/icon.png.
  */

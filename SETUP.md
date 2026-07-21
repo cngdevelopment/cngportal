@@ -1,16 +1,16 @@
 # Going live with Supabase
 
 The app runs in **Demo Mode** (in-memory data, one-click logins) until real
-credentials exist. Adding them flips it to the real database automatically —
+credentials exist. Adding them flips it to the real database automatically -
 no code changes. Follow these steps in order.
 
 ## 1. Create the Supabase project
 1. Create a project at [supabase.com](https://supabase.com).
 2. Copy `.env.example` to `.env`.
 3. Fill in the five Supabase values in `.env` (blocks **1** and **2**):
-   - `DATABASE_URL`, `DIRECT_URL` — Project Settings → Database → Connection string
+   - `DATABASE_URL`, `DIRECT_URL` - Project Settings → Database → Connection string
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-     `SUPABASE_SERVICE_ROLE_KEY` — Project Settings → API
+     `SUPABASE_SERVICE_ROLE_KEY` - Project Settings → API
 
 > The moment `DATABASE_URL` **and** `NEXT_PUBLIC_SUPABASE_URL` are set, the app
 > leaves Demo Mode (`src/lib/mode.ts`).
@@ -31,7 +31,7 @@ npm run user:create -- buyer@test.com  "Test Buyer" CG-001 CUSTOMER_ADMIN
 
 ## 4. (Optional) Email
 Add `RESEND_API_KEY` + a verified `EMAIL_FROM` (block **4**) to send real
-staff/customer notifications. Without it, the app still works — it just
+staff/customer notifications. Without it, the app still works - it just
 doesn't send email.
 
 ## 5. Run it locally
@@ -41,7 +41,7 @@ npm run build      # production build (also runs lint + typecheck)
 ```
 `localhost` is your machine only. To let customers use it on any device, deploy (below).
 
-## 6. Deploy so anyone can use it (Vercel — recommended for Next.js)
+## 6. Deploy so anyone can use it (Vercel - recommended for Next.js)
 1. Push to GitHub (already done: `cngdevelopment/cngportal`).
 2. [vercel.com](https://vercel.com) → New Project → import the repo. Framework
    auto-detects as Next.js; no build settings to change.
@@ -65,8 +65,8 @@ Redeploys are automatic on every `git push` to `main`.
 | Concern | Insertion point |
 |---|---|
 | Auth | `src/lib/supabase/server.ts`, `src/data/context.ts` (already wired) |
-| Data access | `src/data/*.ts` — each function already has the Prisma branch |
-| Settings persistence | `src/server/settings/settings-store.ts` — swap the in-memory store for the `Setting` table |
+| Data access | `src/data/*.ts` - each function already has the Prisma branch |
+| Settings persistence | `src/server/settings/settings-store.ts` - swap the in-memory store for the `Setting` table |
 | File uploads | private bucket + signed URLs; `Attachment` model exists |
 
 ## Verify before shipping

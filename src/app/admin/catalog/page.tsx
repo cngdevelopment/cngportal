@@ -16,7 +16,7 @@ export default async function AdminCatalogPage() {
       <Breadcrumbs items={[{ label: "Admin", href: ROUTES.admin.overview }, { label: "Catalog" }]} />
       <PageHeader
         title="Catalog"
-        description="Everything customers can order — products, pricing, finishes, and options."
+        description="Everything customers can order: products, pricing, finishes, and options."
       />
       <div className="cust-panel">
         <CatalogManager products={products} colors={colors} />

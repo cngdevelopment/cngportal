@@ -17,7 +17,7 @@ import {
 
 /**
  * Order reads/writes, always scoped by accountId (resolved server-side in
- * src/data/context.ts — never from the client).
+ * src/data/context.ts - never from the client).
  * Missing/foreign rows read as "not found", never "forbidden" (spec §12.2).
  */
 
@@ -241,7 +241,7 @@ export async function reorderLines(accountId: string, orderId: string): Promise<
   }));
 }
 
-/** Customer-side message send — scoped by accountId before touching the order. */
+/** Customer-side message send - scoped by accountId before touching the order. */
 export async function addCustomerMessage(accountId: string, orderId: string, userId: string, body: string) {
   const owned = await getOrder(accountId, orderId);
   if (!owned) return false;

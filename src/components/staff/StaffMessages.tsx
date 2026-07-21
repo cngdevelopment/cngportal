@@ -73,7 +73,7 @@ export function StaffMessages({ orderId, messages }: { orderId: string; messages
               rows={2}
               value={internalBody}
               onChange={(e) => setInternalBody(e.target.value)}
-              placeholder="Staff only — never shown to the customer"
+              placeholder="Staff only. Never shown to the customer"
             />
           </div>
           <button

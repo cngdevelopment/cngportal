@@ -6,7 +6,7 @@ import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/schemas/employe
 import { MOCK_USERS } from "./mock/catalog-data";
 
 /**
- * Employee (staff) account management — Admin Portal only. Creating a login
+ * Employee (staff) account management - Admin Portal only. Creating a login
  * touches Supabase Auth (service role) + the users table, so mutations only
  * work against the real database. Staff have no linked customer account
  * (accountId null) and role STAFF or STAFF_ADMIN.

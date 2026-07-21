@@ -10,7 +10,7 @@ import { isDemoMode } from "@/lib/mode";
  * "not save". Demo mode (no database) still falls back to memory.
  */
 
-/** Shape is owned by src/server/settings — kept structural to avoid a cycle. */
+/** Shape is owned by src/server/settings - kept structural to avoid a cycle. */
 export type SettingsOverridesRecord = Record<string, unknown>;
 
 const SETTINGS_KEY = "app";

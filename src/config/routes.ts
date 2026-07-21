@@ -1,6 +1,6 @@
 /**
  * Application route constants. Replaces scattered string literals so a
- * path is defined once and refactors are type-safe. Pure constants —
+ * path is defined once and refactors are type-safe. Pure constants -
  * safe to import from Client Components.
  */
 export const ROUTES = {

@@ -22,6 +22,6 @@ export const updateContentSchema = z.object({
   contactPhone: optionalText(40),
   contactAddress: optionalText(300),
   contactHours: optionalText(160),
-  faqs: z.array(faqSchema).max(50, "That's a lot of FAQs — keep it under 50."),
+  faqs: z.array(faqSchema).max(50, "That's a lot of FAQs. Keep it under 50."),
 });
 export type UpdateContentInput = z.infer<typeof updateContentSchema>;

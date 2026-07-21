@@ -7,9 +7,9 @@ import {
 } from "./buildPipeline";
 
 // Spec §12.9: unit test covering all four combinations of
-// requires_assembly × delivery_method — step count, order, and labels.
+// requires_assembly × delivery_method - step count, order, and labels.
 
-describe("buildPipeline — all four variants (spec §7)", () => {
+describe("buildPipeline - all four variants (spec §7)", () => {
   it("SHIP + assembly → 6 steps", () => {
     const s = buildPipeline({ requiresAssembly: true, deliveryMethod: "SHIP" });
     expect(s.map((x) => x.label)).toEqual([

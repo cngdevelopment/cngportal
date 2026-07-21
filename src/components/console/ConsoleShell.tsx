@@ -9,7 +9,7 @@ import type { Role } from "@/types/domain";
 
 /**
  * One shell for the whole staff/admin experience. Staff and Admin are the
- * same person on the same login — so both areas render identical chrome and
+ * same person on the same login - so both areas render identical chrome and
  * the same top-level nav (Order Queue / Admin). Admin is a tab, not a
  * separate app you get "switched" into.
  */
@@ -60,7 +60,7 @@ export function ConsoleShell({
       </nav>
       {maintenanceMode && (
         <div className="maintenance-flag" role="status">
-          Maintenance mode is ON — customers can&rsquo;t place orders right now.
+          Maintenance mode is ON. Customers can&rsquo;t place orders right now.
         </div>
       )}
       {announcement && (

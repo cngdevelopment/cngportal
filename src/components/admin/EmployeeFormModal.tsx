@@ -112,8 +112,8 @@ export function EmployeeFormModal({
           <div className="form-2col">
             <FormField label="Role" htmlFor="role" error={errors.role} required>
               <select id="role" className="field" value={form.role} onChange={(e) => set("role", e.target.value as FormState["role"])}>
-                <option value="STAFF">Staff — order queue only</option>
-                <option value="STAFF_ADMIN">Admin — full access</option>
+                <option value="STAFF">Staff (order queue only)</option>
+                <option value="STAFF_ADMIN">Admin (full access)</option>
               </select>
             </FormField>
             <FormField label="Status" htmlFor="isActive" error={errors.isActive} required>

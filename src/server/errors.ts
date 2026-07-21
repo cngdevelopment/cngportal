@@ -34,7 +34,7 @@ export class ValidationError extends AppError {
   }
 }
 
-/** No valid session — the caller must sign in. */
+/** No valid session - the caller must sign in. */
 export class AuthenticationError extends AppError {
   readonly code = "UNAUTHENTICATED" as const;
   constructor(message = "You must be signed in to do that.") {
@@ -76,7 +76,7 @@ export function toErrorResult(error: unknown): Result<never> {
   if (error instanceof AppError) {
     return errFrom(error);
   }
-  // Unknown/unexpected — never leak internals to the client.
+  // Unknown/unexpected - never leak internals to the client.
   console.error("Unexpected error:", error);
   return err("INTERNAL", "Something went wrong. Please try again.");
 }

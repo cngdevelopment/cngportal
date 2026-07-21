@@ -8,7 +8,7 @@ type CookieToSet = { name: string; value: string; options: CookieOptions };
  * Gates the portal: unauthenticated requests are sent to /login. Auth
  * endpoints, static assets, and the login page itself are open.
  *
- * In demo mode (no Supabase configured — src/lib/mode.ts) this just
+ * In demo mode (no Supabase configured - src/lib/mode.ts) this just
  * checks for the lightweight demo-session cookie set by /login instead
  * of talking to Supabase.
  */

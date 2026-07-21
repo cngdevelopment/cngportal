@@ -63,7 +63,7 @@ export function StaffOrderActions({
   }
 
   if (isTerminal) {
-    return <p className="meta">This order is {status === "COMPLETED" ? "complete" : "cancelled"} — no further status changes.</p>;
+    return <p className="meta">This order is {status === "COMPLETED" ? "complete" : "cancelled"}. No further status changes.</p>;
   }
 
   return (

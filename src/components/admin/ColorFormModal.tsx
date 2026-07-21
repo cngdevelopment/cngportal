@@ -70,7 +70,7 @@ export function ColorFormModal({
           <FormField label="Code" htmlFor="colorCode" error={errors.code} hint="Short identifier used on orders." required>
             <input id="colorCode" className="field" value={form.code} onChange={(e) => set("code", e.target.value.toUpperCase())} placeholder="SW" />
           </FormField>
-          <FormField label="Swatch image URL" htmlFor="swatchUrl" error={errors.swatchUrl} hint="Optional — falls back to a built-in swatch color.">
+          <FormField label="Swatch image URL" htmlFor="swatchUrl" error={errors.swatchUrl} hint="Optional. Falls back to a built-in swatch color.">
             <input id="swatchUrl" className="field" value={form.swatchUrl} onChange={(e) => set("swatchUrl", e.target.value)} placeholder="Optional" />
           </FormField>
           <div className="form-2col">

@@ -54,7 +54,7 @@ export interface SubmitOrderPayload {
 export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ orderId: string }> {
   const ctx = await requireCustomer();
 
-  // Never trust the client — re-validate at the trust boundary (spec §5.2).
+  // Never trust the client - re-validate at the trust boundary (spec §5.2).
   const parsed = submitOrderSchema.safeParse(payload);
   if (!parsed.success) throw ValidationError.fromZod(parsed.error);
 

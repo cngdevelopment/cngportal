@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Discount codes, managed in the Admin Portal and redeemed by customers at
- * checkout. Every constraint is optional — a code with none set is simply
+ * checkout. Every constraint is optional - a code with none set is simply
  * "valid for everyone, forever, unlimited".
  */
 
@@ -55,7 +55,7 @@ export const updateDiscountSchema = z
   });
 export type UpdateDiscountInput = z.input<typeof updateDiscountSchema>;
 
-/** Customer applying a code at checkout — validated against server-side prices. */
+/** Customer applying a code at checkout - validated against server-side prices. */
 export const applyDiscountSchema = z.object({
   code: z.string().trim().min(1, "Enter a promo code."),
   lines: z

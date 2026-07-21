@@ -16,7 +16,7 @@ export default async function AdminContentPage() {
       <Breadcrumbs items={[{ label: "Admin", href: ROUTES.admin.overview }, { label: "Content" }]} />
       <PageHeader
         title="Content"
-        description="The words customers read — dashboard welcome, Help page FAQs, contact details, and footer."
+        description="The words customers read: dashboard welcome, Help page FAQs, contact details, and footer."
       />
       <div className="cust-panel" style={{ maxWidth: 760 }}>
         <ContentForm content={content} />

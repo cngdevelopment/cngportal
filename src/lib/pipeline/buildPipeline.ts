@@ -1,5 +1,5 @@
 /**
- * buildPipeline() — spec §7.
+ * buildPipeline() - spec §7.
  *
  * The ONE pure function that derives an order's progress pipeline from
  * `requires_assembly` × `delivery_method`. The progress bar component,
@@ -51,7 +51,7 @@ export function buildPipeline({
 /**
  * Legal forward transition map derived from the pipeline (spec §7).
  * Staff may also move backward exactly one step (with a required reason),
- * and ON_HOLD / CANCELLED are reachable from any non-terminal status —
+ * and ON_HOLD / CANCELLED are reachable from any non-terminal status -
  * enforce those rules in the caller with `previousStep()` below.
  */
 export function nextStatus(

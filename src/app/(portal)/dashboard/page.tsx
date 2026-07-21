@@ -68,7 +68,7 @@ export default async function DashboardPage() {
 
       {recent.length > 0 && (
         <>
-          <h2>Recent — delivered / picked up</h2>
+          <h2>Recent (delivered / picked up)</h2>
           {recent.map((o) => (
             <div key={o.id} className="order-card">
               <div className="row1">

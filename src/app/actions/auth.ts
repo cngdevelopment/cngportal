@@ -26,7 +26,7 @@ export async function signOutAction() {
 /**
  * Email + password sign-in. Sets the session cookie on success; the client
  * then navigates to "/" which routes by role. Returns the standard Result so
- * the form can show inline errors. (No redirect here — that would be swallowed
+ * the form can show inline errors. (No redirect here - that would be swallowed
  * by the client's action call.)
  */
 export async function signInAction(input: SignInInput): Promise<Result<null>> {
@@ -44,7 +44,7 @@ export async function signInAction(input: SignInInput): Promise<Result<null>> {
 }
 
 /**
- * "Forgot password" — sends a Supabase recovery email that lands on
+ * "Forgot password" - sends a Supabase recovery email that lands on
  * /reset-password. Always reports success (even for unknown emails) so the
  * form never reveals whether an account exists.
  */

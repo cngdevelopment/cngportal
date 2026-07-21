@@ -154,7 +154,7 @@ export async function updateProduct(input: UpdateProductInput): Promise<{ id: st
   const optionName = input.optionName?.trim();
   const optionValues = input.optionValues ?? [];
 
-  // Colors and options are replaced wholesale — simplest correct semantics.
+  // Colors and options are replaced wholesale - simplest correct semantics.
   await prisma.$transaction([
     prisma.productColor.deleteMany({ where: { productId: input.id } }),
     prisma.productOption.deleteMany({ where: { productId: input.id } }),

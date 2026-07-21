@@ -142,7 +142,7 @@ export async function createCustomer(input: CreateCustomerInput): Promise<Custom
     } while (await prisma.account.findUnique({ where: { accountNumber } }));
   }
 
-  // Create the auth login first — fails clearly if the email already has one.
+  // Create the auth login first - fails clearly if the email already has one.
   const admin = supabaseAdmin();
   const { data: created, error } = await admin.auth.admin.createUser({
     email: input.buyerEmail,

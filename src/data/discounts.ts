@@ -5,7 +5,7 @@ import type { CreateDiscountInput, UpdateDiscountInput } from "@/schemas/discoun
 
 /**
  * Discount codes: admin CRUD plus the checkout-time validator. All money math
- * happens here on server-side prices — a client-supplied subtotal is never
+ * happens here on server-side prices - a client-supplied subtotal is never
  * trusted.
  */
 
@@ -119,7 +119,7 @@ export async function updateDiscount(input: UpdateDiscountInput): Promise<{ id: 
     if (clash) throw new ConflictError(`Code "${data.code}" already exists.`);
   }
 
-  // Replace the account restriction set wholesale — simplest correct semantics.
+  // Replace the account restriction set wholesale - simplest correct semantics.
   await prisma.$transaction([
     prisma.discountAccount.deleteMany({ where: { discountId: input.id } }),
     prisma.discount.update({
@@ -142,7 +142,7 @@ export async function deleteDiscount(id: string): Promise<void> {
   await prisma.discount.delete({ where: { id } });
 }
 
-/** Subtotal from real catalog prices — never from anything the client sent. */
+/** Subtotal from real catalog prices - never from anything the client sent. */
 export async function computeSubtotal(
   lines: { sku: string; quantity: number }[]
 ): Promise<number> {

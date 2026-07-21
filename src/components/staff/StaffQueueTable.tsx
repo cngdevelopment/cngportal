@@ -104,7 +104,7 @@ export function StaffQueueTable({ orders }: { orders: StaffOrderRow[] }) {
                   />
                 </td>
                 <td>{o.itemCount}</td>
-                <td>{o.submittedAt ?? "—"}</td>
+                <td>{o.submittedAt ?? "-"}</td>
               </tr>
             ))}
           </tbody>

@@ -58,9 +58,9 @@ async function getSupabaseSessionContext(): Promise<SessionContext | null> {
 
 /**
  * Resolves the caller's identity server-side. In demo mode (no Supabase/DB
- * configured — see src/lib/mode.ts) this reads a lightweight session
+ * configured - see src/lib/mode.ts) this reads a lightweight session
  * cookie against the in-memory demo users instead. Either way,
- * account_id is NEVER accepted from the client (spec §5.2) — it comes
+ * account_id is NEVER accepted from the client (spec §5.2) - it comes
  * from here or nowhere.
  */
 export async function getSessionContext(): Promise<SessionContext | null> {

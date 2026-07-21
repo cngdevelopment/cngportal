@@ -1,6 +1,6 @@
 /**
  * Prisma singleton. ONLY files inside src/data/ may import this.
- * (Spec §5.3 — all data access goes through this layer. An ESLint
+ * (Spec §5.3 - all data access goes through this layer. An ESLint
  * rule enforcing the boundary gets added with the lint setup.)
  */
 import { PrismaClient } from "@prisma/client";

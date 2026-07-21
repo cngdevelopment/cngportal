@@ -160,8 +160,8 @@ export function CatalogManager({
                       {p.category === "CABINETS" ? "Cabinets" : "Flooring"}
                       {p.subcategory ? <div className="meta">{p.subcategory}</div> : null}
                     </td>
-                    <td>{p.price == null ? "—" : formatPrice(p.price)}</td>
-                    <td>{p.colorIds.length || "—"}</td>
+                    <td>{p.price == null ? "-" : formatPrice(p.price)}</td>
+                    <td>{p.colorIds.length || "-"}</td>
                     <td>
                       <span className={`chip ${p.isActive ? "green" : "neutral"}`}>
                         {p.isActive ? "Active" : "Hidden"}

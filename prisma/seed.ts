@@ -1,12 +1,12 @@
 /**
- * Seed — loads the canonical catalog (colors, cabinets with prices, flooring
+ * Seed - loads the canonical catalog (colors, cabinets with prices, flooring
  * SKUs) straight from the app's single source of truth
  * (src/data/mock/catalog-data.ts), so the database matches exactly what the
  * app shows.
  *
  * Uses the DIRECT connection and batch inserts, so it runs in seconds
  * instead of thousands of pooled round-trips. Catalog tables are wiped and
- * rebuilt each run for a clean, deterministic result — safe because the
+ * rebuilt each run for a clean, deterministic result - safe because the
  * catalog is reference data (this is a first-run/setup tool). It intentionally
  * does NOT touch accounts, users, or orders.
  */
@@ -19,7 +19,7 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  // Colors — upsert (keep ids stable for any existing references).
+  // Colors - upsert (keep ids stable for any existing references).
   const colorIdByCode = new Map<string, string>();
   for (const c of MOCK_COLORS) {
     const row = await prisma.color.upsert({
@@ -35,7 +35,7 @@ async function main() {
   await prisma.productOption.deleteMany();
   await prisma.product.deleteMany();
 
-  // Products — one batch insert.
+  // Products - one batch insert.
   await prisma.product.createMany({
     data: MOCK_PRODUCTS.map((p) => ({
       sku: p.sku,
@@ -54,7 +54,7 @@ async function main() {
     (await prisma.product.findMany({ select: { id: true, sku: true } })).map((p) => [p.sku, p.id])
   );
 
-  // Product ↔ color links — one batch insert.
+  // Product ↔ color links - one batch insert.
   const colorLinks = MOCK_PRODUCTS.flatMap((p) => {
     const productId = productIdBySku.get(p.sku);
     if (!productId) return [];
@@ -65,7 +65,7 @@ async function main() {
   });
   await prisma.productColor.createMany({ data: colorLinks });
 
-  // Product options (flooring thickness) — one batch insert.
+  // Product options (flooring thickness) - one batch insert.
   const options = MOCK_PRODUCTS.flatMap((p) => {
     const productId = productIdBySku.get(p.sku);
     if (!productId) return [];

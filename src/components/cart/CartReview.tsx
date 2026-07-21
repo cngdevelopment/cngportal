@@ -96,8 +96,8 @@ export function CartReview({
     if (rta) parts.push(`${rta} cabinet${rta === 1 ? "" : "s"} unassembled`);
     if (flr) parts.push(`${flr} box${flr === 1 ? "" : "es"} flooring`);
     let tail = "";
-    if (deliveryMethod === "SHIP") tail = " — shipping to your jobsite";
-    if (deliveryMethod === "PICKUP") tail = " — picking up at the warehouse";
+    if (deliveryMethod === "SHIP") tail = ", shipping to your jobsite";
+    if (deliveryMethod === "PICKUP") tail = ", picking up at the warehouse";
     return parts.join(", ") + tail + ".";
   }, [lines, deliveryMethod]);
 
@@ -268,7 +268,7 @@ export function CartReview({
                       </button>
                     </span>
                   ) : (
-                    <span style={{ color: "var(--ink-3)" }}>&mdash;</span>
+                    <span style={{ color: "var(--ink-3)" }}>-</span>
                   )}
                 </td>
                 <td>
@@ -294,7 +294,7 @@ export function CartReview({
                   )}
                 </td>
                 <td>{formatPrice(l.unitPrice)}</td>
-                <td>{l.unitPrice == null ? "—" : formatPrice(l.unitPrice * l.quantity)}</td>
+                <td>{l.unitPrice == null ? "-" : formatPrice(l.unitPrice * l.quantity)}</td>
                 <td>
                   <button type="button" className="rm" onClick={() => removeLine(l.key)}>
                     Remove
@@ -394,7 +394,7 @@ export function CartReview({
                   <select value={shipToId} onChange={(e) => setShipToId(e.target.value)}>
                     {shipToOptions.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.label} — {s.line1}, {s.city}, {s.state}
+                        {s.label}: {s.line1}, {s.city}, {s.state}
                       </option>
                     ))}
                     <option value={NEW_ADDRESS}>+ Enter a new address</option>
@@ -411,7 +411,7 @@ export function CartReview({
                     type="text"
                     value={newAddress.label}
                     onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
-                    placeholder="Name this address (optional) — e.g. Oak St jobsite"
+                    placeholder="Name this address (optional), e.g. Oak St jobsite"
                     style={{ marginBottom: 7 }}
                   />
                   <input

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const emailSchema = z.string().trim().email("Enter a valid email address.");
 
 /**
- * Strong password policy — min 8 chars with upper, lower, number, and a
+ * Strong password policy - min 8 chars with upper, lower, number, and a
  * special character. Shared by employee create/edit and the reset flow.
  */
 export const passwordSchema = z
@@ -22,7 +22,7 @@ export const signInSchema = z.object({
 });
 export type SignInInput = z.infer<typeof signInSchema>;
 
-/** "Forgot password" request — just an email; we send a reset link. */
+/** "Forgot password" request - just an email; we send a reset link. */
 export const passwordResetRequestSchema = z.object({ email: emailSchema });
 export type PasswordResetRequestInput = z.infer<typeof passwordResetRequestSchema>;
 

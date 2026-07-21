@@ -20,7 +20,7 @@ export function ErrorState({
   homeLabel: string;
 }) {
   useEffect(() => {
-    // Observability seam — replace with Sentry.captureException(error) later.
+    // Observability seam - replace with Sentry.captureException(error) later.
     console.error(error);
   }, [error]);
 

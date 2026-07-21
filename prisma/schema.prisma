@@ -1,5 +1,5 @@
-// C&G Wholesale Ordering Portal — schema per spec §6
-// NOTE: Spec §2 rule 6 (no pricing) was lifted — products now carry a
+// C&G Wholesale Ordering Portal - schema per spec §6
+// NOTE: Spec §2 rule 6 (no pricing) was lifted - products now carry a
 // retail price, shown in the catalog and summed as a cart subtotal.
 // NOTE: No inventory/stock fields anywhere, by design (spec §2 rule 4).
 
@@ -179,7 +179,7 @@ model ProductColor {
   @@map("product_colors")
 }
 
-// Assembly is NOT modeled here — see spec §2.1. Thickness lives here.
+// Assembly is NOT modeled here - see spec §2.1. Thickness lives here.
 model ProductOption {
   id         String  @id @default(uuid()) @db.Uuid
   productId  String  @map("product_id") @db.Uuid
@@ -246,7 +246,7 @@ model Discount {
   value       Decimal
   isActive    Boolean      @default(true) @map("is_active")
 
-  // Optional constraints — all null means "no limit".
+  // Optional constraints - all null means "no limit".
   startsAt         DateTime? @map("starts_at")
   endsAt           DateTime? @map("ends_at")
   maxRedemptions   Int?      @map("max_redemptions")
@@ -301,7 +301,7 @@ model OrderItem {
   unit            Unit
   lineNotes       String?   @map("line_notes")
 
-  // Snapshots are mandatory (spec §6) — never resolve history via live join
+  // Snapshots are mandatory (spec §6) - never resolve history via live join
   productNameSnapshot String  @map("product_name_snapshot")
   colorNameSnapshot   String? @map("color_name_snapshot")
   skuSnapshot         String  @map("sku_snapshot")

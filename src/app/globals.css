@@ -1,4 +1,4 @@
-/* Design tokens — C&G Global. Arasaka-inspired: red #F40009, black, white.
+/* Design tokens - C&G Global. Arasaka-inspired: red #F40009, black, white.
    High contrast, sharp edges, no gradients, deliberately minimal. */
 
 :root{
@@ -24,7 +24,7 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .site-header :focus-visible{outline-color:#fff}
 
-/* header / nav — black bar, red accent line (Arasaka) */
+/* header / nav - black bar, red accent line (Arasaka) */
 .site-header{background:var(--black);border-bottom:2px solid var(--red);padding:0 28px;height:68px;display:flex;align-items:center;gap:13px}
 .mark{width:34px;height:34px;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--red)}
 .wordmark{font-weight:700;letter-spacing:.06em;font-size:1.02rem;color:#fff;text-transform:uppercase}
@@ -120,7 +120,7 @@ table.list td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-si
 table.list tr:last-child td{border-bottom:none}
 .mini-sw{display:inline-block;width:13px;height:13px;border-radius:2px;border:1px solid rgba(0,0,0,.25);vertical-align:-2px;margin-right:6px}
 
-/* loading skeletons — opacity pulse (no gradients) */
+/* loading skeletons - opacity pulse (no gradients) */
 @keyframes cg-pulse{0%,100%{opacity:1}50%{opacity:.45}}
 .skeleton{background:var(--line-soft);border-radius:2px;animation:cg-pulse 1.2s ease-in-out infinite}
 .sk-title{height:20px;width:180px;margin-bottom:8px}
@@ -149,9 +149,9 @@ table.list tr:last-child td{border-bottom:none}
 /* login */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--paper);position:relative;overflow:hidden}
 
-/* full-bleed globe behind the sign-in card — oversized so it crops off every edge */
+/* full-bleed globe behind the sign-in card - oversized so it crops off every edge */
 /* Sized off viewport height so the rim arc stays on screen while the globe
-   crops off the top and bottom — a planet horizon, not a wall of grid. */
+   crops off the top and bottom - a planet horizon, not a wall of grid. */
 .world-backdrop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(142vh,128vw);height:auto;pointer-events:none;user-select:none}
 /* hairlines stay crisp at any scale */
 .world-backdrop circle,.world-backdrop ellipse,.world-backdrop line{vector-effect:non-scaling-stroke}
@@ -161,7 +161,7 @@ table.list tr:last-child td{border-bottom:none}
 .world-backdrop .wb-line{stroke:var(--ink);stroke-width:1;opacity:.15}
 .login-wrap .auth-card{position:relative;z-index:1}
 /* Narrow screens: the card takes nearly the full width, so only the rim arcs
-   can show at the margins — size for a clear curve and lift them slightly. */
+   can show at the margins - size for a clear curve and lift them slightly. */
 @media (max-width:640px){
   .world-backdrop{width:165vw}
   .world-backdrop .wb-rim{opacity:.55}
@@ -173,7 +173,7 @@ table.list tr:last-child td{border-bottom:none}
 .login-card .sub{text-align:center}
 .notice{background:var(--red-wash);border:1px solid #f3c4c5;border-radius:2px;padding:10px 13px;font-size:.87rem;color:var(--red-deep);margin-top:14px}
 
-/* auth card (login) — black brand band + red accent, on-theme */
+/* auth card (login) - black brand band + red accent, on-theme */
 .auth-card{background:var(--card);border:1px solid var(--line);border-radius:3px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.10)}
 .auth-head{background:var(--black);border-bottom:3px solid var(--red);padding:32px 24px 26px;text-align:center}
 .auth-head img{display:block;margin:0 auto 14px}

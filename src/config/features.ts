@@ -3,7 +3,7 @@
  * lands (Phase 3+). Guarding new capability behind a flag keeps
  * half-built features out of the running product.
  *
- * Pure constants — safe to import anywhere.
+ * Pure constants - safe to import anywhere.
  */
 export const FEATURES = {
   emailNotifications: false,

@@ -28,7 +28,7 @@ export default async function AdminStorePage({ params }: { params: { id: string 
           { label: account.name },
         ]}
       />
-      <PageHeader title={account.name} description={`Account ${account.accountNumber} — every order placed.`} />
+      <PageHeader title={account.name} description={`Account ${account.accountNumber}. Every order placed.`} />
 
       {orders.length === 0 ? (
         <EmptyState title="No orders yet" description="This account hasn't placed any orders." />
@@ -60,7 +60,7 @@ export default async function AdminStorePage({ params }: { params: { id: string 
                         day: "numeric",
                         year: "numeric",
                       })
-                    : "—"}
+                    : "-"}
                 </td>
                 <td>{o._count.items}</td>
                 <td>{o.deliveryMethod === "PICKUP" ? "Pickup" : "Ship"}</td>

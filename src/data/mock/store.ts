@@ -16,7 +16,7 @@ import { formatOrderNumber } from "@/config/business";
 /**
  * In-memory demo backend. Stands in for Prisma/Postgres while no
  * DATABASE_URL is configured (src/lib/mode.ts). State lives for the life
- * of the dev server process — restarting `next dev` resets it back to
+ * of the dev server process - restarting `next dev` resets it back to
  * the seed below. Every function here mirrors the shape/behavior the
  * real src/data/*.ts + Prisma layer will have once real credentials are
  * added, so callers don't need to branch on mode themselves.
@@ -88,7 +88,7 @@ const globalForMock = globalThis as unknown as {
   __cgMockOrders?: MockOrder[];
   __cgMockSeq?: number;
   // Persisted on globalThis (like the orders themselves) so ids stay
-  // monotonic across dev hot-reloads — otherwise a module reset would
+  // monotonic across dev hot-reloads - otherwise a module reset would
   // restart the counter and collide with already-persisted event/item ids.
   __cgMockIdSeq?: number;
 };
@@ -130,7 +130,7 @@ function makeItem(
 }
 
 function seedOrders(): MockOrder[] {
-  // Starts empty — customer accounts begin with no orders.
+  // Starts empty - customer accounts begin with no orders.
   return [];
 }
 
@@ -163,7 +163,7 @@ export function listShipToMock(accountId: string) {
   return MOCK_SHIP_TO.filter((s) => s.accountId === accountId);
 }
 
-/** Demo-mode counterpart of createShipToAddress — appends to the in-memory list. */
+/** Demo-mode counterpart of createShipToAddress - appends to the in-memory list. */
 export function createShipToMock(
   accountId: string,
   data: {

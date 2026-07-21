@@ -6,11 +6,11 @@ import { FEATURES } from "@/config/features";
 import { readSettingsOverrides, writeSettingsOverrides } from "@/data/settings";
 import type { UpdateSettingsInput } from "@/schemas/settings";
 
-/** Only the editable fields — never the derived `features` map. */
+/** Only the editable fields - never the derived `features` map. */
 export type SettingsOverrides = Partial<Omit<AppSettings, "features">>;
 
 /**
- * Application settings — the values a business owner should be able to edit
+ * Application settings - the values a business owner should be able to edit
  * without touching code. Today `getSettings()` returns defaults sourced
  * from src/config/*; when the Admin Portal + database land, this becomes
  * the single place that merges persisted overrides on top of the defaults.

@@ -1,5 +1,5 @@
 /**
- * Demo-mode catalog data — mirrors prisma/seed.ts exactly (same SKUs,
+ * Demo-mode catalog data - mirrors prisma/seed.ts exactly (same SKUs,
  * colors, thicknesses) so switching to a real database later doesn't
  * change what the UI shows. See src/lib/mode.ts.
  *
@@ -50,29 +50,29 @@ export const MOCK_COLORS: MockColor[] = CABINET_COLORS.map((c) => ({
   sortOrder: c.sortOrder,
 }));
 
-// [sku, price, name, subcategory] — full Jan-26 price sheet.
+// [sku, price, name, subcategory] - full Jan-26 price sheet.
 const CABINET_DEFS: Array<[string, number, string, string]> = [
-  // ── Base Cabinets — 1 door, 1 drawer, 1 shelf (34.5" tall, 24" deep) ──
+  // ── Base Cabinets - 1 door, 1 drawer, 1 shelf (34.5" tall, 24" deep) ──
   ["B09", 279.13, 'Base Cabinet 9" - 1 Door, 1 Drawer', "Base"],
   ["B12", 323.13, 'Base Cabinet 12" - 1 Door, 1 Drawer', "Base"],
   ["B15", 358.88, 'Base Cabinet 15" - 1 Door, 1 Drawer', "Base"],
   ["B18", 390.50, 'Base Cabinet 18" - 1 Door, 1 Drawer', "Base"],
   ["B21", 441.38, 'Base Cabinet 21" - 1 Door, 1 Drawer', "Base"],
-  // ── Base Cabinets — 2 door, 1 drawer, 1 shelf ──
+  // ── Base Cabinets - 2 door, 1 drawer, 1 shelf ──
   ["B24", 489.50, 'Base Cabinet 24" - 2 Door, 1 Drawer', "Base"],
   ["B27", 547.25, 'Base Cabinet 27" - 2 Door, 1 Drawer', "Base"],
   ["B30", 653.13, 'Base Cabinet 30" - 2 Door, 1 Drawer', "Base"],
   ["B33", 683.38, 'Base Cabinet 33" - 2 Door, 1 Drawer', "Base"],
   ["B36", 721.88, 'Base Cabinet 36" - 2 Door, 1 Drawer', "Base"],
   ["B42", 768.63, 'Base Cabinet 42" - 2 Door, 1 Drawer', "Base"],
-  // ── Sink Base Cabinets — 2 doors, 1 dummy drawer ──
+  // ── Sink Base Cabinets - 2 doors, 1 dummy drawer ──
   ["SB24", 453.75, 'Sink Base Cabinet 24"', "Base"],
   ["SB27", 496.38, 'Sink Base Cabinet 27"', "Base"],
   ["SB30", 534.88, 'Sink Base Cabinet 30"', "Base"],
   ["SB33", 552.75, 'Sink Base Cabinet 33"', "Base"],
   ["SB36", 574.75, 'Sink Base Cabinet 36"', "Base"],
   ["SB42", 622.88, 'Sink Base Cabinet 42"', "Base"],
-  // ── Base Drawer Cabinets — 3 drawers ──
+  // ── Base Drawer Cabinets - 3 drawers ──
   ["DB09-3", 457.63, 'Base Drawer Cabinet 9" - 3 Drawer', "Base"],
   ["DB12-3", 482.63, 'Base Drawer Cabinet 12" - 3 Drawer', "Base"],
   ["DB15-3", 506.00, 'Base Drawer Cabinet 15" - 3 Drawer', "Base"],
@@ -90,44 +90,44 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   // ── Farm Sink Base ──
   ["FSB33", 706.13, 'Farm Sink Base 33" - 30" Sink Cutout', "Base"],
   ["FSB36", 756.13, 'Farm Sink Base 36" - 33" Sink Cutout', "Base"],
-  // ── Corner Sink Cabinet — 1 door ──
+  // ── Corner Sink Cabinet - 1 door ──
   ["CSB36", 826.38, 'Corner Sink Cabinet 36"', "Base"],
   ["CSB42", 951.38, 'Corner Sink Cabinet 42"', "Base"],
-  // ── Lazy Susan Cabinet — folding doors, wood Lazy Susan included ──
+  // ── Lazy Susan Cabinet - folding doors, wood Lazy Susan included ──
   ["LS3612", 966.63, 'Lazy Susan Cabinet 36x12"', "Base"],
   ["LS3312", 825.00, 'Lazy Susan Cabinet 33x12"', "Base"],
-  // ── Corner Diagonal Cabinet — 1 door, includes shelf ──
+  // ── Corner Diagonal Cabinet - 1 door, includes shelf ──
   ["BDC36", 892.00, 'Corner Diagonal Cabinet 36" - Shelf Only', "Base"],
   ["BDC36LS", 220.00, 'Corner Diagonal Cabinet 36" - Lazy Susan Add-On', "Base"],
-  // ── Blind Base Corner Cabinet — 1 door, 1 drawer, 1 shelf ──
+  // ── Blind Base Corner Cabinet - 1 door, 1 drawer, 1 shelf ──
   ["BBC36L", 551.38, 'Blind Base Corner Cabinet 36" - 12" Door, Left', "Base"],
   ["BBC36R", 551.38, 'Blind Base Corner Cabinet 36" - 12" Door, Right', "Base"],
   ["BBC39L", 609.13, 'Blind Base Corner Cabinet 39" - 15" Door, Left (pulls to 42")', "Base"],
   ["BBC39R", 609.13, 'Blind Base Corner Cabinet 39" - 15" Door, Right (pulls to 42")', "Base"],
   ["BBC42L", 666.88, 'Blind Base Corner Cabinet 42" - 18" Door, Left (pulls to 45")', "Base"],
   ["BBC42R", 666.88, 'Blind Base Corner Cabinet 42" - 18" Door, Right (pulls to 45")', "Base"],
-  // ── Base Waste Cabinet — 1 door, 1 drawer ──
+  // ── Base Waste Cabinet - 1 door, 1 drawer ──
   ["BWBK15", 404.25, 'Base Waste Cabinet 15" - Single', "Base"],
   ["BWBK18-2", 596.88, 'Base Waste Cabinet 18" - Double', "Base"],
   ["TRASHCAN", 45.00, "Pull-Out Trash Can", "Accessory"],
   ["BSR9", 306.63, 'Base Spice Pull-Out 9"', "Base"],
   ["FB09", 269.13, 'Full Height Door Base Cabinet 9"', "Base"],
   ["BSR12", 346.63, 'Base Spice Pull-Out 12"', "Base"],
-  // ── Spice Drawer — 5 spice drawers, no glides, 6x24x34.5 ──
+  // ── Spice Drawer - 5 spice drawers, no glides, 6x24x34.5 ──
   ["BSDC6", 321.75, 'Spice Drawer Cabinet 6" (5 Drawers)', "Base"],
-  // ── Base Angle End — 2 doors, 1 shelf, 2 dummy drawers ──
+  // ── Base Angle End - 2 doors, 1 shelf, 2 dummy drawers ──
   ["BEC24", 622.88, "Base Angle End Cabinet 24x24x18.375x18.375", "Base"],
-  // ── Base Open Shelf — 3 shelves, 9x24x34.5 ──
+  // ── Base Open Shelf - 3 shelves, 9x24x34.5 ──
   ["BES9R", 357.50, 'Base Open Shelf 9" - Right', "Base"],
   ["BES9L", 357.50, 'Base Open Shelf 9" - Left', "Base"],
-  // ── Knee Drawer — 21" deep ──
+  // ── Knee Drawer - 21" deep ──
   ["FD24", 235.13, 'Knee Drawer 24"', "Base"],
   ["FD27", 253.00, 'Knee Drawer 27"', "Base"],
   ["FD30", 284.63, 'Knee Drawer 30"', "Base"],
   ["FD33", 320.00, 'Knee Drawer 33"', "Base"],
   ["FD36", 359.26, 'Knee Drawer 36"', "Base"],
 
-  // ── Wall Cabinets — 1 door, 2 shelves, 12" deep ──
+  // ── Wall Cabinets - 1 door, 2 shelves, 12" deep ──
   ["W0930", 170.50, 'Wall Cabinet 9x30"', "Wall"],
   ["W1230", 207.63, 'Wall Cabinet 12x30"', "Wall"],
   ["W1530", 250.25, 'Wall Cabinet 15x30"', "Wall"],
@@ -138,13 +138,13 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["W1536", 281.88, 'Wall Cabinet 15x36"', "Wall"],
   ["W1836", 298.38, 'Wall Cabinet 18x36"', "Wall"],
   ["W2136", 347.88, 'Wall Cabinet 21x36"', "Wall"],
-  // ── Wall Cabinets — 1 door, 3 shelves, 12" deep ──
+  // ── Wall Cabinets - 1 door, 3 shelves, 12" deep ──
   ["W0942", 228.25, 'Wall Cabinet 9x42"', "Wall"],
   ["W1242", 265.38, 'Wall Cabinet 12x42"', "Wall"],
   ["W1542", 305.25, 'Wall Cabinet 15x42"', "Wall"],
   ["W1842", 325.88, 'Wall Cabinet 18x42"', "Wall"],
   ["W2142", 375.38, 'Wall Cabinet 21x42"', "Wall"],
-  // ── Wall Cabinets — 2 doors, 2 shelves, 12" deep ──
+  // ── Wall Cabinets - 2 doors, 2 shelves, 12" deep ──
   ["W2430", 330.00, 'Wall Cabinet 24x30"', "Wall"],
   ["W2730", 372.63, 'Wall Cabinet 27x30"', "Wall"],
   ["W3030", 415.25, 'Wall Cabinet 30x30"', "Wall"],
@@ -157,14 +157,14 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["W3336", 492.25, 'Wall Cabinet 33x36"', "Wall"],
   ["W3636", 515.63, 'Wall Cabinet 36x36"', "Wall"],
   ["W4236", 536.25, 'Wall Cabinet 42x36"', "Wall"],
-  // ── Wall Cabinets — 2 doors, 3 shelves, 12" deep ──
+  // ── Wall Cabinets - 2 doors, 3 shelves, 12" deep ──
   ["W2442", 387.75, 'Wall Cabinet 24x42"', "Wall"],
   ["W2742", 430.38, 'Wall Cabinet 27x42"', "Wall"],
   ["W3042", 519.75, 'Wall Cabinet 30x42"', "Wall"],
   ["W3342", 533.50, 'Wall Cabinet 33x42"', "Wall"],
   ["W3642", 547.25, 'Wall Cabinet 36x42"', "Wall"],
   ["W4242", 562.38, 'Wall Cabinet 42x42"', "Wall"],
-  // ── Wall Cabinet Bridge — 2 doors, 12" deep ──
+  // ── Wall Cabinet Bridge - 2 doors, 12" deep ──
   ["W3012", 240.63, 'Wall Bridge Cabinet 30x12"', "Wall"],
   ["W3015", 257.13, 'Wall Bridge Cabinet 30x15"', "Wall"],
   ["W3018", 290.13, 'Wall Bridge Cabinet 30x18"', "Wall"],
@@ -180,7 +180,7 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["W3618", 336.88, 'Wall Bridge Cabinet 36x18"', "Wall"],
   ["W3621", 398.75, 'Wall Bridge Cabinet 36x21"', "Wall"],
   ["W3624", 404.25, 'Wall Bridge Cabinet 36x24"', "Wall"],
-  // ── Refrigerator Wall — 2 doors, 27" deep ──
+  // ── Refrigerator Wall - 2 doors, 27" deep ──
   ["W331227", 400.40, 'Refrigerator Wall Cabinet 33x12x27"', "Wall"],
   ["W331527", 430.43, 'Refrigerator Wall Cabinet 33x15x27"', "Wall"],
   ["W331827", 460.46, 'Refrigerator Wall Cabinet 33x18x27"', "Wall"],
@@ -189,7 +189,7 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["W361527", 473.00, 'Refrigerator Wall Cabinet 36x15x27"', "Wall"],
   ["W361827", 506.00, 'Refrigerator Wall Cabinet 36x18x27"', "Wall"],
   ["W362427", 533.50, 'Refrigerator Wall Cabinet 36x24x27"', "Wall"],
-  // ── Wall Diagonal Cabinet — 1 door, 2 shelves (42" = 3 shelves) ──
+  // ── Wall Diagonal Cabinet - 1 door, 2 shelves (42" = 3 shelves) ──
   ["WDC2430", 437.25, 'Wall Diagonal Cabinet 24x30"', "Wall"],
   ["WDC2436", 501.88, 'Wall Diagonal Cabinet 24x36"', "Wall"],
   ["WDC2442", 554.13, 'Wall Diagonal Cabinet 24x42"', "Wall"],
@@ -202,25 +202,25 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["WDCMD273015", 825.00, 'Wall Diagonal Cabinet 27x30x15" - Mullion Door', "Wall"],
   ["WDCMD273615", 850.00, 'Wall Diagonal Cabinet 27x36x15" - Mullion Door', "Wall"],
   ["WDCMD274215", 880.00, 'Wall Diagonal Cabinet 27x42x15" - Mullion Door', "Wall"],
-  // ── Wall Easy Reach Cabinet — 1 door, 2 shelves (42" = 3 shelves) ──
+  // ── Wall Easy Reach Cabinet - 1 door, 2 shelves (42" = 3 shelves) ──
   ["WLS2430", 616.00, 'Wall Easy Reach Cabinet 24x30"', "Wall"],
   ["WLS2436", 694.38, 'Wall Easy Reach Cabinet 24x36"', "Wall"],
   ["WLS2442", 760.38, 'Wall Easy Reach Cabinet 24x42"', "Wall"],
-  // ── Wall Blind Corner Cabinet — custom build, 6" center stile, 15" door ──
+  // ── Wall Blind Corner Cabinet - custom build, 6" center stile, 15" door ──
   ["WBC3030R", 672.63, 'Wall Blind Corner Cabinet 30x30" - Right', "Wall"],
   ["WBC3030L", 672.63, 'Wall Blind Corner Cabinet 30x30" - Left', "Wall"],
   ["WBC3036R", 704.25, 'Wall Blind Corner Cabinet 30x36" - Right', "Wall"],
   ["WBC3036L", 704.25, 'Wall Blind Corner Cabinet 30x36" - Left', "Wall"],
   ["WBC3042R", 730.38, 'Wall Blind Corner Cabinet 30x42" - Right', "Wall"],
   ["WBC3042L", 730.38, 'Wall Blind Corner Cabinet 30x42" - Left', "Wall"],
-  // ── Wall End Shelf — 2 shelves, 9"w x 12"d ──
+  // ── Wall End Shelf - 2 shelves, 9"w x 12"d ──
   ["WES0930R", 196.63, 'Wall End Shelf 9x30" - Right', "Wall"],
   ["WES0930L", 196.63, 'Wall End Shelf 9x30" - Left', "Wall"],
   ["WES0936R", 217.25, 'Wall End Shelf 9x36" - Right', "Wall"],
   ["WES0936L", 217.25, 'Wall End Shelf 9x36" - Left', "Wall"],
   ["WES0942R", 244.75, 'Wall End Shelf 9x42" - Right (3 Shelves)', "Wall"],
   ["WES0942L", 244.75, 'Wall End Shelf 9x42" - Left (3 Shelves)', "Wall"],
-  // ── Wall End Cabinet — 2 doors, 2 shelves, 12"w x 12"d ──
+  // ── Wall End Cabinet - 2 doors, 2 shelves, 12"w x 12"d ──
   ["WEC1230", 254.38, 'Wall End Cabinet 12x30"', "Wall"],
   ["WEC1236", 305.25, 'Wall End Cabinet 12x36"', "Wall"],
   ["WEC1242", 332.75, 'Wall End Cabinet 12x42"', "Wall"],
@@ -237,7 +237,7 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["WMW3036", 706.75, 'Microwave Wall Cabinet 30x36"', "Wall"],
   ["WMW3042", 753.50, 'Microwave Wall Cabinet 30x42"', "Wall"],
 
-  // ── Tall Pantry — 27" deep ──
+  // ── Tall Pantry - 27" deep ──
   ["PC188427", 1291.13, 'Tall Pantry 18x84x27"', "Tall"],
   ["PC189027", 1318.63, 'Tall Pantry 18x90x27"', "Tall"],
   ["PC189627", 1346.13, 'Tall Pantry 18x96x27"', "Tall"],
@@ -247,7 +247,7 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["PC308427", 1551.00, 'Tall Pantry 30x84x27"', "Tall"],
   ["PC309027", 1617.00, 'Tall Pantry 30x90x27"', "Tall"],
   ["PC309627", 1705.00, 'Tall Pantry 30x96x27"', "Tall"],
-  // ── Double Oven Cabinet — 27" deep ──
+  // ── Double Oven Cabinet - 27" deep ──
   ["DOC308427", 1204.50, 'Double Oven Cabinet 30x84x27" (28.5" max cutout)', "Tall"],
   ["DOC309027", 1223.75, 'Double Oven Cabinet 30x90x27" (28.5" max cutout)', "Tall"],
   ["DOC309627", 1240.25, 'Double Oven Cabinet 30x96x27" (28.5" max cutout)', "Tall"],
@@ -255,14 +255,14 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["DOC339027", 1361.25, 'Double Oven Cabinet 33x90x27" (29.5" max cutout)', "Tall"],
   ["DOC339627", 1372.25, 'Double Oven Cabinet 33x96x27" (29.5" max cutout)', "Tall"],
 
-  // ── Vanity — 34.5" tall, 21" deep ──
+  // ── Vanity - 34.5" tall, 21" deep ──
   ["VBD09", 457.63, 'Vanity Base Drawer 9"', "Vanity"],
   ["VBD12", 482.63, 'Vanity Base Drawer 12"', "Vanity"],
   ["VBD15", 506.00, 'Vanity Base Drawer 15"', "Vanity"],
   ["VBD18", 536.25, 'Vanity Base Drawer 18"', "Vanity"],
   ["VBD21", 577.50, 'Vanity Base Drawer 21"', "Vanity"],
   ["VBD24", 613.25, 'Vanity Base Drawer 24"', "Vanity"],
-  // ── Vanity Sink Base — 2 door, 1 dummy drawer ──
+  // ── Vanity Sink Base - 2 door, 1 dummy drawer ──
   ["VSB24", 453.75, 'Vanity Sink Base 24"', "Vanity"],
   ["VSB27", 496.38, 'Vanity Sink Base 27"', "Vanity"],
   ["VSB30", 534.88, 'Vanity Sink Base 30"', "Vanity"],
@@ -382,7 +382,7 @@ const CABINET_DEFS: Array<[string, number, string, string]> = [
   ["WDC2442G", 153.13, 'Glass Door Panel - Diagonal 24x42"', "Accessory"],
   ["WDC273615G", 131.25, 'Glass Door Panel - Diagonal 27x36x15"', "Accessory"],
   ["WDC274215G", 153.13, 'Glass Door Panel - Diagonal 27x42x15"', "Accessory"],
-  // ── Floating Shelf — 10"D, 2.5"H, White Shaker / Super White / Natural Wood only ──
+  // ── Floating Shelf - 10"D, 2.5"H, White Shaker / Super White / Natural Wood only ──
   ["FS24", 104.30, 'Floating Shelf 24"', "Accessory"],
   ["FS30", 114.20, 'Floating Shelf 30"', "Accessory"],
   ["FS36", 123.30, 'Floating Shelf 36"', "Accessory"],

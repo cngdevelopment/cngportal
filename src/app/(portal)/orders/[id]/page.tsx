@@ -28,7 +28,7 @@ export default async function OrderDetailPage({
 }) {
   const ctx = await requireCustomer();
   // Scoped fetch: a UUID from another account finds nothing → 404,
-  // never 403 (spec §12.2 — don't confirm existence).
+  // never 403 (spec §12.2 - don't confirm existence).
   const [order, settings] = await Promise.all([
     getOrder(ctx.accountId, params.id),
     getSettings(),
@@ -121,7 +121,7 @@ export default async function OrderDetailPage({
           <span className="meta">Shipping to</span>
           <br />
           <b style={{ fontSize: ".9rem" }}>
-            {order.shipTo.label} — {order.shipTo.line1}, {order.shipTo.city},{" "}
+            {order.shipTo.label}: {order.shipTo.line1}, {order.shipTo.city},{" "}
             {order.shipTo.state} {order.shipTo.zip}
           </b>
         </div>
@@ -174,13 +174,13 @@ export default async function OrderDetailPage({
                     {l.lineNotes ? <> · {l.lineNotes}</> : null}
                   </span>
                 </td>
-                <td>{l.colorNameSnapshot ?? opts["Thickness"] ?? "—"}</td>
+                <td>{l.colorNameSnapshot ?? opts["Thickness"] ?? "-"}</td>
                 <td>
                   {l.assembly === "ASSEMBLED"
                     ? "Assembled"
                     : l.assembly === "UNASSEMBLED"
                       ? "RTA"
-                      : "—"}
+                      : "-"}
                 </td>
                 <td>{Number(l.quantity)}</td>
               </tr>

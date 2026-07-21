@@ -1,5 +1,5 @@
 /**
- * Canonical domain types — the single source of truth for the enums that
+ * Canonical domain types - the single source of truth for the enums that
  * describe the business. Mirrors the Prisma enums (prisma/schema.prisma)
  * so the in-memory and database backends speak the same language.
  *

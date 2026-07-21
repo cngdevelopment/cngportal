@@ -1,6 +1,6 @@
 /**
  * Loading placeholder shown by route-group `loading.tsx` files while a
- * Server Component's data resolves. Server component — no client JS.
+ * Server Component's data resolves. Server component - no client JS.
  *
  * `variant="grid"` mirrors the catalog's product grid; `variant="list"`
  * (default) mirrors the dashboard/queue stacked cards.

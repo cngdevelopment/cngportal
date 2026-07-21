@@ -109,7 +109,7 @@ export function ProductFormModal({
             </FormField>
             <FormField label="Status" htmlFor="isActive" error={errors.isActive} required>
               <select id="isActive" className="field" value={form.isActive ? "active" : "inactive"} onChange={(e) => set("isActive", e.target.value === "active")}>
-                <option value="active">Active — shown in catalog</option>
+                <option value="active">Active (shown in catalog)</option>
                 <option value="inactive">Hidden</option>
               </select>
             </FormField>
@@ -143,13 +143,13 @@ export function ProductFormModal({
               </select>
             </FormField>
             <FormField label="Units per box" htmlFor="unitsPerBox" error={errors.unitsPerBox} hint="Flooring: sq ft per carton.">
-              <input id="unitsPerBox" type="number" min="0" step="0.01" className="field" value={form.unitsPerBox} onChange={(e) => set("unitsPerBox", e.target.value)} placeholder="—" />
+              <input id="unitsPerBox" type="number" min="0" step="0.01" className="field" value={form.unitsPerBox} onChange={(e) => set("unitsPerBox", e.target.value)} placeholder="Optional" />
             </FormField>
           </div>
 
           <div className="form-2col">
             <FormField label="Price ($)" htmlFor="price" error={errors.price} hint="Blank = no price shown.">
-              <input id="price" type="number" min="0" step="0.01" className="field" value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="—" />
+              <input id="price" type="number" min="0" step="0.01" className="field" value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="Optional" />
             </FormField>
             <FormField label="Max order quantity" htmlFor="maxQuantity" error={errors.maxQuantity} required>
               <input id="maxQuantity" type="number" min="1" step="1" className="field" value={form.maxQuantity} onChange={(e) => set("maxQuantity", e.target.value)} />
@@ -175,7 +175,7 @@ export function ProductFormModal({
           <div className="form-section-label">Finishes offered</div>
           <div className="field-hint" style={{ marginBottom: 8 }}>
             {form.colorIds.length === 0
-              ? "No finishes selected — customers won't pick a color."
+              ? "No finishes selected. Customers won't pick a color."
               : `${form.colorIds.length} finish${form.colorIds.length === 1 ? "" : "es"} selected.`}
           </div>
           {colors.length > 0 && (

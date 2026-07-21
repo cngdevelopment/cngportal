@@ -1,6 +1,6 @@
 /**
  * Full-bleed globe behind the sign-in card. An orthographic graticule scaled
- * past the viewport so it crops off every edge — reads as a planet horizon
+ * past the viewport so it crops off every edge - reads as a planet horizon
  * rather than a logo. Strokes are non-scaling, so the line work stays hairline
  * and precise no matter how large it renders.
  *
@@ -26,7 +26,7 @@ export function WorldBackdrop() {
       preserveAspectRatio="xMidYMid meet"
     >
       <g fill="none">
-        {/* outer orbit ring — sits beyond the globe, cropped by the viewport */}
+        {/* outer orbit ring - sits beyond the globe, cropped by the viewport */}
         <circle cx={C} cy={C} r={282} className="wb-orbit" />
 
         {/* globe rim */}
@@ -38,7 +38,7 @@ export function WorldBackdrop() {
         ))}
         <line x1={C} y1={C - R} x2={C} y2={C + R} className="wb-line" />
 
-        {/* equator — slightly stronger, gives the horizon its anchor */}
+        {/* equator - slightly stronger, gives the horizon its anchor */}
         <line x1={C - R} y1={C} x2={C + R} y2={C} className="wb-equator" />
 
         {/* latitudes above and below */}

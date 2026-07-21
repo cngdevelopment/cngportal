@@ -67,7 +67,7 @@ export function StoreChipGrid({ accounts }: { accounts: StoreChip[] }) {
           message={
             <>
               <b>{removing.name}</b> will be removed. If it has no orders it&rsquo;s deleted
-              permanently. If it has order history it&rsquo;s deactivated instead — its logins stop
+              permanently. If it has order history it&rsquo;s deactivated instead, so its logins stop
               working but the orders are kept.
             </>
           }

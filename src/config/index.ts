@@ -1,5 +1,5 @@
 /**
- * Barrel for the pure (env-free) config modules — safe to import from
+ * Barrel for the pure (env-free) config modules - safe to import from
  * anywhere, including Client Components.
  *
  * `company` and `warehouse` read process.env, so they are intentionally
