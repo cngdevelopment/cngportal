@@ -1,5 +1,6 @@
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 import { signOutAction } from "@/app/actions/auth";
 import { hasPermission } from "@/server/auth/permissions";
 import { ROUTES } from "@/config/routes";
@@ -17,12 +18,16 @@ export function ConsoleShell({
   fullName,
   email,
   role,
+  announcement,
+  maintenanceMode = false,
   children,
 }: {
   companyName: string;
   fullName: string;
   email: string;
   role: Role;
+  announcement?: { enabled: boolean; message: string };
+  maintenanceMode?: boolean;
   children: React.ReactNode;
 }) {
   const links: { href: string; label: string }[] = [
@@ -53,6 +58,14 @@ export function ConsoleShell({
       <nav className="site-nav">
         <NavLinks links={links} />
       </nav>
+      {maintenanceMode && (
+        <div className="maintenance-flag" role="status">
+          Maintenance mode is ON — customers can&rsquo;t place orders right now.
+        </div>
+      )}
+      {announcement && (
+        <AnnouncementBanner enabled={announcement.enabled} message={announcement.message} />
+      )}
       <main className="portal">{children}</main>
     </>
   );

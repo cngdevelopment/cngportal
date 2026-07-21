@@ -2,14 +2,17 @@ import Link from "next/link";
 import { requireCustomer } from "@/data/context";
 import { listShipToAddresses } from "@/data/orders";
 import { CartReview } from "@/components/cart/CartReview";
-import { WAREHOUSE } from "@/config/warehouse";
+import { getSettings } from "@/server/settings/settings";
 import { ROUTES } from "@/config/routes";
 
 export const dynamic = "force-dynamic";
 
 export default async function CartPage() {
   const ctx = await requireCustomer();
-  const shipTo = await listShipToAddresses(ctx.accountId);
+  const [shipTo, settings] = await Promise.all([
+    listShipToAddresses(ctx.accountId),
+    getSettings(),
+  ]);
 
   return (
     <>
@@ -28,11 +31,7 @@ export default async function CartPage() {
           zip: s.zip,
           isDefault: s.isDefault,
         }))}
-        warehouse={{
-          address: WAREHOUSE.address,
-          hours: WAREHOUSE.hours,
-          phone: WAREHOUSE.phone,
-        }}
+        warehouse={settings.warehouse}
       />
     </>
   );

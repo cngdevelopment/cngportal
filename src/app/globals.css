@@ -38,6 +38,11 @@ a{color:inherit;text-decoration:none}
 .site-nav a.on{color:var(--ink);border-bottom-color:var(--red)}
 .site-nav a:hover{color:var(--red)}
 
+/* site-wide notices (Admin → Settings) */
+.announcement{background:var(--amber-wash);border-bottom:1px solid #e3d2ab;color:var(--amber);padding:10px 28px;font-size:.85rem;text-align:center}
+.maintenance-flag{background:var(--red-wash);border-bottom:1px solid #f3c4c5;color:var(--red-deep);padding:9px 28px;font-size:.78rem;font-weight:600;letter-spacing:.03em;text-align:center;text-transform:uppercase}
+.maintenance-copy{font-size:.9rem;color:var(--ink-2);text-align:center;line-height:1.6;margin-bottom:10px}
+
 main.portal{max-width:1180px;margin:0 auto;padding:26px 28px 90px}
 h1{font-size:1.25rem;font-weight:700;margin-bottom:4px}
 .sub{color:var(--ink-2);font-size:.86rem;margin-bottom:20px}

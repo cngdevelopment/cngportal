@@ -74,15 +74,6 @@ export function previousStep(
   return steps[i - 1].status;
 }
 
-/** Label for a status under a given delivery method (for emails, chips). */
-export function statusLabel(
-  input: PipelineInput,
-  status: PipelineStatus
-): string | null {
-  const step = buildPipeline(input).find((s) => s.status === status);
-  return step ? step.label : null;
-}
-
 export function isValidTransition(
   input: PipelineInput,
   from: PipelineStatus,

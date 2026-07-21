@@ -6,7 +6,14 @@ export default async function StaffLayout({ children }: { children: React.ReactN
   const ctx = await requireStaff();
   const settings = await getSettings();
   return (
-    <ConsoleShell companyName={settings.companyName} fullName={ctx.fullName} email={ctx.email} role={ctx.role}>
+    <ConsoleShell
+      companyName={settings.companyName}
+      fullName={ctx.fullName}
+      email={ctx.email}
+      role={ctx.role}
+      announcement={settings.announcement}
+      maintenanceMode={settings.maintenanceMode}
+    >
       {children}
     </ConsoleShell>
   );

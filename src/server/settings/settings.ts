@@ -1,9 +1,13 @@
 import "server-only";
+import { cache } from "react";
 import { COMPANY } from "@/config/company";
 import { WAREHOUSE } from "@/config/warehouse";
 import { FEATURES } from "@/config/features";
-import { readOverrides, writeOverrides, type SettingsOverrides } from "./settings-store";
+import { readSettingsOverrides, writeSettingsOverrides } from "@/data/settings";
 import type { UpdateSettingsInput } from "@/schemas/settings";
+
+/** Only the editable fields — never the derived `features` map. */
+export type SettingsOverrides = Partial<Omit<AppSettings, "features">>;
 
 /**
  * Application settings — the values a business owner should be able to edit
@@ -56,8 +60,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
  * config-derived defaults. `features` is always taken from code (not
  * user-editable). Callers read settings only through this function.
  */
-export async function getSettings(): Promise<AppSettings> {
-  const overrides = readOverrides();
+export const getSettings = cache(async function getSettings(): Promise<AppSettings> {
+  const overrides = (await readSettingsOverrides()) as SettingsOverrides;
   return {
     ...DEFAULT_SETTINGS,
     ...overrides,
@@ -65,7 +69,7 @@ export async function getSettings(): Promise<AppSettings> {
     announcement: { ...DEFAULT_SETTINGS.announcement, ...overrides.announcement },
     features: FEATURES,
   };
-}
+});
 
 /**
  * Persist a settings change from the Admin Portal. Input is already
@@ -89,6 +93,12 @@ export async function updateSettings(input: UpdateSettingsInput): Promise<AppSet
     },
     maintenanceMode: input.maintenanceMode,
   };
-  writeOverrides(overrides);
-  return getSettings();
+  await writeSettingsOverrides(overrides as Record<string, unknown>);
+  return {
+    ...DEFAULT_SETTINGS,
+    ...overrides,
+    warehouse: { ...DEFAULT_SETTINGS.warehouse, ...overrides.warehouse },
+    announcement: { ...DEFAULT_SETTINGS.announcement, ...overrides.announcement },
+    features: FEATURES,
+  };
 }

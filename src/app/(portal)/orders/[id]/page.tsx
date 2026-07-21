@@ -6,7 +6,7 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { StatusChip } from "@/components/StatusChip";
 import { OrderDetailActions } from "@/components/cart/OrderDetailActions";
 import { CustomerMessages } from "@/components/cart/CustomerMessages";
-import { WAREHOUSE } from "@/config/warehouse";
+import { getSettings } from "@/server/settings/settings";
 import { ROUTES } from "@/config/routes";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,10 @@ export default async function OrderDetailPage({
   const ctx = await requireCustomer();
   // Scoped fetch: a UUID from another account finds nothing → 404,
   // never 403 (spec §12.2 — don't confirm existence).
-  const order = await getOrder(ctx.accountId, params.id);
+  const [order, settings] = await Promise.all([
+    getOrder(ctx.accountId, params.id),
+    getSettings(),
+  ]);
   if (!order) notFound();
 
   const dm = order.deliveryMethod ?? "SHIP";
@@ -100,7 +103,7 @@ export default async function OrderDetailPage({
       {dm === "PICKUP" && pastReady && (
         <div className="pickup-panel">
           <b>Ready for pickup</b>
-          {WAREHOUSE.address} · {WAREHOUSE.hours}
+          {settings.warehouse.address} · {settings.warehouse.hours}
           <br />
           Give the counter your order number: <b>{order.orderNumber}</b>
           {order.pickupContactName ? (

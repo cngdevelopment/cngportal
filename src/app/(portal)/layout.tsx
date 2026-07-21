@@ -1,7 +1,10 @@
 import { requireCustomer } from "@/data/context";
 import { getSettings } from "@/server/settings/settings";
+import { isStaffRole } from "@/types/domain";
 import { Logo } from "@/components/Logo";
 import { NavLinks } from "@/components/NavLinks";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
+import { MaintenanceScreen } from "@/components/MaintenanceScreen";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartPill } from "@/components/cart/CartPill";
 import { signOutAction } from "@/app/actions/auth";
@@ -14,6 +17,11 @@ export default async function PortalLayout({
 }) {
   const ctx = await requireCustomer();
   const settings = await getSettings();
+
+  // Maintenance mode closes the customer portal; staff keep working through it.
+  if (settings.maintenanceMode && !isStaffRole(ctx.role)) {
+    return <MaintenanceScreen companyName={settings.companyName} supportPhone={settings.supportPhone} />;
+  }
 
   return (
     <CartProvider>
@@ -42,6 +50,7 @@ export default async function PortalLayout({
           ]}
         />
       </nav>
+      <AnnouncementBanner enabled={settings.announcement.enabled} message={settings.announcement.message} />
       <main className="portal">{children}</main>
       <CartPill />
     </CartProvider>

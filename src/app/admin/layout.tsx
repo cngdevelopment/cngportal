@@ -8,7 +8,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const ctx = await requirePermission("admin.access");
   const settings = await getSettings();
   return (
-    <ConsoleShell companyName={settings.companyName} fullName={ctx.fullName} email={ctx.email} role={ctx.role}>
+    <ConsoleShell
+      companyName={settings.companyName}
+      fullName={ctx.fullName}
+      email={ctx.email}
+      role={ctx.role}
+      announcement={settings.announcement}
+      maintenanceMode={settings.maintenanceMode}
+    >
       <ToastProvider>{children}</ToastProvider>
     </ConsoleShell>
   );
