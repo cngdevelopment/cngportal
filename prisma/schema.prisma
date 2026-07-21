@@ -42,6 +42,11 @@ enum Assembly {
   UNASSEMBLED
 }
 
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
 enum OrderStatus {
   DRAFT
   SUBMITTED
@@ -65,9 +70,11 @@ model Account {
   isActive      Boolean  @default(true) @map("is_active")
   createdAt     DateTime @default(now()) @map("created_at")
 
-  users     User[]
-  addresses ShipToAddress[]
-  orders    Order[]
+  users             User[]
+  addresses         ShipToAddress[]
+  orders            Order[]
+  discounts         DiscountAccount[]
+  discountRedeemed  DiscountRedemption[]
 
   @@map("accounts")
 }
@@ -207,16 +214,80 @@ model Order {
   createdAt          DateTime        @default(now()) @map("created_at")
   updatedAt          DateTime        @updatedAt @map("updated_at")
 
+  // Discount applied at checkout. Code + amount are snapshots so the order
+  // still reads correctly if the discount is later edited or deleted.
+  discountId       String?  @map("discount_id") @db.Uuid
+  discountCode     String?  @map("discount_code")
+  discountAmount   Decimal? @map("discount_amount")
+  subtotalAmount   Decimal? @map("subtotal_amount")
+
   account     Account        @relation(fields: [accountId], references: [id])
   createdBy   User           @relation("created_by", fields: [createdByUserId], references: [id])
   shipTo      ShipToAddress? @relation(fields: [shipToAddressId], references: [id])
+  discount    Discount?      @relation(fields: [discountId], references: [id])
   items       OrderItem[]
   events      OrderEvent[]
   messages    OrderMessage[]
   attachments Attachment[]
+  redemptions DiscountRedemption[]
 
   @@index([accountId, status])
   @@map("orders")
+}
+
+// ── Discounts ────────────────────────────────────────────────────────
+
+model Discount {
+  id          String       @id @default(uuid()) @db.Uuid
+  code        String       @unique // stored uppercase; matched case-insensitively
+  description String?
+  type        DiscountType
+  /// Percent (0-100) when type = PERCENT, dollars when type = FIXED.
+  value       Decimal
+  isActive    Boolean      @default(true) @map("is_active")
+
+  // Optional constraints — all null means "no limit".
+  startsAt         DateTime? @map("starts_at")
+  endsAt           DateTime? @map("ends_at")
+  maxRedemptions   Int?      @map("max_redemptions")
+  maxPerAccount    Int?      @map("max_per_account")
+  minOrderSubtotal Decimal?  @map("min_order_subtotal")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Empty = valid for every account; otherwise restricted to these accounts.
+  accounts    DiscountAccount[]
+  redemptions DiscountRedemption[]
+  orders      Order[]
+
+  @@map("discounts")
+}
+
+model DiscountAccount {
+  discountId String @map("discount_id") @db.Uuid
+  accountId  String @map("account_id") @db.Uuid
+
+  discount Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@id([discountId, accountId])
+  @@map("discount_accounts")
+}
+
+model DiscountRedemption {
+  id         String   @id @default(uuid()) @db.Uuid
+  discountId String   @map("discount_id") @db.Uuid
+  accountId  String   @map("account_id") @db.Uuid
+  orderId    String?  @map("order_id") @db.Uuid
+  amount     Decimal
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  discount Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  account  Account  @relation(fields: [accountId], references: [id])
+  order    Order?   @relation(fields: [orderId], references: [id])
+
+  @@index([discountId, accountId])
+  @@map("discount_redemptions")
 }
 
 model OrderItem {

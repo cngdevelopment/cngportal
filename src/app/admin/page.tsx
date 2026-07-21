@@ -23,7 +23,7 @@ const SECTIONS: AdminSection[] = [
   { key: "stores", title: "Stores", permission: "accounts.manage", description: "Browse every customer account and view their order history.", href: ROUTES.admin.stores },
   { key: "settings", title: "Settings", permission: "settings.manage", description: "Company info, warehouse, branding, and announcements.", href: ROUTES.admin.settings },
   { key: "catalog", title: "Catalog", permission: "catalog.manage", description: "Products, pricing, colors, and images." },
-  { key: "discounts", title: "Discounts", permission: "discounts.manage", description: "Promo codes and automatic discount rules." },
+  { key: "discounts", title: "Discounts", permission: "discounts.manage", description: "Promo codes customers redeem at checkout.", href: ROUTES.admin.discounts },
   { key: "cms", title: "Content", permission: "cms.manage", description: "Homepage, FAQs, footer, and contact info." },
   { key: "orders", title: "Orders", permission: "orders.manage", description: "Queue, status changes, and amendments.", href: ROUTES.staff.queue },
 ];

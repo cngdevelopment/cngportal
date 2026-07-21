@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { submitOrderAction } from "@/app/actions/orders";
+import { applyDiscountAction } from "@/app/actions/discounts";
 import { formatPrice } from "@/lib/price";
 
 interface ShipTo {
@@ -74,6 +75,10 @@ export function CartReview({
   const [po, setPo] = useState("");
   const [requestedDate, setRequestedDate] = useState("");
   const [notes, setNotes] = useState("");
+  const [promoInput, setPromoInput] = useState("");
+  const [promo, setPromo] = useState<{ code: string; amount: number } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoPending, setPromoPending] = useState(false);
   const [submitTried, setSubmitTried] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -100,6 +105,34 @@ export function CartReview({
     () => lines.reduce((sum, l) => sum + (l.unitPrice ?? 0) * l.quantity, 0),
     [lines]
   );
+
+  // Server recomputes and re-validates on submit; this is display only.
+  const discountAmount = promo ? Math.min(promo.amount, subtotal) : 0;
+  const total = Math.max(0, subtotal - discountAmount);
+
+  async function applyPromo() {
+    const code = promoInput.trim();
+    if (!code) return;
+    setPromoPending(true);
+    setPromoError(null);
+    const result = await applyDiscountAction({
+      code,
+      lines: lines.map((l) => ({ sku: l.sku, quantity: l.quantity })),
+    });
+    setPromoPending(false);
+    if (result.ok) {
+      setPromo({ code: result.data.code, amount: result.data.amount });
+      setPromoInput("");
+    } else {
+      setPromo(null);
+      setPromoError(result.error.message);
+    }
+  }
+
+  function removePromo() {
+    setPromo(null);
+    setPromoError(null);
+  }
 
   const enteringNewAddress = shipToId === NEW_ADDRESS;
 
@@ -141,6 +174,7 @@ export function CartReview({
         poNumber: po,
         requestedDate: requestedDate || null,
         customerNotes: notes || null,
+        discountCode: promo?.code ?? null,
       });
       clear();
       router.push(`/orders/${orderId}?justSubmitted=1`);
@@ -276,6 +310,57 @@ export function CartReview({
         <div className="subtotal-line">
           <span>Subtotal</span>
           <b>{formatPrice(subtotal)}</b>
+        </div>
+
+        {promo && (
+          <div className="subtotal-line discount">
+            <span>
+              Promo <b className="promo-tag">{promo.code}</b>
+              <button type="button" className="promo-remove" onClick={removePromo}>
+                Remove
+              </button>
+            </span>
+            <b>&minus;{formatPrice(discountAmount)}</b>
+          </div>
+        )}
+
+        {promo && (
+          <div className="subtotal-line total">
+            <span>Total</span>
+            <b>{formatPrice(total)}</b>
+          </div>
+        )}
+
+        <div className="promo-box">
+          {!promo && (
+            <>
+              <div className="promo-row">
+                <input
+                  type="text"
+                  className="field"
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      applyPromo();
+                    }
+                  }}
+                  placeholder="Promo code"
+                  aria-label="Promo code"
+                />
+                <button
+                  type="button"
+                  className="btn ghost"
+                  onClick={applyPromo}
+                  disabled={promoPending || !promoInput.trim()}
+                >
+                  {promoPending ? "…" : "Apply"}
+                </button>
+              </div>
+              {promoError && <div className="err">{promoError}</div>}
+            </>
+          )}
         </div>
         <div className="side-box">
           <div className="fgroup">

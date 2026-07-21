@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { assertPermission } from "@/server/auth/guards";
 import { runAction } from "@/server/action";
 import { ValidationError } from "@/server/errors";
-import { createCustomer, updateCustomer, deleteAccount, type CustomerCreated } from "@/data/accounts";
+import { createCustomer, updateCustomer, deleteAccount, removeOrDeactivateAccount, type CustomerCreated } from "@/data/accounts";
 import { createCustomerSchema, updateCustomerSchema, type CreateCustomerInput, type UpdateCustomerInput } from "@/schemas/customer";
 import { ROUTES } from "@/config/routes";
 import type { Result } from "@/lib/result";
@@ -34,6 +34,23 @@ export async function updateCustomerAction(input: UpdateCustomerInput): Promise<
     const updated = await updateCustomer(parsed.data);
     revalidatePath(ROUTES.admin.customers);
     return updated;
+  });
+}
+
+/**
+ * Remove a store from the Stores page. Deletes it when it has no orders,
+ * otherwise deactivates it so order history survives.
+ */
+export async function removeStoreAction(
+  accountId: string
+): Promise<Result<{ deleted: boolean; name: string }>> {
+  return runAction(async () => {
+    await assertPermission("accounts.manage");
+    if (!accountId) throw new ValidationError("Missing store.");
+    const result = await removeOrDeactivateAccount(accountId);
+    revalidatePath(ROUTES.admin.stores);
+    revalidatePath(ROUTES.admin.customers);
+    return result;
   });
 }
 

@@ -58,6 +58,42 @@ export async function listAccounts(): Promise<AccountRow[]> {
   }));
 }
 
+/**
+ * Remove a store. Accounts with no orders are deleted outright; accounts that
+ * have order history are deactivated instead (hidden from the list, logins
+ * disabled) so the history is never destroyed. Returns which happened.
+ */
+export async function removeOrDeactivateAccount(
+  accountId: string
+): Promise<{ deleted: boolean; name: string }> {
+  if (isDemoMode()) {
+    throw new BusinessRuleError("Connect the database (Supabase) to manage stores.");
+  }
+  const { prisma } = await import("./db");
+
+  const account = await prisma.account.findUnique({
+    where: { id: accountId },
+    include: { users: { select: { id: true } }, _count: { select: { orders: true } } },
+  });
+  if (!account) throw new NotFoundError("That store no longer exists.");
+
+  if (account._count.orders === 0) {
+    await deleteAccount(accountId);
+    return { deleted: true, name: account.name };
+  }
+
+  // Has history: deactivate the account and disable its logins instead.
+  const admin = supabaseAdmin();
+  for (const u of account.users) {
+    await admin.auth.admin.updateUserById(u.id, { ban_duration: "876000h" }).catch(() => {});
+  }
+  await prisma.$transaction([
+    prisma.account.update({ where: { id: accountId }, data: { isActive: false } }),
+    prisma.user.updateMany({ where: { accountId }, data: { isActive: false } }),
+  ]);
+  return { deleted: false, name: account.name };
+}
+
 export async function deleteAccount(accountId: string): Promise<void> {
   if (isDemoMode()) {
     throw new BusinessRuleError("Connect the database (Supabase) to manage accounts.");

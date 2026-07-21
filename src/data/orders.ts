@@ -1,6 +1,7 @@
 import "server-only";
 import { isDemoMode } from "@/lib/mode";
 import { formatOrderNumber } from "@/config/business";
+import { validateDiscount } from "./discounts";
 import {
   listOrdersMock,
   getOrderMock,
@@ -113,6 +114,24 @@ export async function createOrder(input: CreateOrderInput) {
   const productBySku = new Map(products.map((p) => [p.sku, p]));
   const colorByCode = new Map(colors.map((c) => [c.code, c]));
 
+  // Subtotal from real catalog prices, then validate any promo code against it.
+  const subtotal =
+    Math.round(
+      input.lines.reduce((sum, l) => {
+        const p = productBySku.get(l.sku);
+        const price = p?.price === null || p?.price === undefined ? 0 : Number(p.price);
+        return sum + price * l.quantity;
+      }, 0) * 100
+    ) / 100;
+
+  const applied = input.discountCode
+    ? await validateDiscount({
+        code: input.discountCode,
+        accountId: input.accountId,
+        subtotal,
+      })
+    : null;
+
   return prisma.$transaction(async (tx) => {
     // Placeholder numbering until a real sequence/counter lands.
     const orderNumber = formatOrderNumber(Math.floor(1000 + Math.random() * 9000));
@@ -123,6 +142,10 @@ export async function createOrder(input: CreateOrderInput) {
         accountId: input.accountId,
         createdByUserId: input.userId,
         poNumber: input.poNumber,
+        subtotalAmount: subtotal,
+        discountId: applied?.discountId ?? null,
+        discountCode: applied?.code ?? null,
+        discountAmount: applied?.amount ?? null,
         deliveryMethod: input.deliveryMethod,
         shipToAddressId: input.deliveryMethod === "SHIP" ? input.shipToAddressId : null,
         pickupContactName: input.deliveryMethod === "PICKUP" ? input.pickupContactName : null,
@@ -163,6 +186,18 @@ export async function createOrder(input: CreateOrderInput) {
       },
       include: { items: true },
     });
+
+    // Record the redemption so usage limits are enforced on later orders.
+    if (applied) {
+      await tx.discountRedemption.create({
+        data: {
+          discountId: applied.discountId,
+          accountId: input.accountId,
+          orderId: order.id,
+          amount: applied.amount,
+        },
+      });
+    }
     return order;
   });
 }

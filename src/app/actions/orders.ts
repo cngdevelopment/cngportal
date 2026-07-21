@@ -47,6 +47,8 @@ export interface SubmitOrderPayload {
   poNumber: string;
   requestedDate: string | null;
   customerNotes: string | null;
+  /** Promo code entered at checkout; re-validated server-side. */
+  discountCode?: string | null;
 }
 
 export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ orderId: string }> {
@@ -82,6 +84,7 @@ export async function submitOrderAction(payload: SubmitOrderPayload): Promise<{ 
     poNumber: payload.poNumber.trim(),
     requestedDate: payload.requestedDate,
     customerNotes: payload.customerNotes,
+    discountCode: parsed.data.discountCode ?? null,
   });
 
   revalidatePath("/dashboard");

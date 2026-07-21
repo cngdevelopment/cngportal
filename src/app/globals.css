@@ -9,6 +9,7 @@
   --red:#f40009; --red-deep:#c50007; --red-wash:#fdecec;
   --amber:#8a5d16; --amber-wash:#f8f1e0;
   --green:#1f7a3d; --green-wash:#e9f4ec;
+  --blue:#1d4ed8; --blue-wash:#e8eefc;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px}
@@ -59,16 +60,20 @@ a .onum:hover,.onum a:hover{text-decoration:underline}
 .push{margin-left:auto}
 
 /* progress bar */
-.pipe{display:flex;margin-top:14px}
+/* --track drives the whole bar: blue while in flight, green once delivered. */
+.pipe{display:flex;margin-top:14px;--track:var(--blue)}
+.pipe.complete{--track:var(--green)}
 .step{flex:1;position:relative;text-align:center;padding-top:16px}
 .step::before{content:"";position:absolute;top:5px;left:-50%;width:100%;height:2px;background:var(--line)}
 .step:first-child::before{display:none}
-.step.done::before,.step.now::before{background:var(--ink)}
+.step.done::before,.step.now::before{background:var(--track)}
 .dot{position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--line)}
-.step.done .dot{background:var(--ink);border-color:var(--ink)}
-.step.now .dot{border-color:var(--ink);border-width:3px;width:14px;height:14px;top:-1px}
+.step.done .dot{background:var(--track);border-color:var(--track)}
+.step.now .dot{border-color:var(--track);border-width:3px;width:14px;height:14px;top:-1px}
 .slabel{font-size:.72rem;color:var(--ink-3);margin-top:2px}
 .step.done .slabel,.step.now .slabel{color:var(--ink)}
+.step.now .slabel{color:var(--track)}
+.pipe.complete .step.done .slabel{color:var(--green)}
 .step.now .slabel{font-weight:700}
 .stime{font-size:.66rem;color:var(--ink-3)}
 
@@ -137,7 +142,14 @@ table.list tr:last-child td{border-bottom:none}
 .back:hover{color:var(--ink)}
 
 /* login */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--paper)}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--paper);position:relative;overflow:hidden}
+
+/* decorative globe behind the sign-in card */
+.world-backdrop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(880px,140vw);height:auto;pointer-events:none;user-select:none}
+.world-backdrop .wb-rim{stroke:var(--red);opacity:.13}
+.world-backdrop .wb-line{stroke:var(--ink);opacity:.07}
+.login-wrap .auth-card{position:relative;z-index:1}
+@media (max-width:520px){.world-backdrop{opacity:.7}}
 .login-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:34px 36px;width:100%;max-width:400px}
 .login-card .mark{margin:0 auto 12px}
 .login-card h1{text-align:center}
@@ -225,6 +237,21 @@ aside.rail{width:200px;flex-shrink:0}
 .summary-line{background:var(--red-wash);border:1px solid #f3c4c5;border-radius:2px;padding:10px 13px;font-size:.87rem;color:var(--red);margin-bottom:12px}
 .subtotal-line{display:flex;align-items:baseline;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:2px;padding:14px 18px;margin-bottom:14px;font-size:.9rem}
 .subtotal-line b{font-size:1.3rem;color:var(--ink)}
+.subtotal-line.discount{margin-bottom:10px;padding:11px 18px}
+.subtotal-line.discount b{font-size:1rem;color:var(--green)}
+.subtotal-line.total b{color:var(--ink)}
+.promo-tag{font-size:.8rem!important;color:var(--ink)!important;letter-spacing:.04em}
+.promo-remove{font-size:.74rem;color:var(--ink-3);margin-left:8px;text-decoration:underline}
+.promo-remove:hover{color:var(--red-deep)}
+.promo-box{margin-bottom:14px}
+.promo-row{display:flex;gap:8px}
+.promo-row .field{flex:1;min-width:0;text-transform:uppercase}
+.promo-row .btn{white-space:nowrap}
+
+/* discount account restriction picker */
+.account-picker{max-height:180px;overflow-y:auto;border:1px solid var(--line);border-radius:2px;padding:8px 10px;background:#fff}
+.account-pick{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:.85rem;cursor:pointer}
+.account-pick input{width:auto}
 
 /* cart pill */
 .pill{position:fixed;right:24px;bottom:22px;z-index:30;background:var(--red);color:#fff;border-radius:100px;padding:11px 20px;font-size:.88rem;font-weight:600;box-shadow:0 3px 12px rgba(20,30,60,.25)}
@@ -290,6 +317,10 @@ aside.rail{width:200px;flex-shrink:0}
 .store-chip:hover{border-color:var(--red);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .store-chip-name{font-weight:600;font-size:1rem;color:var(--ink)}
 .store-chip-number{font-size:.78rem;color:var(--ink-3)}
+.store-chip-wrap{position:relative}
+.store-chip-remove{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;line-height:1;color:var(--ink-3);opacity:0;transition:opacity .12s,background .12s,color .12s}
+.store-chip-wrap:hover .store-chip-remove,.store-chip-remove:focus-visible{opacity:1}
+.store-chip-remove:hover{background:var(--red-wash);color:var(--red-deep)}
 
 /* admin forms */
 .settings-panel{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:8px 22px 22px;max-width:760px}

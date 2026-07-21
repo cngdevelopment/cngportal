@@ -48,6 +48,7 @@ export const submitOrderSchema = z
     poNumber: z.string().trim().min(1, "PO number is required."),
     requestedDate: z.string().nullable(),
     customerNotes: z.string().nullable(),
+    discountCode: z.string().trim().nullable().optional(),
   })
   .superRefine((v, ctx) => {
     if (v.deliveryMethod === "PICKUP") {

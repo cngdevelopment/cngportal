@@ -228,6 +228,8 @@ export interface CreateOrderInput {
   poNumber: string;
   requestedDate?: string | null;
   customerNotes?: string | null;
+  /** Promo code entered at checkout; validated server-side. */
+  discountCode?: string | null;
 }
 
 export function createOrderMock(input: CreateOrderInput): MockOrder {

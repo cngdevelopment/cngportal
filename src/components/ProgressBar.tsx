@@ -20,9 +20,11 @@ export function ProgressBar({
   }
   const steps = buildPipeline({ requiresAssembly, deliveryMethod });
   const idx = steps.findIndex((s) => s.status === (status as PipelineStatus));
+  // Blue while the order is in flight; the whole bar turns green on delivery.
+  const complete = status === "COMPLETED";
 
   return (
-    <div className="pipe">
+    <div className={`pipe${complete ? " complete" : ""}`}>
       {steps.map((s, i) => {
         const cls =
           i < idx ? "done" : i === idx ? (status === "COMPLETED" ? "done" : "now") : "";
