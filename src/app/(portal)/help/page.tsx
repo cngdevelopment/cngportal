@@ -1,14 +1,15 @@
 import { requireCustomer } from "@/data/context";
 import { getContent } from "@/server/content/content";
-
+import { getSettings } from "@/server/settings/settings";
 export const dynamic = "force-dynamic";
 
 export default async function HelpPage() {
   await requireCustomer();
+  const settings = await getSettings();
   const content = await getContent();
 
   const contactRows = [
-    { label: "Phone", value: content.contactPhone },
+    { label: "Phone", value: settings.supportPhone },
     { label: "Email", value: content.contactEmail },
     { label: "Address", value: content.contactAddress },
     { label: "Hours", value: content.contactHours },
